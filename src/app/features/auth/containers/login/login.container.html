@@ -1,0 +1,47 @@
+<div class="login-card">
+  <div class="login-header">
+    <h1>TechDecide</h1>
+    <p>Sign in to your account</p>
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" />
+  }
+
+  <div class="login-form">
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        pInputText
+        id="email"
+        type="email"
+        [(ngModel)]="credentials.email"
+        placeholder="you@company.com"
+      />
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <p-password
+        id="password"
+        [(ngModel)]="credentials.password"
+        placeholder="Your password"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="w-full"
+      />
+    </div>
+
+    <p-button
+      label="Sign in"
+      [loading]="loading()"
+      (onClick)="onSubmit()"
+      styleClass="w-full"
+    />
+  </div>
+
+  <div class="login-footer">
+    <span>Don't have an account?</span>
+    <a routerLink="/auth/register">Register</a>
+  </div>
+</div>

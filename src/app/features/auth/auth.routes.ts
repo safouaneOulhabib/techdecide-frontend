@@ -4,14 +4,14 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./pages/login/login.page')
-        .then(m => m.LoginPage)
+      import('./containers/login/login.container')
+        .then(m => m.LoginContainer)
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./pages/register/register.page')
-        .then(m => m.RegisterPage)
+      import('./containers/register/register.container')
+        .then(m => m.RegisterContainer)
   },
   {
     path: '',

@@ -1,0 +1,57 @@
+<div class="register-card">
+  <div class="register-header">
+    <h1>TechDecide</h1>
+    <p>Create your account</p>
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" />
+  }
+
+  <div class="register-form">
+    <div class="field">
+      <label for="name">Full Name</label>
+      <input
+        pInputText
+        id="name"
+        type="text"
+        [(ngModel)]="credentials.name"
+        placeholder="John Doe"
+      />
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input
+        pInputText
+        id="email"
+        type="email"
+        [(ngModel)]="credentials.email"
+        placeholder="you@company.com"
+      />
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <p-password
+        id="password"
+        [(ngModel)]="credentials.password"
+        placeholder="Min. 8 characters"
+        [toggleMask]="true"
+        styleClass="w-full"
+      />
+    </div>
+
+    <p-button
+      label="Create account"
+      [loading]="loading()"
+      (onClick)="onSubmit()"
+      styleClass="w-full"
+    />
+  </div>
+
+  <div class="register-footer">
+    <span>Already have an account?</span>
+    <a routerLink="/auth/login">Sign in</a>
+  </div>
+</div>
