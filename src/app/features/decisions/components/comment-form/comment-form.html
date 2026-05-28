@@ -1,0 +1,27 @@
+<div class="comment-form">
+  <h4>Add a comment</h4>
+
+  <div class="field">
+    <textarea
+      pTextarea
+      [(ngModel)]="content"
+      placeholder="Share your thoughts on this decision..."
+      rows="3"
+    ></textarea>
+  </div>
+
+  <div class="form-footer">
+    <p-selectbutton
+      [(ngModel)]="selectedVote"
+      [options]="voteOptions"
+      optionLabel="label"
+      optionValue="value"
+    />
+    <p-button
+      label="Post Comment"
+      icon="pi pi-send"
+      (onClick)="submit()"
+      [disabled]="!content()"
+    />
+  </div>
+</div>

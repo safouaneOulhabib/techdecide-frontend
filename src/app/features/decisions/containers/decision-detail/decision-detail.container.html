@@ -1,101 +1,114 @@
 <div class="decision-detail">
 
-  <div class="detail-header">
-    <p-button
-      icon="pi pi-arrow-left"
-      label="Back"
-      severity="secondary"
-      [text]="true"
-      (onClick)="goBack()"
-    />
-  </div>
-
-  @if (loading()) {
-    <div class="loading">
-      <p-progressSpinner />
+    <div class="detail-header">
+        <p-button icon="pi pi-arrow-left" label="Back" severity="secondary" [text]="true" (onClick)="goBack()" />
     </div>
-  }
 
-  @if (error()) {
+    @if (loading()) {
+    <div class="loading">
+        <p-progressSpinner />
+    </div>
+    }
+
+    @if (error()) {
     <p-message severity="error" [text]="error()!" />
-  }
+    }
 
-  @if (decision()) {
+    @if (decision()) {
     <p-card>
-      <ng-template pTemplate="header">
-        <div class="card-header">
-          <div class="header-left">
-            <h1>{{ decision()!.title }}</h1>
-            <div class="header-meta">
-              <app-decision-status-badge [status]="decision()!.status" />
-              <span class="meta-item">
-                <i class="pi pi-users"></i>
-                {{ decision()!.teamName }}
-              </span>
-              <span class="meta-item">
-                <i class="pi pi-user"></i>
-                {{ decision()!.authorName }}
-              </span>
-              <span class="meta-item">
-                <i class="pi pi-calendar"></i>
-                {{ decision()!.createdAt | date:'mediumDate' }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-
-      <div class="detail-body">
-
-        <section class="detail-section">
-          <h3>Context</h3>
-          <p>{{ decision()!.context }}</p>
-        </section>
-
-        <p-divider />
-
-        <section class="detail-section">
-          <h3>Decision</h3>
-          <p>{{ decision()!.decision }}</p>
-        </section>
-
-        @if (decision()!.consequences) {
-          <p-divider />
-          <section class="detail-section">
-            <h3>Consequences</h3>
-            <p>{{ decision()!.consequences }}</p>
-          </section>
-        }
-
-        @if (decision()!.alternatives.length > 0) {
-          <p-divider />
-          <section class="detail-section">
-            <h3>Alternatives Considered</h3>
-            <div class="alternatives-list">
-              @for (alt of decision()!.alternatives; track alt.id) {
-                <div class="alternative-item">
-                  <span class="alt-name">{{ alt.name }}</span>
-                  <span class="alt-reason">{{ alt.rejectionReason }}</span>
+        <ng-template pTemplate="header">
+            <div class="card-header">
+                <div class="header-left">
+                    <h1>{{ decision()!.title }}</h1>
+                    <div class="header-meta">
+                        <app-decision-status-badge [status]="decision()!.status" />
+                        <span class="meta-item">
+                            <i class="pi pi-users"></i>
+                            {{ decision()!.teamName }}
+                        </span>
+                        <span class="meta-item">
+                            <i class="pi pi-user"></i>
+                            {{ decision()!.authorName }}
+                        </span>
+                        <span class="meta-item">
+                            <i class="pi pi-calendar"></i>
+                            {{ decision()!.createdAt | date:'mediumDate' }}
+                        </span>
+                    </div>
                 </div>
-              }
             </div>
-          </section>
-        }
+        </ng-template>
 
-        @if (decision()!.tags.length > 0) {
-          <p-divider />
-          <section class="detail-section">
-            <h3>Tags</h3>
-            <div class="tags-list">
-              @for (tag of decision()!.tags; track tag) {
-                <p-tag [value]="tag" severity="secondary" />
-              }
-            </div>
-          </section>
-        }
+        <div class="detail-body">
 
-      </div>
+            <section class="detail-section">
+                <h3>Context</h3>
+                <p>{{ decision()!.context }}</p>
+            </section>
+
+            <p-divider />
+
+            <section class="detail-section">
+                <h3>Decision</h3>
+                <p>{{ decision()!.decision }}</p>
+            </section>
+
+            @if (decision()!.consequences) {
+            <p-divider />
+            <section class="detail-section">
+                <h3>Consequences</h3>
+                <p>{{ decision()!.consequences }}</p>
+            </section>
+            }
+
+            @if (decision()!.alternatives.length > 0) {
+            <p-divider />
+            <section class="detail-section">
+                <h3>Alternatives Considered</h3>
+                <div class="alternatives-list">
+                    @for (alt of decision()!.alternatives; track alt.id) {
+                    <div class="alternative-item">
+                        <span class="alt-name">{{ alt.name }}</span>
+                        <span class="alt-reason">{{ alt.rejectionReason }}</span>
+                    </div>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (decision()!.tags.length > 0) {
+            <p-divider />
+            <section class="detail-section">
+                <h3>Tags</h3>
+                <div class="tags-list">
+                    @for (tag of decision()!.tags; track tag) {
+                    <p-tag [value]="tag" severity="secondary" />
+                    }
+                </div>
+            </section>
+            }
+
+            <p-divider />
+
+            <section class="detail-section">
+                <h3>Discussion</h3>
+
+                <app-comment-form (onSubmit)="onCommentSubmit($event)" />
+
+                <div style="height: 1.5rem"></div>
+
+                @if (commentsLoading()) {
+                <div class="loading">
+                    <p-progressSpinner />
+                </div>
+                }
+
+                <app-comment-list [comments]="comments()" [currentUserName]="currentUser()?.name || ''"
+                    (onDelete)="onCommentDelete($event)" />
+            </section>
+
+        </div>
     </p-card>
-  }
+    }
 
 </div>

@@ -1,0 +1,41 @@
+<div class="comment-list">
+  @if (comments().length === 0) {
+    <div class="empty-comments">
+      <i class="pi pi-comments"></i>
+      <p>No comments yet. Be the first to comment.</p>
+    </div>
+  }
+
+  @for (comment of comments(); track comment.id) {
+    <div class="comment-item">
+      <div class="comment-header">
+        <div class="comment-author">
+          <i class="pi pi-user"></i>
+          <span>{{ comment.authorName }}</span>
+          <span class="comment-date">
+            {{ comment.createdAt | date:'mediumDate' }}
+          </span>
+        </div>
+        <div class="comment-actions">
+          @if (comment.vote) {
+            <p-tag
+              [value]="getVoteLabel(comment.vote)"
+              [severity]="getVoteSeverity(comment.vote)"
+            />
+          }
+          @if (canDelete(comment)) {
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              size="small"
+              (onClick)="onDelete.emit(comment.id)"
+            />
+          }
+        </div>
+      </div>
+      <p class="comment-content">{{ comment.content }}</p>
+      <p-divider />
+    </div>
+  }
+</div>
