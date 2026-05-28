@@ -1,1 +1,131 @@
-<p>decision-create works!</p>
+<div class="decision-create">
+  <div class="page-header">
+    <p-button
+      icon="pi pi-arrow-left"
+      label="Back"
+      severity="secondary"
+      [text]="true"
+      (onClick)="goBack()"
+    />
+    <h2>New Technical Decision</h2>
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" />
+  }
+
+  <p-card>
+    <div class="form-grid">
+
+      <div class="field full-width">
+        <label for="title">Title *</label>
+        <input
+          pInputText
+          id="title"
+          [(ngModel)]="form.title"
+          placeholder="e.g. Use PostgreSQL as primary database"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label for="team">Team *</label>
+        <p-select
+          id="team"
+          [(ngModel)]="form.teamId"
+          [options]="teams()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select a team"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="field full-width">
+        <label for="context">Context *</label>
+        <textarea
+          pTextarea
+          id="context"
+          [(ngModel)]="form.context"
+          placeholder="Why does this decision need to be made?"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="field full-width">
+        <label for="decision">Decision *</label>
+        <textarea
+          pTextarea
+          id="decision"
+          [(ngModel)]="form.decision"
+          placeholder="What exactly was decided?"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="field full-width">
+        <label for="consequences">Consequences</label>
+        <textarea
+          pTextarea
+          id="consequences"
+          [(ngModel)]="form.consequences"
+          placeholder="What are the trade-offs?"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="field full-width">
+        <label>Alternatives Considered</label>
+        <div class="alternatives-input">
+          <input
+            pInputText
+            [(ngModel)]="newAlternative.name"
+            placeholder="Alternative name"
+          />
+          <input
+            pInputText
+            [(ngModel)]="newAlternative.rejectionReason"
+            placeholder="Why rejected?"
+          />
+          <p-button
+            icon="pi pi-plus"
+            (onClick)="addAlternative()"
+            severity="secondary"
+          />
+        </div>
+
+        @if (form.alternatives && form.alternatives.length > 0) {
+          <div class="alternatives-list">
+            @for (alt of form.alternatives; track $index) {
+              <div class="alternative-item">
+                <span class="alt-name">{{ alt.name }}</span>
+                <span class="alt-reason">{{ alt.rejectionReason }}</span>
+                <p-button
+                  icon="pi pi-times"
+                  severity="danger"
+                  [text]="true"
+                  size="small"
+                  (onClick)="removeAlternative($index)"
+                />
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (onClick)="goBack()"
+      />
+      <p-button
+        label="Create Decision"
+        icon="pi pi-check"
+        [loading]="loading()"
+        (onClick)="onSubmit()"
+      />
+    </div>
+  </p-card>
+</div>
