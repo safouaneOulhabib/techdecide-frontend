@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, withComputed, patchState } from '@ngrx/signals';
 import { computed, Signal } from '@angular/core';
+import { tap } from 'rxjs';
 import { DecisionService } from '@features/decisions/services/decision.service';
 import {
   Decision,
@@ -67,16 +68,18 @@ export const DecisionStore = signalStore(
 
     create(request: CreateDecisionRequest) {
       patchState(store, { loading: true, error: null });
-      service.create(request).subscribe({
-        next: (decision) => patchState(store, (state) => ({
-          decisions: [...state.decisions, decision],
-          loading: false
-        })),
-        error: (err) => patchState(store, {
-          error: err.error?.message || 'Failed to create decision',
-          loading: false
+      return service.create(request).pipe(
+        tap({
+          next: (decision) => patchState(store, (state) => ({
+            decisions: [...state.decisions, decision],
+            loading: false
+          })),
+          error: (err) => patchState(store, {
+            error: err.error?.message || 'Failed to create decision',
+            loading: false
+          })
         })
-      });
+      );
     },
 
     updateStatus(id: number, status: DecisionStatus) {
