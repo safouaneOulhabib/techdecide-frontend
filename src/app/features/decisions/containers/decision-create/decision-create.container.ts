@@ -41,8 +41,9 @@ export class DecisionCreateContainer implements OnInit {
       teamId: data.teamId,
       tagIds: data.tagIds,
       alternatives: data.alternatives
+    }).subscribe({
+      next: () => this.router.navigate(['/decisions'])
     });
-    this.router.navigate(['/decisions']);
   }
 
   onFormCancel() {
