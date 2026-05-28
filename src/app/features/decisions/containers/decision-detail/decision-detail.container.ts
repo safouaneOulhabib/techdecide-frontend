@@ -72,6 +72,10 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.commentStore.remove(commentId);
   }
 
+  onEdit() {
+    this.router.navigate(['/decisions', this.decisionId, 'edit']);
+  }
+
   ngOnDestroy() {
     this.commentStore.clearComments();
   }

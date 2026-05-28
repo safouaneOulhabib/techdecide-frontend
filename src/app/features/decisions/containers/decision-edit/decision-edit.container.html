@@ -1,0 +1,26 @@
+<div class="decision-edit">
+  <div class="page-header">
+    <h2>Edit Decision</h2>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <p-progressSpinner />
+    </div>
+  }
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" />
+  }
+
+  @if (decision()) {
+    <app-decision-form
+      [existingDecision]="decision()"
+      [teams]="teams()"
+      [tags]="tags()"
+      [loading]="loading()"
+      (formSubmit)="onFormSubmit($event)"
+      (formCancel)="onFormCancel()"
+    />
+  }
+</div>

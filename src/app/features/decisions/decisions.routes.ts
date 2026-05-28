@@ -18,5 +18,11 @@ export const DECISION_ROUTES: Routes = [
     loadComponent: () =>
       import('./containers/decision-detail/decision-detail.container')
         .then(m => m.DecisionDetailContainer)
-  }
+  },
+  {
+  path: ':id/edit',
+  loadComponent: () =>
+    import('./containers/decision-edit/decision-edit.container')
+      .then(m => m.DecisionEditContainer)
+}
 ];

@@ -82,6 +82,19 @@ export const DecisionStore = signalStore(
       );
     },
 
+    update(id: number, request: UpdateDecisionRequest) {
+      patchState(store, { loading: true, error: null });
+      return service.update(id, request).pipe(
+        tap((updated) => {
+          patchState(store, (state) => ({
+            decisions: state.decisions.map(d => d.id === id ? updated : d),
+            selectedDecision: updated,
+            loading: false
+          }));
+        })
+      );
+    },
+
     updateStatus(id: number, status: DecisionStatus) {
       service.updateStatus(id, status).subscribe({
         next: (updated) => patchState(store, (state) => ({

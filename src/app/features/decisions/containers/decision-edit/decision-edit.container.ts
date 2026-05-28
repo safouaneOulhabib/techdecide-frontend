@@ -1,0 +1,59 @@
+import { Component, inject, OnInit, Signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DecisionStore } from '@features/decisions/store/decision.store';
+import { TeamStore } from '@features/teams/store/team.store';
+import { TagStore } from '@features/tags/store/tag.store';
+import { DecisionForm, DecisionFormData } from '@features/decisions/components/decision-form/decision-form';
+import { Decision } from '@features/decisions/models/decision.model';
+import { Team } from '@features/teams/models/team.model';
+import { Tag } from '@features/tags/models/tag.model';
+
+@Component({
+  selector: 'app-decision-edit',
+  standalone: true,
+  imports: [MessageModule, ProgressSpinnerModule, DecisionForm],
+  templateUrl: './decision-edit.container.html',
+  styleUrl: './decision-edit.container.scss'
+})
+export class DecisionEditContainer implements OnInit {
+  private readonly decisionStore = inject(DecisionStore);
+  private readonly teamStore = inject(TeamStore);
+  private readonly tagStore = inject(TagStore);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
+  readonly decision: Signal<Decision | null> = this.decisionStore.selectedDecision;
+  readonly loading: Signal<boolean> = this.decisionStore.loading;
+  readonly error: Signal<string | null> = this.decisionStore.error;
+  readonly teams: Signal<Team[]> = this.teamStore.teams;
+  readonly tags: Signal<Tag[]> = this.tagStore.tags;
+
+  private decisionId = 0;
+
+  ngOnInit() {
+    this.decisionId = Number(this.route.snapshot.paramMap.get('id'));
+    this.decisionStore.loadById(this.decisionId);
+    this.teamStore.loadAll();
+    this.tagStore.loadAll();
+  }
+
+  onFormSubmit(data: DecisionFormData) {
+    this.decisionStore.update(this.decisionId, {
+      title: data.title,
+      context: data.context,
+      decision: data.decision,
+      consequences: data.consequences,
+      tagIds: data.tagIds,
+      alternatives: data.alternatives
+    }).subscribe({
+      next: () => this.router.navigate(['/decisions', this.decisionId]),
+      error: () => {}
+    });
+  }
+
+  onFormCancel() {
+    this.router.navigate(['/decisions', this.decisionId]);
+  }
+}
