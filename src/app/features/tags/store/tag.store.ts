@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { TagService } from '@features/tags/services/tag.service';
-import { Tag } from '@features/tags/models/tag.model';
+import { Tag, CreateTagRequest } from '@features/tags/models/tag.model';
 
 export type TagState = {
   tags: Tag[];
@@ -26,6 +26,31 @@ export const TagStore = signalStore(
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to load tags',
           loading: false
+        })
+      });
+    },
+
+    create(request: CreateTagRequest) {
+      patchState(store, { loading: true, error: null });
+      service.create(request).subscribe({
+        next: (tag) => patchState(store, {
+          tags: [...store.tags(), tag],
+          loading: false
+        }),
+        error: (err) => patchState(store, {
+          error: err.error?.message || 'Failed to create tag',
+          loading: false
+        })
+      });
+    },
+
+    remove(id: number) {
+      service.remove(id).subscribe({
+        next: () => patchState(store, {
+          tags: store.tags().filter(t => t.id !== id)
+        }),
+        error: (err) => patchState(store, {
+          error: err.error?.message || 'Failed to delete tag'
         })
       });
     }
