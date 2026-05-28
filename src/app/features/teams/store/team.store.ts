@@ -33,10 +33,10 @@ export const TeamStore = signalStore(
     create(request: CreateTeamRequest) {
       patchState(store, { loading: true, error: null });
       service.create(request).subscribe({
-        next: (team) => patchState(store, {
-          teams: [...store.teams(), team],
+        next: (team) => patchState(store, (state) => ({
+          teams: [...state.teams, team],
           loading: false
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to create team',
           loading: false
@@ -46,9 +46,9 @@ export const TeamStore = signalStore(
 
     remove(id: number) {
       service.remove(id).subscribe({
-        next: () => patchState(store, {
-          teams: store.teams().filter(t => t.id !== id)
-        }),
+        next: () => patchState(store, (state) => ({
+          teams: state.teams.filter(t => t.id !== id)
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to delete team'
         })

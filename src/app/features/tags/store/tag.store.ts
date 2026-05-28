@@ -33,10 +33,10 @@ export const TagStore = signalStore(
     create(request: CreateTagRequest) {
       patchState(store, { loading: true, error: null });
       service.create(request).subscribe({
-        next: (tag) => patchState(store, {
-          tags: [...store.tags(), tag],
+        next: (tag) => patchState(store, (state) => ({
+          tags: [...state.tags, tag],
           loading: false
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to create tag',
           loading: false
@@ -46,9 +46,9 @@ export const TagStore = signalStore(
 
     remove(id: number) {
       service.remove(id).subscribe({
-        next: () => patchState(store, {
-          tags: store.tags().filter(t => t.id !== id)
-        }),
+        next: () => patchState(store, (state) => ({
+          tags: state.tags.filter(t => t.id !== id)
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to delete tag'
         })
