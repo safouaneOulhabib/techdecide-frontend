@@ -10,6 +10,13 @@ import { DatePipe } from '@angular/common';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
 import { Decision } from '@features/decisions/models/decision.model';
+import { OnDestroy } from '@angular/core';
+import { AuthStore } from '@features/auth/store/auth.store';
+import { CommentForm } from '@features/decisions/components/comment-form/comment-form';
+import { CommentList } from '@features/decisions/components/comment-list/comment-list';
+import { Comment, CreateCommentRequest } from '@features/decisions/models/comment.model';
+import { AuthResponse } from '@features/auth/models/auth.model';
+import { CommentStore } from '@features/decisions/store/comment.store';
 
 @Component({
   selector: 'app-decision-detail',
@@ -22,26 +29,50 @@ import { Decision } from '@features/decisions/models/decision.model';
     MessageModule,
     TagModule,
     DatePipe,
-    DecisionStatusBadge
+    DecisionStatusBadge,
+    CommentForm,
+    CommentList
   ],
   templateUrl: './decision-detail.container.html',
   styleUrl: './decision-detail.container.scss'
 })
-export class DecisionDetailContainer implements OnInit {
-  private readonly store = inject(DecisionStore);
+export class DecisionDetailContainer implements OnInit, OnDestroy {
+  private readonly decisionStore = inject(DecisionStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  readonly decision: Signal<Decision | null> = this.store.selectedDecision;
-  readonly loading: Signal<boolean> = this.store.loading;
-  readonly error: Signal<string | null> = this.store.error;
+  readonly decision: Signal<Decision | null> = this.decisionStore.selectedDecision;
+  readonly loading: Signal<boolean> = this.decisionStore.loading;
+  readonly error: Signal<string | null> = this.decisionStore.error;
+
+  private readonly commentStore = inject(CommentStore);
+  private readonly authStore = inject(AuthStore);
+
+  readonly comments: Signal<Comment[]> = this.commentStore.comments;
+  readonly commentsLoading: Signal<boolean> = this.commentStore.loading;
+  readonly currentUser: Signal<AuthResponse | null> = this.authStore.user;
+
+  private decisionId = 0;
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.store.loadById(id);
+    this.decisionId = Number(this.route.snapshot.paramMap.get('id'));
+    this.decisionStore.loadById(this.decisionId); // changed from this.store
+    this.commentStore.loadByDecision(this.decisionId);
   }
 
   goBack() {
     this.router.navigate(['/decisions']);
+  }
+
+  onCommentSubmit(request: CreateCommentRequest) {
+    this.commentStore.create(this.decisionId, request);
+  }
+
+  onCommentDelete(commentId: number) {
+    this.commentStore.remove(commentId);
+  }
+
+  ngOnDestroy() {
+    this.commentStore.clearComments();
   }
 }
