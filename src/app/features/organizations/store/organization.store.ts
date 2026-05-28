@@ -33,10 +33,10 @@ export const OrganizationStore = signalStore(
     create(request: CreateOrganizationRequest) {
       patchState(store, { loading: true, error: null });
       service.create(request).subscribe({
-        next: (organization) => patchState(store, {
-          organizations: [...store.organizations(), organization],
+        next: (organization) => patchState(store, (state) => ({
+          organizations: [...state.organizations, organization],
           loading: false
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to create organization',
           loading: false
@@ -46,9 +46,9 @@ export const OrganizationStore = signalStore(
 
     remove(id: number) {
       service.remove(id).subscribe({
-        next: () => patchState(store, {
-          organizations: store.organizations().filter(o => o.id !== id)
-        }),
+        next: () => patchState(store, (state) => ({
+          organizations: state.organizations.filter(o => o.id !== id)
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to delete organization'
         })

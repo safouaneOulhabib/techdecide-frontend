@@ -68,10 +68,10 @@ export const DecisionStore = signalStore(
     create(request: CreateDecisionRequest) {
       patchState(store, { loading: true, error: null });
       service.create(request).subscribe({
-        next: (decision) => patchState(store, {
-          decisions: [...store.decisions(), decision],
+        next: (decision) => patchState(store, (state) => ({
+          decisions: [...state.decisions, decision],
           loading: false
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to create decision',
           loading: false
@@ -81,12 +81,12 @@ export const DecisionStore = signalStore(
 
     updateStatus(id: number, status: DecisionStatus) {
       service.updateStatus(id, status).subscribe({
-        next: (updated) => patchState(store, {
-          decisions: store.decisions().map(d =>
+        next: (updated) => patchState(store, (state) => ({
+          decisions: state.decisions.map(d =>
             d.id === id ? updated : d
           ),
           selectedDecision: updated
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to update status'
         })
@@ -95,9 +95,9 @@ export const DecisionStore = signalStore(
 
     remove(id: number) {
       service.remove(id).subscribe({
-        next: () => patchState(store, {
-          decisions: store.decisions().filter(d => d.id !== id)
-        }),
+        next: () => patchState(store, (state) => ({
+          decisions: state.decisions.filter(d => d.id !== id)
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to delete decision'
         })

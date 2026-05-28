@@ -34,10 +34,10 @@ export const CommentStore = signalStore(
     create(decisionId: number, request: CreateCommentRequest) {
       patchState(store, { loading: true, error: null });
       service.create(decisionId, request).subscribe({
-        next: (comment) => patchState(store, {
-          comments: [...store.comments(), comment],
+        next: (comment) => patchState(store, (state) => ({
+          comments: [...state.comments, comment],
           loading: false
-        }),
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to add comment',
           loading: false
@@ -47,9 +47,9 @@ export const CommentStore = signalStore(
 
     remove(commentId: number) {
       service.remove(commentId).subscribe({
-        next: () => patchState(store, {
-          comments: store.comments().filter(c => c.id !== commentId)
-        }),
+        next: () => patchState(store, (state) => ({
+          comments: state.comments.filter(c => c.id !== commentId)
+        })),
         error: (err) => patchState(store, {
           error: err.error?.message || 'Failed to delete comment'
         })
