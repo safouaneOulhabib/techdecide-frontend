@@ -1,8 +1,22 @@
 <div class="decision-detail">
 
-    <div class="detail-header">
-        <p-button icon="pi pi-arrow-left" label="Back" severity="secondary" [text]="true" (onClick)="goBack()" />
-    </div>
+ <div class="detail-header">
+  <p-button
+    icon="pi pi-arrow-left"
+    label="Back"
+    severity="secondary"
+    [text]="true"
+    (onClick)="goBack()"
+  />
+  @if (decision()) {
+    <p-button
+      icon="pi pi-pencil"
+      label="Edit"
+      severity="secondary"
+      (onClick)="onEdit()"
+    />
+  }
+</div>
 
     @if (loading()) {
     <div class="loading">
