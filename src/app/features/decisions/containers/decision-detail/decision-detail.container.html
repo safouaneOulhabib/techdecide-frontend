@@ -88,8 +88,8 @@
             <section class="detail-section">
                 <h3>Tags</h3>
                 <div class="tags-list">
-                    @for (tag of decision()!.tags; track tag) {
-                    <p-tag [value]="tag" severity="secondary" />
+                    @for (tag of decision()!.tags; track tag.id) {
+                    <p-tag [value]="tag.name" severity="secondary" />
                     }
                 </div>
             </section>

@@ -22,29 +22,19 @@
     </div>
 
     @if (decision().tags.length > 0) {
-      <div class="card-tags">
-        @for (tag of decision().tags; track tag) {
-          <p-tag [value]="tag" severity="secondary" />
-        }
-      </div>
+    <div class="card-tags">
+      @for (tag of decision().tags; track tag.id) {
+      <p-tag [value]="tag.name" severity="secondary" />
+      }
+    </div>
     }
   </div>
 
   <ng-template pTemplate="footer">
     <div class="card-actions">
-      <p-button
-        label="View"
-        icon="pi pi-eye"
-        size="small"
-        (onClick)="onView.emit(decision().id)"
-      />
-      <p-button
-        icon="pi pi-trash"
-        severity="danger"
-        size="small"
-        [text]="true"
-        (onClick)="onDelete.emit(decision().id)"
-      />
+      <p-button label="View" icon="pi pi-eye" size="small" (onClick)="onView.emit(decision().id)" />
+      <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true"
+        (onClick)="onDelete.emit(decision().id)" />
     </div>
   </ng-template>
 </p-card>

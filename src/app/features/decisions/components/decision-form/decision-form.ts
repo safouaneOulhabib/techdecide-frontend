@@ -7,6 +7,7 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
+import { MultiSelectModule } from 'primeng/multiselect';
 import {
   Decision
 } from '@features/decisions/models/decision.model';
@@ -30,7 +31,8 @@ export type DecisionFormData = {
     InputTextModule,
     TextareaModule,
     SelectModule,
-    CardModule
+    CardModule,
+    MultiSelectModule
   ],
   templateUrl: './decision-form.html',
   styleUrl: './decision-form.scss'
@@ -76,7 +78,7 @@ export class DecisionForm implements OnInit {
         decision: existing.decision,
         consequences: existing.consequences || '',
         teamId: 0,
-        tagIds: [],
+        tagIds: existing.tags.map(t => t.id),
         alternatives: existing.alternatives.map(a => ({
           name: a.name,
           rejectionReason: a.rejectionReason || ''
