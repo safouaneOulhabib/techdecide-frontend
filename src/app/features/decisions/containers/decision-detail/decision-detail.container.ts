@@ -9,7 +9,7 @@ import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
-import { Decision } from '@features/decisions/models/decision.model';
+import { Decision, DecisionStatus } from '@features/decisions/models/decision.model';
 import { OnDestroy } from '@angular/core';
 import { AuthStore } from '@features/auth/store/auth.store';
 import { CommentForm } from '@features/decisions/components/comment-form/comment-form';
@@ -18,6 +18,7 @@ import { Comment, CreateCommentRequest } from '@features/decisions/models/commen
 import { AuthResponse } from '@features/auth/models/auth.model';
 import { CommentStore } from '@features/decisions/store/comment.store';
 import { VoteSummary } from '@features/decisions/components/vote-summary/vote-summary';
+import { DecisionStatusSelector } from '@features/decisions/components/decision-status-selector/decision-status-selector';
 
 @Component({
   selector: 'app-decision-detail',
@@ -33,7 +34,8 @@ import { VoteSummary } from '@features/decisions/components/vote-summary/vote-su
     DecisionStatusBadge,
     CommentForm,
     CommentList,
-    VoteSummary
+    VoteSummary,
+    DecisionStatusSelector
   ],
   templateUrl: './decision-detail.container.html',
   styleUrl: './decision-detail.container.scss'
@@ -76,6 +78,10 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   onEdit() {
     this.router.navigate(['/decisions', this.decisionId, 'edit']);
+  }
+
+  onStatusChange(status: DecisionStatus) {
+    this.decisionStore.updateStatus(this.decisionId, status);
   }
 
   ngOnDestroy() {

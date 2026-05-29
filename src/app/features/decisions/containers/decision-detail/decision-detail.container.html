@@ -38,6 +38,10 @@
                             {{ decision()!.createdAt | date:'mediumDate' }}
                         </span>
                     </div>
+                    <div class="header-actions">
+                        <app-decision-status-selector [currentStatus]="decision()!.status"
+                            (statusChange)="onStatusChange($event)" />
+                    </div>
                 </div>
             </div>
         </ng-template>
