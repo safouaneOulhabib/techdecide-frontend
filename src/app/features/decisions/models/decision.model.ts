@@ -1,3 +1,5 @@
+import { Tag } from "@features/tags/models/tag.model";
+
 export type DecisionStatus =
   'DRAFT' | 'PROPOSED' | 'APPROVED' | 'REJECTED' | 'SUPERSEDED';
 
@@ -16,7 +18,7 @@ export interface Decision {
   status: DecisionStatus;
   authorName: string;
   teamName: string;
-  tags: string[];
+  tags: Tag[];
   alternatives: Alternative[];
   reviewDate: string;
   createdAt: string;
