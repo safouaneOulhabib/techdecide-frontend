@@ -1,0 +1,26 @@
+<div class="filters-bar">
+    <div class="filters-left">
+        <input pInputText [ngModel]="filters().keyword"
+            (ngModelChange)="filters.update(f => ({...f, keyword: $event})); onFilterChange()"
+            placeholder="Search decisions..." />
+
+        <p-select [ngModel]="filters().status"
+            (ngModelChange)="filters.update(f => ({...f, status: $event})); onFilterChange()" [options]="statusOptions"
+            optionLabel="label" optionValue="value" placeholder="All Statuses" styleClass="filter-select" />
+
+        <p-select [ngModel]="filters().teamId"
+            (ngModelChange)="filters.update(f => ({...f, teamId: $event})); onFilterChange()"
+            [options]="[{name: 'All Teams', id: null}, ...teams()]" optionLabel="name" optionValue="id"
+            placeholder="All Teams" styleClass="filter-select" />
+
+        <p-select [ngModel]="filters().tagId"
+            (ngModelChange)="filters.update(f => ({...f, tagId: $event})); onFilterChange()"
+            [options]="[{name: 'All Tags', id: null}, ...tags()]" optionLabel="name" optionValue="id"
+            placeholder="All Tags" styleClass="filter-select" />
+    </div>
+
+    @if (hasActiveFilters) {
+    <p-button label="Clear" icon="pi pi-times" severity="secondary" [text]="true" size="small"
+        (onClick)="clearFilters()" />
+    }
+</div>

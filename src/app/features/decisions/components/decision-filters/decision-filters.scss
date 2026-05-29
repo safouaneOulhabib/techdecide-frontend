@@ -1,0 +1,24 @@
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters-left {
+  display: flex;
+  gap: 0.75rem;
+  flex: 1;
+  flex-wrap: wrap;
+
+  input {
+    flex: 2;
+    min-width: 200px;
+  }
+
+  .filter-select {
+    min-width: 150px;
+  }
+}
