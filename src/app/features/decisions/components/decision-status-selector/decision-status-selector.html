@@ -1,0 +1,11 @@
+<div class="status-selector">
+  <label>Change Status</label>
+  <p-select
+    [ngModel]="currentStatus()"
+    (ngModelChange)="onStatusChange($event)"
+    [options]="statusOptions"
+    optionLabel="label"
+    optionValue="value"
+    styleClass="w-full"
+  />
+</div>
