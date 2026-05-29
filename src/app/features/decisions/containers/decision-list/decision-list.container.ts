@@ -1,24 +1,27 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
-import { FormsModule } from '@angular/forms';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { DecisionCard } from '@features/decisions/components/decision-card/decision-card';
 import { Decision } from '@features/decisions/models/decision.model';
+import { signal, computed } from '@angular/core';
+import { TeamStore } from '@features/teams/store/team.store';
+import { TagStore } from '@features/tags/store/tag.store';
+import { DecisionFilters, DecisionFiltersValue } from '@features/decisions/components/decision-filters/decision-filters';
+import { Team } from '@features/teams/models/team.model';
+import { Tag } from '@features/tags/models/tag.model';
 
 @Component({
   selector: 'app-decision-list',
   standalone: true,
   imports: [
     ButtonModule,
-    InputTextModule,
     ProgressSpinnerModule,
     MessageModule,
-    FormsModule,
-    DecisionCard
+    DecisionCard,
+    DecisionFilters
   ],
   templateUrl: './decision-list.container.html',
   styleUrl: './decision-list.container.scss'
@@ -27,22 +30,52 @@ export class DecisionListContainer implements OnInit {
   private readonly store = inject(DecisionStore);
   private readonly router = inject(Router);
 
-  readonly decisions: Signal<Decision[]> = this.store.decisions;
+  readonly allDecisions: Signal<Decision[]> = this.store.decisions;
   readonly loading: Signal<boolean> = this.store.loading;
   readonly error: Signal<string | null> = this.store.error;
 
-  searchKeyword = '';
+  private readonly teamStore = inject(TeamStore);
+  private readonly tagStore = inject(TagStore);
+
+  readonly teams: Signal<Team[]> = this.teamStore.teams;
+  readonly tags: Signal<Tag[]> = this.tagStore.tags;
+
+  activeFilters = signal<DecisionFiltersValue>({
+    keyword: '',
+    status: null,
+    teamId: null,
+    tagId: null
+  });
+
+  filteredDecisions = computed(() => {
+    const filters = this.activeFilters();
+    return this.allDecisions().filter(d => {
+      const matchesKeyword = !filters.keyword ||
+        d.title.toLowerCase().includes(filters.keyword.toLowerCase()) ||
+        d.context.toLowerCase().includes(filters.keyword.toLowerCase());
+
+      const matchesStatus = !filters.status || d.status === filters.status;
+
+      const matchesTeam = !filters.teamId || d.teamName ===
+        this.teams().find(t => t.id === filters.teamId)?.name;
+
+      const matchesTag = !filters.tagId ||
+        d.tags.some(t => t.id === filters.tagId);
+
+      return matchesKeyword && matchesStatus && matchesTeam && matchesTag;
+    });
+  });
+
+
 
   ngOnInit() {
     this.store.loadAll();
+    this.teamStore.loadAll();
+    this.tagStore.loadAll();
   }
 
-  onSearch() {
-    if (this.searchKeyword.trim()) {
-      this.store.search(this.searchKeyword);
-    } else {
-      this.store.loadAll();
-    }
+  onFiltersChange(filters: DecisionFiltersValue) {
+    this.activeFilters.set(filters);
   }
 
   onView(id: number) {

@@ -1,55 +1,32 @@
 <div class="decision-list">
   <div class="page-header">
     <h2>Technical Decisions</h2>
-    <p-button
-      label="New Decision"
-      icon="pi pi-plus"
-      (onClick)="onCreateNew()"
-    />
+    <p-button label="New Decision" icon="pi pi-plus" (onClick)="onCreateNew()" />
   </div>
 
-  <div class="search-bar">
-    <input
-      pInputText
-      [(ngModel)]="searchKeyword"
-      placeholder="Search decisions..."
-      (keyup.enter)="onSearch()"
-    />
-    <p-button
-      icon="pi pi-search"
-      (onClick)="onSearch()"
-      severity="secondary"
-    />
-  </div>
+  <app-decision-filters [teams]="teams()" [tags]="tags()" (filtersChange)="onFiltersChange($event)" />
 
   @if (loading()) {
-    <div class="loading">
-      <p-progressSpinner />
-    </div>
+  <div class="loading">
+    <p-progressSpinner />
+  </div>
   }
 
   @if (error()) {
-    <p-message severity="error" [text]="error()!" />
+  <p-message severity="error" [text]="error()!" />
   }
 
-  @if (!loading() && decisions().length === 0) {
-    <div class="empty-state">
-      <i class="pi pi-inbox"></i>
-      <p>No decisions found</p>
-      <p-button
-        label="Create your first decision"
-        (onClick)="onCreateNew()"
-      />
-    </div>
+  @if (!loading() && filteredDecisions().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-inbox"></i>
+    <p>No decisions found</p>
+    <p-button label="Create your first decision" (onClick)="onCreateNew()" />
+  </div>
   }
 
   <div class="decisions-grid">
-    @for (decision of decisions(); track decision.id) {
-      <app-decision-card
-        [decision]="decision"
-        (onView)="onView($event)"
-        (onDelete)="onDelete($event)"
-      />
+    @for (decision of filteredDecisions(); track decision.id) {
+    <app-decision-card [decision]="decision" (onView)="onView($event)" (onDelete)="onDelete($event)" />
     }
   </div>
 </div>
