@@ -17,6 +17,7 @@ import { CommentList } from '@features/decisions/components/comment-list/comment
 import { Comment, CreateCommentRequest } from '@features/decisions/models/comment.model';
 import { AuthResponse } from '@features/auth/models/auth.model';
 import { CommentStore } from '@features/decisions/store/comment.store';
+import { VoteSummary } from '@features/decisions/components/vote-summary/vote-summary';
 
 @Component({
   selector: 'app-decision-detail',
@@ -31,7 +32,8 @@ import { CommentStore } from '@features/decisions/store/comment.store';
     DatePipe,
     DecisionStatusBadge,
     CommentForm,
-    CommentList
+    CommentList,
+    VoteSummary
   ],
   templateUrl: './decision-detail.container.html',
   styleUrl: './decision-detail.container.scss'

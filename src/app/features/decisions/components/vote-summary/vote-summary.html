@@ -1,0 +1,25 @@
+@if (totalVotes() > 0) {
+  <div class="vote-summary">
+    <h3>Vote Summary</h3>
+    <div class="vote-counts">
+      <div class="vote-item approved">
+        <span class="vote-icon">✅</span>
+        <span class="vote-label">Approved</span>
+        <span class="vote-count">{{ approved() }}</span>
+      </div>
+      <div class="vote-item rejected">
+        <span class="vote-icon">❌</span>
+        <span class="vote-label">Rejected</span>
+        <span class="vote-count">{{ rejected() }}</span>
+      </div>
+      <div class="vote-item abstained">
+        <span class="vote-icon">🤔</span>
+        <span class="vote-label">Abstained</span>
+        <span class="vote-count">{{ abstained() }}</span>
+      </div>
+    </div>
+    <div class="vote-total">
+      {{ totalVotes() }} vote{{ totalVotes() === 1 ? '' : 's' }} total
+    </div>
+  </div>
+}
