@@ -1,1 +1,36 @@
-<p>sidebar works!</p>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="pi pi-bolt"></i>
+    </div>
+    <span class="brand-name">TechDecide</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Navigation</span>
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <i class="pi {{ item.icon }}"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    @if (currentUser()) {
+      <div class="user-info">
+        <div class="user-avatar">
+          {{ currentUser()!.name.charAt(0).toUpperCase() }}
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser()!.name }}</span>
+          <span class="user-role">{{ currentUser()!.role }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</aside>

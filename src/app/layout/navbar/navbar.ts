@@ -1,19 +1,27 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { MenubarModule } from 'primeng/menubar';
+import { Component, inject, signal, computed } from '@angular/core';
 import { AuthStore } from '@features/auth/store/auth.store';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, ButtonModule, MenubarModule],
+  standalone: true,
+  imports: [],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss'
 })
 export class Navbar {
   private readonly authStore = inject(AuthStore);
 
-  readonly currentUser = this.authStore.user;
+  isDark = signal(false);
+
+  userInitial = computed(() => {
+    const name = this.authStore.user()?.name || '';
+    return name.charAt(0).toUpperCase();
+  });
+
+  toggleDarkMode() {
+    this.isDark.update(v => !v);
+    document.documentElement.classList.toggle('my-app-dark');
+  }
 
   logout() {
     this.authStore.logout();

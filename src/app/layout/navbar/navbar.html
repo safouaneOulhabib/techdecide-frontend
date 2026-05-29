@@ -1,26 +1,21 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <a routerLink="/decisions">
-      <span class="brand-name">TechDecide</span>
-    </a>
+<header class="navbar">
+  <div class="navbar-search">
+    <i class="pi pi-search"></i>
+    <input placeholder="Search anything..." />
+    <span class="kbd">⌘K</span>
   </div>
 
-  <div class="navbar-menu">
-    <a routerLink="/decisions" class="nav-link">Decisions</a>
-    <a routerLink="/organizations" class="nav-link">Organizations</a>
-    <a routerLink="/teams" class="nav-link">Teams</a>
-    <a routerLink="/tags" class="nav-link">Tags</a>
-  </div>
+  <div class="navbar-right">
+    <button class="navbar-btn" title="Toggle dark mode" (click)="toggleDarkMode()">
+      <i class="pi" [class.pi-sun]="isDark()" [class.pi-moon]="!isDark()"></i>
+    </button>
 
-  <div class="navbar-actions">
-    @if (currentUser()) {
-      <span class="user-name">{{ currentUser()?.name }}</span>
-    }
-    <p-button
-      label="Logout"
-      severity="secondary"
-      size="small"
-      (onClick)="logout()"
-    />
+    <button class="navbar-btn" title="Notifications">
+      <i class="pi pi-bell"></i>
+    </button>
+
+    <div class="user-avatar" title="Logout" (click)="logout()">
+      {{ userInitial() }}
+    </div>
   </div>
-</nav>
+</header>
