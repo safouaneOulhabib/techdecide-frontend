@@ -12,6 +12,7 @@ import { TeamStore } from '@features/teams/store/team.store';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
 import { Team, CreateTeamRequest } from '@features/teams/models/team.model';
 import { Organization } from '@features/organizations/models/organization.model';
+import { ConfirmService } from '@core/services/confirm.service';
 
 @Component({
   selector: 'app-team-list',
@@ -38,6 +39,7 @@ export class TeamListContainer implements OnInit {
   readonly loading: Signal<boolean> = this.teamStore.loading;
   readonly error: Signal<string | null> = this.teamStore.error;
   readonly organizations: Signal<Organization[]> = this.orgStore.organizations;
+  private readonly confirmService = inject(ConfirmService);
 
   dialogVisible = false;
   newTeamName = '';
@@ -64,7 +66,10 @@ export class TeamListContainer implements OnInit {
     this.dialogVisible = false;
   }
 
-  onDelete(id: number) {
-    this.teamStore.remove(id);
-  }
+ onDelete(id: number) {
+  this.confirmService.confirm(
+    'Are you sure you want to delete this team?',
+    () => this.teamStore.remove(id)
+  );
+}
 }

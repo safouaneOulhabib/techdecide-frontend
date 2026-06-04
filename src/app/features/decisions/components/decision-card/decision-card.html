@@ -31,7 +31,7 @@
       </span>
     </div>
 
-    <button class="btn-delete" (click)="$event.stopPropagation(); onDelete.emit(decision().id)">
+    <button class="btn-delete" (click)="onDeleteClick($event)">
       <i class="pi pi-trash"></i>
     </button>
   </div>

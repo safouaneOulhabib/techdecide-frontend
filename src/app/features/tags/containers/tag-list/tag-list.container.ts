@@ -7,9 +7,9 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
 import { TagStore } from '@features/tags/store/tag.store';
 import { Tag, CreateTagRequest } from '@features/tags/models/tag.model';
+import { ConfirmService } from '@core/services/confirm.service';
 
 @Component({
   selector: 'app-tag-list',
@@ -24,13 +24,12 @@ import { Tag, CreateTagRequest } from '@features/tags/models/tag.model';
     MessageModule,
     ConfirmDialogModule
   ],
-  providers: [ConfirmationService],
   templateUrl: './tag-list.container.html',
   styleUrl: './tag-list.container.scss'
 })
 export class TagListContainer implements OnInit {
   private readonly store = inject(TagStore);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly confirmService = inject(ConfirmService);
 
   readonly tags: Signal<Tag[]> = this.store.tags;
   readonly loading: Signal<boolean> = this.store.loading;
@@ -55,13 +54,9 @@ export class TagListContainer implements OnInit {
   }
 
   onDeleteTag(tag: Tag) {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to delete the tag "${tag.name}"?`,
-      header: 'Confirm Delete',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.store.remove(tag.id);
-      }
-    });
-  }
+  this.confirmService.confirm(
+    `Are you sure you want to delete the tag "${tag.name}"?`,
+    () => this.store.remove(tag.id)
+  );
+}
 }

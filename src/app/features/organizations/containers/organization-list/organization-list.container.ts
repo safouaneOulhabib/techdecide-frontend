@@ -10,6 +10,7 @@ import { MessageModule } from 'primeng/message';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
 import { Organization, CreateOrganizationRequest } from '@features/organizations/models/organization.model';
 import { TableModule } from 'primeng/table';
+import { ConfirmService } from '@core/services/confirm.service';
 
 @Component({
   selector: 'app-organization-list',
@@ -34,10 +35,13 @@ export class OrganizationListContainer implements OnInit {
   readonly organizations: Signal<Organization[]> = this.store.organizations;
   readonly loading: Signal<boolean> = this.store.loading;
   readonly error: Signal<string | null> = this.store.error;
+  private readonly confirmService = inject(ConfirmService);
 
   dialogVisible = false;
   newName = '';
   newDescription = '';
+
+
 
   ngOnInit() {
     this.store.loadAll();
@@ -60,6 +64,9 @@ export class OrganizationListContainer implements OnInit {
   }
 
   onDelete(id: number) {
-    this.store.remove(id);
+    this.confirmService.confirm(
+      'Are you sure you want to delete this organization?',
+      () => this.store.remove(id)
+    );
   }
 }
