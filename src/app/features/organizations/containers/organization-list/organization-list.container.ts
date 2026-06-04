@@ -2,7 +2,6 @@ import { Component, inject, OnInit, Signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
@@ -10,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
 import { Organization, CreateOrganizationRequest } from '@features/organizations/models/organization.model';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-organization-list',
@@ -18,11 +18,11 @@ import { Organization, CreateOrganizationRequest } from '@features/organizations
     DatePipe,
     FormsModule,
     ButtonModule,
-    TableModule,
     DialogModule,
     InputTextModule,
     TextareaModule,
     ProgressSpinnerModule,
+    TableModule,
     MessageModule
   ],
   templateUrl: './organization-list.container.html',

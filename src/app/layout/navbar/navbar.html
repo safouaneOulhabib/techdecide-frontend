@@ -13,8 +13,8 @@
     <button class="navbar-btn" title="Notifications">
       <i class="pi pi-bell"></i>
     </button>
-
-    <div class="user-avatar" title="Logout" (click)="logout()">
+    <p-menu #profileMenu [model]="profileItems" [popup]="true" />
+    <div class="user-avatar" (click)="toggleProfileMenu($event)">
       {{ userInitial() }}
     </div>
   </div>

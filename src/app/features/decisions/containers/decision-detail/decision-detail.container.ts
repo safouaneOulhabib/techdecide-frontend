@@ -8,7 +8,6 @@ import { MessageModule } from 'primeng/message';
 import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import { DecisionStore } from '@features/decisions/store/decision.store';
-import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
 import { Decision, DecisionStatus } from '@features/decisions/models/decision.model';
 import { OnDestroy } from '@angular/core';
 import { AuthStore } from '@features/auth/store/auth.store';
@@ -19,17 +18,15 @@ import { AuthResponse } from '@features/auth/models/auth.model';
 import { CommentStore } from '@features/decisions/store/comment.store';
 import { VoteSummary } from '@features/decisions/components/vote-summary/vote-summary';
 import { DecisionStatusSelector } from '@features/decisions/components/decision-status-selector/decision-status-selector';
+import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
 
 @Component({
   selector: 'app-decision-detail',
   standalone: true,
   imports: [
     ButtonModule,
-    CardModule,
-    DividerModule,
     ProgressSpinnerModule,
     MessageModule,
-    TagModule,
     DatePipe,
     DecisionStatusBadge,
     CommentForm,

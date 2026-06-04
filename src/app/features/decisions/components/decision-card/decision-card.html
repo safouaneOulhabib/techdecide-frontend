@@ -1,40 +1,38 @@
-<p-card class="decision-card">
-  <ng-template pTemplate="header">
-    <div class="card-header">
-      <app-decision-status-badge [status]="decision().status" />
-      <span class="card-team">{{ decision().teamName }}</span>
-    </div>
-  </ng-template>
+<div class="decision-card" (click)="onView.emit(decision().id)">
+  <div class="card-header">
+    <app-decision-status-badge [status]="decision().status" />
+    <span class="card-team">{{ decision().teamName }}</span>
+  </div>
 
   <div class="card-body">
     <h3 class="card-title">{{ decision().title }}</h3>
-    <p class="card-context">{{ decision().context | slice:0:120 }}...</p>
+    <p class="card-context" [pTooltip]="decision().context" tooltipPosition="bottom" [showDelay]="400">
+      {{ decision().context | slice:0:80 }}...
+    </p>
+  </div>
 
+  @if (decision().tags.length > 0) {
+  <div class="card-tags">
+    @for (tag of decision().tags; track tag.id) {
+    <span class="tag">{{ tag.name }}</span>
+    }
+  </div>
+  }
+
+  <div class="card-footer">
     <div class="card-meta">
-      <span class="meta-author">
+      <span class="meta-item">
         <i class="pi pi-user"></i>
         {{ decision().authorName }}
       </span>
-      <span class="meta-date">
+      <span class="meta-item">
         <i class="pi pi-calendar"></i>
         {{ decision().createdAt | date:'mediumDate' }}
       </span>
     </div>
 
-    @if (decision().tags.length > 0) {
-    <div class="card-tags">
-      @for (tag of decision().tags; track tag.id) {
-      <p-tag [value]="tag.name" severity="secondary" />
-      }
-    </div>
-    }
+    <button class="btn-delete" (click)="$event.stopPropagation(); onDelete.emit(decision().id)">
+      <i class="pi pi-trash"></i>
+    </button>
   </div>
-
-  <ng-template pTemplate="footer">
-    <div class="card-actions">
-      <p-button label="View" icon="pi pi-eye" size="small" (onClick)="onView.emit(decision().id)" />
-      <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true"
-        (onClick)="onDelete.emit(decision().id)" />
-    </div>
-  </ng-template>
-</p-card>
+</div>

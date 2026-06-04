@@ -1,68 +1,90 @@
-<p-card>
+<div class="form-card">
   <div class="form-grid">
 
     <div class="field">
       <label for="title">Title *</label>
-      <input pInputText id="title" [ngModel]="form().title" (ngModelChange)="form.update(f => ({...f, title: $event}))"
+      <input pInputText id="title"
+        [ngModel]="form().title"
+        (ngModelChange)="form.update(f => ({...f, title: $event}))"
         placeholder="e.g. Use PostgreSQL as primary database" />
     </div>
 
     @if (!isEditMode) {
-    <div class="field">
-      <label for="team">Team *</label>
-      <p-select id="team" [ngModel]="form().teamId" (ngModelChange)="form.update(f => ({...f, teamId: $event}))"
-        [options]="teams()" optionLabel="name" optionValue="id" placeholder="Select a team" styleClass="w-full" />
-    </div>
+      <div class="field">
+        <label for="team">Team *</label>
+        <p-select id="team"
+          [ngModel]="form().teamId"
+          (ngModelChange)="form.update(f => ({...f, teamId: $event}))"
+          [options]="teams()" optionLabel="name" optionValue="id"
+          placeholder="Select a team" styleClass="w-full" />
+      </div>
     }
 
     <div class="field">
       <label for="tags">Tags</label>
-      <p-multiselect id="tags" [ngModel]="form().tagIds" (ngModelChange)="form.update(f => ({...f, tagIds: $event}))"
-        [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tags" [style]="{'width': '100%'}" />
+      <p-multiselect id="tags"
+        [ngModel]="form().tagIds"
+        (ngModelChange)="form.update(f => ({...f, tagIds: $event}))"
+        [options]="tags()" optionLabel="name" optionValue="id"
+        placeholder="Select tags" [style]="{'width': '100%'}" />
     </div>
+
+    <hr class="form-section-divider" />
 
     <div class="field">
       <label for="context">Context *</label>
-      <textarea pTextarea id="context" [ngModel]="form().context"
+      <textarea pTextarea id="context"
+        [ngModel]="form().context"
         (ngModelChange)="form.update(f => ({...f, context: $event}))"
-        placeholder="Why does this decision need to be made?" rows="4"></textarea>
+        placeholder="Why does this decision need to be made?"
+        rows="4"></textarea>
     </div>
 
     <div class="field">
       <label for="decision">Decision *</label>
-      <textarea pTextarea id="decision" [ngModel]="form().decision"
-        (ngModelChange)="form.update(f => ({...f, decision: $event}))" placeholder="What exactly was decided?"
+      <textarea pTextarea id="decision"
+        [ngModel]="form().decision"
+        (ngModelChange)="form.update(f => ({...f, decision: $event}))"
+        placeholder="What exactly was decided?"
         rows="4"></textarea>
     </div>
 
     <div class="field">
       <label for="consequences">Consequences</label>
-      <textarea pTextarea id="consequences" [ngModel]="form().consequences"
-        (ngModelChange)="form.update(f => ({...f, consequences: $event}))" placeholder="What are the trade-offs?"
+      <textarea pTextarea id="consequences"
+        [ngModel]="form().consequences"
+        (ngModelChange)="form.update(f => ({...f, consequences: $event}))"
+        placeholder="What are the trade-offs?"
         rows="3"></textarea>
     </div>
+
+    <hr class="form-section-divider" />
 
     <div class="field">
       <label>Alternatives Considered</label>
       <div class="alternatives-input">
-        <input pInputText [ngModel]="newAlternative().name"
-          (ngModelChange)="newAlternative.update(a => ({...a, name: $event}))" placeholder="Alternative name" />
-        <input pInputText [ngModel]="newAlternative().rejectionReason"
-          (ngModelChange)="newAlternative.update(a => ({...a, rejectionReason: $event}))" placeholder="Why rejected?" />
+        <input pInputText
+          [ngModel]="newAlternative().name"
+          (ngModelChange)="newAlternative.update(a => ({...a, name: $event}))"
+          placeholder="Alternative name" />
+        <input pInputText
+          [ngModel]="newAlternative().rejectionReason"
+          (ngModelChange)="newAlternative.update(a => ({...a, rejectionReason: $event}))"
+          placeholder="Why rejected?" />
         <p-button icon="pi pi-plus" severity="secondary" (onClick)="addAlternative()" />
       </div>
 
       @if (form().alternatives.length > 0) {
-      <div class="alternatives-list">
-        @for (alt of form().alternatives; track $index) {
-        <div class="alternative-item">
-          <span class="alt-name">{{ alt.name }}</span>
-          <span class="alt-reason">{{ alt.rejectionReason }}</span>
-          <p-button icon="pi pi-times" severity="danger" [text]="true" size="small"
-            (onClick)="removeAlternative($index)" />
+        <div class="alternatives-list">
+          @for (alt of form().alternatives; track $index) {
+            <div class="alternative-item">
+              <span class="alt-name">{{ alt.name }}</span>
+              <span class="alt-reason">{{ alt.rejectionReason }}</span>
+              <p-button icon="pi pi-times" severity="danger" [text]="true"
+                size="small" (onClick)="removeAlternative($index)" />
+            </div>
+          }
         </div>
-        }
-      </div>
       }
     </div>
 
@@ -70,6 +92,7 @@
 
   <div class="form-actions">
     <p-button label="Cancel" severity="secondary" (onClick)="onCancel()" />
-    <p-button [label]="submitLabel" icon="pi pi-check" [loading]="loading()" (onClick)="onSubmit()" />
+    <p-button [label]="submitLabel" icon="pi pi-check"
+      [loading]="loading()" (onClick)="onSubmit()" />
   </div>
-</p-card>
+</div>

@@ -1,125 +1,104 @@
 <div class="decision-detail">
 
-    <div class="detail-header">
-        <p-button icon="pi pi-arrow-left" label="Back" severity="secondary" [text]="true" (onClick)="goBack()" />
-        @if (decision()) {
-        <p-button icon="pi pi-pencil" label="Edit" severity="secondary" (onClick)="onEdit()" />
-        }
-    </div>
-
-    @if (loading()) {
-    <div class="loading">
-        <p-progressSpinner />
-    </div>
-    }
-
-    @if (error()) {
-    <p-message severity="error" [text]="error()!" />
-    }
-
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back
+    </button>
     @if (decision()) {
-    <p-card>
-        <ng-template pTemplate="header">
-            <div class="card-header">
-                <div class="header-left">
-                    <h1>{{ decision()!.title }}</h1>
-                    <div class="header-meta">
-                        <app-decision-status-badge [status]="decision()!.status" />
-                        <span class="meta-item">
-                            <i class="pi pi-users"></i>
-                            {{ decision()!.teamName }}
-                        </span>
-                        <span class="meta-item">
-                            <i class="pi pi-user"></i>
-                            {{ decision()!.authorName }}
-                        </span>
-                        <span class="meta-item">
-                            <i class="pi pi-calendar"></i>
-                            {{ decision()!.createdAt | date:'mediumDate' }}
-                        </span>
-                    </div>
-                    <div class="header-actions">
-                        <app-decision-status-selector [currentStatus]="decision()!.status"
-                            (statusChange)="onStatusChange($event)" />
-                    </div>
-                </div>
-            </div>
-        </ng-template>
-
-        <div class="detail-body">
-
-            <section class="detail-section">
-                <h3>Context</h3>
-                <p>{{ decision()!.context }}</p>
-            </section>
-
-            <p-divider />
-
-            <section class="detail-section">
-                <h3>Decision</h3>
-                <p>{{ decision()!.decision }}</p>
-            </section>
-
-            @if (decision()!.consequences) {
-            <p-divider />
-            <section class="detail-section">
-                <h3>Consequences</h3>
-                <p>{{ decision()!.consequences }}</p>
-            </section>
-            }
-
-            @if (decision()!.alternatives.length > 0) {
-            <p-divider />
-            <section class="detail-section">
-                <h3>Alternatives Considered</h3>
-                <div class="alternatives-list">
-                    @for (alt of decision()!.alternatives; track alt.id) {
-                    <div class="alternative-item">
-                        <span class="alt-name">{{ alt.name }}</span>
-                        <span class="alt-reason">{{ alt.rejectionReason }}</span>
-                    </div>
-                    }
-                </div>
-            </section>
-            }
-
-            @if (decision()!.tags.length > 0) {
-            <p-divider />
-            <section class="detail-section">
-                <h3>Tags</h3>
-                <div class="tags-list">
-                    @for (tag of decision()!.tags; track tag.id) {
-                    <p-tag [value]="tag.name" severity="secondary" />
-                    }
-                </div>
-            </section>
-            }
-
-            <p-divider />
-
-            <section class="detail-section">
-                <app-vote-summary [comments]="comments()" />
-            </section>
-
-            <section class="detail-section">
-                <h3>Discussion</h3>
-
-                <app-comment-form (onSubmit)="onCommentSubmit($event)" />
-
-                <div style="height: 1.5rem"></div>
-
-                @if (commentsLoading()) {
-                <div class="loading">
-                    <p-progressSpinner />
-                </div>
-                }
-
-                <app-comment-list [comments]="comments()" [currentUserName]="currentUser()?.name || ''"
-                    (onDelete)="onCommentDelete($event)" />
-            </section>
-
-        </div>
-    </p-card>
+      <button class="btn-edit" (click)="onEdit()">
+        <i class="pi pi-pencil"></i>
+        Edit
+      </button>
     }
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><p-progressSpinner /></div>
+  }
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" />
+  }
+
+  @if (decision()) {
+    <div class="detail-card">
+
+      <div class="detail-top">
+        <div class="detail-title-row">
+          <h1>{{ decision()!.title }}</h1>
+          <app-decision-status-selector
+            [currentStatus]="decision()!.status"
+            (statusChange)="onStatusChange($event)" />
+        </div>
+        <div class="header-meta">
+          <app-decision-status-badge [status]="decision()!.status" />
+          <span class="meta-item"><i class="pi pi-users"></i>{{ decision()!.teamName }}</span>
+          <span class="meta-item"><i class="pi pi-user"></i>{{ decision()!.authorName }}</span>
+          <span class="meta-item"><i class="pi pi-calendar"></i>{{ decision()!.createdAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      @if (decision()!.tags.length > 0) {
+        <div class="detail-tags">
+          @for (tag of decision()!.tags; track tag.id) {
+            <span class="tag">{{ tag.name }}</span>
+          }
+        </div>
+      }
+
+      <div class="detail-sections">
+
+        <div class="detail-section">
+          <h3>Context</h3>
+          <p>{{ decision()!.context }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h3>Decision</h3>
+          <p>{{ decision()!.decision }}</p>
+        </div>
+
+        @if (decision()!.consequences) {
+          <div class="detail-section">
+            <h3>Consequences</h3>
+            <p>{{ decision()!.consequences }}</p>
+          </div>
+        }
+
+        @if (decision()!.alternatives.length > 0) {
+          <div class="detail-section">
+            <h3>Alternatives Considered</h3>
+            <div class="alternatives-list">
+              @for (alt of decision()!.alternatives; track alt.id) {
+                <div class="alternative-item">
+                  <span class="alt-name">{{ alt.name }}</span>
+                  <span class="alt-reason">{{ alt.rejectionReason }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="detail-section">
+          <app-vote-summary [comments]="comments()" />
+        </div>
+
+        <div class="detail-section">
+          <h3>Discussion</h3>
+          <app-comment-form (onSubmit)="onCommentSubmit($event)" />
+          <div style="height: 1.5rem"></div>
+          @if (commentsLoading()) {
+            <div class="loading"><p-progressSpinner /></div>
+          }
+          <app-comment-list
+            [comments]="comments()"
+            [currentUserName]="currentUser()?.name || ''"
+            (onDelete)="onCommentDelete($event)" />
+        </div>
+
+      </div>
+    </div>
+  }
 
 </div>

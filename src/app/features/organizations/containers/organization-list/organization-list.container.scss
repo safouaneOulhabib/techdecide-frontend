@@ -1,6 +1,6 @@
 .organization-list {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
 }
 
 .page-header {
@@ -10,24 +10,107 @@
   margin-bottom: 1.5rem;
 
   h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.75rem;
+    font-weight: 700;
     color: var(--p-text-color);
     margin: 0;
   }
 }
 
-.mb {
-  display: block;
-  margin-bottom: 1rem;
+.table-wrapper {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 12px;
+  overflow: hidden;
+
+  // Override PrimeNG table defaults
+  :host ::ng-deep {
+    .p-datatable-table {
+      border-spacing: 0;
+    }
+
+    .p-datatable-thead > tr > th {
+      background: var(--p-surface-50);
+      border-bottom: 1px solid var(--p-surface-200);
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--p-text-secondary-color);
+    }
+
+    .p-datatable-tbody > tr {
+      border-bottom: 1px solid var(--p-surface-100);
+      transition: background 0.15s;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: var(--p-surface-50) !important;
+      }
+
+      > td {
+        padding: 1rem 1.25rem;
+        border: none;
+        font-size: 0.875rem;
+        color: var(--p-text-secondary-color);
+      }
+    }
+  }
 }
 
-.font-semibold {
+.org-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--p-text-color);
+}
+
+.org-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--p-primary-50);
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i { font-size: 0.875rem; }
 }
 
 .text-secondary {
   color: var(--p-text-secondary-color);
+}
+
+.btn-delete {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--p-text-secondary-color);
+  transition: all 0.15s;
+
+  i { font-size: 0.85rem; }
+
+  &:hover {
+    background: #FEF2F2;
+    color: #DC2626;
+  }
 }
 
 .empty-state {
@@ -39,6 +122,7 @@
     font-size: 3rem;
     margin-bottom: 1rem;
     display: block;
+    color: var(--p-primary-200);
   }
 
   p {
@@ -60,11 +144,16 @@
 
     label {
       font-weight: 500;
+      font-size: 0.875rem;
     }
 
-    input,
-    textarea {
+    input, textarea {
       width: 100%;
     }
   }
+}
+
+.mb {
+  display: block;
+  margin-bottom: 1rem;
 }

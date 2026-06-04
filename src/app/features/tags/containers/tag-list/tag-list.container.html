@@ -1,57 +1,55 @@
 <div class="tag-list">
   <div class="page-header">
     <h2>Tags</h2>
+    <div class="create-form">
+      <input pInputText [(ngModel)]="newTagName" placeholder="Tag name" (keyup.enter)="onCreateTag()" />
+      <p-colorpicker [(ngModel)]="newTagColor" />
+      <p-button label="New Tag" icon="pi pi-plus" (onClick)="onCreateTag()" [disabled]="!newTagName.trim()" />
+    </div>
   </div>
 
-  @if (loading()) {
+  @if (error()) {
+  <p-message severity="error" [text]="error()!" class="mb" />
+  }
+
+  <div class="table-wrapper">
+    @if (loading()) {
     <div class="loading">
       <p-progressSpinner />
     </div>
-  }
+    }
 
-  @if (error()) {
-    <p-message severity="error" [text]="error()!" />
-  }
-
-  <div class="create-form">
-    <h3>Add New Tag</h3>
-    <div class="form-row">
-      <input
-        pInputText
-        [(ngModel)]="newTagName"
-        placeholder="Tag name"
-        (keyup.enter)="onCreateTag()"
-      />
-      <p-colorpicker [(ngModel)]="newTagColor" />
-      <p-button
-        label="Add Tag"
-        icon="pi pi-plus"
-        (onClick)="onCreateTag()"
-        [disabled]="!newTagName.trim()"
-      />
-    </div>
-  </div>
-
-  @if (!loading() && tags().length === 0) {
+    @if (!loading() && tags().length === 0) {
     <div class="empty-state">
       <i class="pi pi-tag"></i>
-      <p>No tags found. Create your first tag above.</p>
+      <p>No tags yet. Create your first tag above.</p>
     </div>
-  }
+    }
 
-  <div class="tags-container">
+    @if (!loading() && tags().length > 0) {
+    <div class="table-header">
+      <span>Tag</span>
+      <span>Color</span>
+      <span></span>
+    </div>
+
     @for (tag of tags(); track tag.id) {
-      <div class="tag-item">
-        <p-tag [value]="tag.name" [style]="{ 'background-color': tag.color }" />
-        <p-button
-          icon="pi pi-times"
-          severity="danger"
-          [text]="true"
-          [rounded]="true"
-          size="small"
-          (onClick)="onDeleteTag(tag)"
-        />
+    <div class="table-row">
+      <div class="tag-name">
+        <span class="tag-dot" [style.background]="tag.color"></span>
+        <span>{{ tag.name }}</span>
       </div>
+      <div class="tag-color-value">
+        <span class="color-swatch" [style.background]="tag.color"></span>
+        <span>{{ tag.color }}</span>
+      </div>
+      <div class="tag-actions">
+        <button class="btn-delete" (click)="onDeleteTag(tag)">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
+    </div>
+    }
     }
   </div>
 

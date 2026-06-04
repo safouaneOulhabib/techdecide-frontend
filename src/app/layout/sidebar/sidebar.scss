@@ -8,14 +8,23 @@
   flex-direction: column;
   padding: 0;
   overflow: hidden;
+  transition: width 0.2s ease, min-width 0.2s ease;
+
+  &.collapsed {
+    width: 64px;
+    min-width: 64px;
+  }
 }
 
 .sidebar-brand {
+  height: 64px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
+  padding: 0 1rem;
   border-bottom: 1px solid var(--p-surface-200);
+  position: relative;
 
   .brand-icon {
     width: 32px;
@@ -25,6 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 
     i {
       color: white;
@@ -40,6 +50,31 @@
   }
 }
 
+.collapse-btn {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--p-text-secondary-color);
+  border-radius: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--p-surface-100);
+    color: var(--p-text-color);
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
 .sidebar-nav {
   flex: 1;
   padding: 1rem 0.75rem;
@@ -48,33 +83,25 @@
   gap: 0.25rem;
 }
 
-.nav-section-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--p-text-secondary-color);
-  padding: 0 0.75rem;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
 .nav-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.625rem 0.75rem;
-  border-radius: 8px;
+  border-radius: 0 6px 6px 0;
   text-decoration: none;
   color: var(--p-text-secondary-color);
   font-size: 0.875rem;
   font-weight: 500;
   transition: all 0.15s ease;
+  outline: none;
+  border-left: 3px solid transparent;
 
   i {
     font-size: 1rem;
     width: 20px;
     text-align: center;
+    flex-shrink: 0;
   }
 
   &:hover {
@@ -82,15 +109,29 @@
     color: var(--p-text-color);
   }
 
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
   &.active {
     background: var(--p-primary-50);
     color: var(--p-primary-color);
     font-weight: 600;
+    border-left-color: var(--p-primary-color);
 
     i {
       color: var(--p-primary-color);
     }
   }
+}
+
+.sidebar-bottom-nav {
+  padding: 0.75rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .sidebar-footer {
@@ -148,4 +189,33 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.sidebar.collapsed {
+  .nav-item {
+    justify-content: center;
+    padding: 0.625rem;
+  }
+
+  .sidebar-brand {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .brand-icon.clickable {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  .sidebar-footer {
+    padding: 1rem 0.5rem;
+  }
+
+  .user-info {
+    justify-content: center;
+    padding: 0.5rem 0.15rem;
+  }
 }

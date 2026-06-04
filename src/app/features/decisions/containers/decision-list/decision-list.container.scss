@@ -1,6 +1,6 @@
 .decision-list {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
 }
 
 .page-header {
@@ -10,10 +10,8 @@
   margin-bottom: 1.5rem;
 
   h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--p-text-color);
-    margin: 0;
+    font-size: 1.75rem;   
+    font-weight: 700;
   }
 }
 
@@ -53,5 +51,6 @@
 .decisions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;        
+  align-items: stretch;  
 }

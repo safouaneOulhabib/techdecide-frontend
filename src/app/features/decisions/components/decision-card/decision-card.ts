@@ -1,16 +1,16 @@
 import { Component, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { Decision } from '@features/decisions/models/decision.model';
-import { DecisionStatusBadge } from '../decision-status-badge/decision-status-badge';
 import { DatePipe, SlicePipe } from '@angular/common';
+import { DecisionStatusBadge } from '../decision-status-badge/decision-status-badge';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-decision-card',
   standalone: true,
-  imports: [RouterLink, CardModule, ButtonModule, TagModule, DecisionStatusBadge, DatePipe, SlicePipe],
+  imports: [CardModule, ButtonModule, TagModule, DatePipe, SlicePipe, DecisionStatusBadge, TooltipModule ],
   templateUrl: './decision-card.html',
   styleUrl: './decision-card.scss'
 })
