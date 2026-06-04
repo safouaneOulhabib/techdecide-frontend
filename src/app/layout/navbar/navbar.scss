@@ -1,54 +1,104 @@
 .navbar {
+  height: 64px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  height: 64px;
   background: var(--p-surface-0);
   border-bottom: 1px solid var(--p-surface-200);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.navbar-brand {
-  a {
-    text-decoration: none;
-  }
-
-  .brand-name {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--p-primary-color);
-  }
-}
-
-.navbar-menu {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: var(--p-text-color);
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-
-  &:hover {
-    color: var(--p-primary-color);
-    border-bottom-color: var(--p-primary-color);
-  }
-}
-
-.navbar-actions {
-  display: flex;
-  align-items: center;
   gap: 1rem;
 }
 
-.user-name {
-  font-size: 0.875rem;
+.navbar-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--p-surface-100);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  flex: 1;
+  max-width: 360px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--p-primary-color);
+    background: var(--p-surface-0);
+  }
+
+  i {
+    color: var(--p-text-secondary-color);
+    font-size: 0.875rem;
+  }
+
+  input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.875rem;
+    color: var(--p-text-secondary-color);
+    flex: 1;
+    cursor: pointer;
+
+    &::placeholder {
+      color: var(--p-text-secondary-color);
+    }
+  }
+
+  .kbd {
+    font-size: 0.7rem;
+    color: var(--p-text-secondary-color);
+    background: var(--p-surface-200);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
   color: var(--p-text-secondary-color);
-  font-weight: 500;
+  transition: all 0.15s;
+
+  i { font-size: 1rem; }
+
+  &:hover {
+    background: var(--p-surface-100);
+    color: var(--p-text-color);
+  }
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--p-primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
 }

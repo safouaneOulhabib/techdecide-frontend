@@ -8,44 +8,54 @@
     <p-message severity="error" [text]="error()!" class="mb" />
   }
 
-  <p-table
-    [value]="organizations()"
-    [loading]="loading()"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    styleClass="p-datatable-striped"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Created</th>
-        <th style="width: 5rem"></th>
-      </tr>
-    </ng-template>
+  <div class="table-wrapper">
+    <p-table
+      [value]="organizations()"
+      [loading]="loading()"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Created</th>
+          <th style="width: 60px"></th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-org>
-      <tr>
-        <td class="font-semibold">{{ org.name }}</td>
-        <td class="text-secondary">{{ org.description }}</td>
-        <td>{{ org.createdAt | date:'mediumDate' }}</td>
-        <td>
-          <p-button icon="pi pi-trash" severity="danger" [text]="true" (onClick)="onDelete(org.id)" />
-        </td>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="body" let-org>
+        <tr>
+          <td>
+            <div class="org-name">
+              <div class="org-avatar">
+                <i class="pi pi-building"></i>
+              </div>
+              <span>{{ org.name }}</span>
+            </div>
+          </td>
+          <td class="text-secondary">{{ org.description || '—' }}</td>
+          <td class="text-secondary">{{ org.createdAt | date:'mediumDate' }}</td>
+          <td>
+            <button class="btn-delete" (click)="onDelete(org.id)">
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4">
-          <div class="empty-state">
-            <i class="pi pi-building"></i>
-            <p>No organizations found</p>
-            <p-button label="Create your first organization" (onClick)="openDialog()" />
-          </div>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">
+            <div class="empty-state">
+              <i class="pi pi-building"></i>
+              <p>No organizations found</p>
+              <p-button label="Create your first organization" (onClick)="openDialog()" />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
   <p-dialog
     header="New Organization"

@@ -1,0 +1,15 @@
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.625rem;
+  border-radius: 20px;
+  display: inline-block;
+
+  &.badge-draft      { background: #F1F5F9; color: #64748B; }
+  &.badge-proposed   { background: #EFF6FF; color: #3B82F6; }
+  &.badge-approved   { background: #F0FDF4; color: #16A34A; }
+  &.badge-rejected   { background: #FEF2F2; color: #DC2626; }
+  &.badge-superseded { background: #FFF7ED; color: #EA580C; }
+}

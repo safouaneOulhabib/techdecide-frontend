@@ -1,1 +1,51 @@
-<p>sidebar works!</p>
+<aside class="sidebar" [class.collapsed]="isCollapsed()">
+  <div class="sidebar-brand">
+    <div class="brand-icon" [class.clickable]="isCollapsed()" (click)="isCollapsed() && toggleCollapsed()">
+      <i class="pi pi-bolt"></i>
+    </div>
+    @if (!isCollapsed()) {
+    <span class="brand-name">TechDecide</span>
+    <button class="collapse-btn" (click)="toggleCollapsed()">
+      <i class="pi pi-chevron-left"></i>
+    </button>
+    }
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (item of navItems; track item.route) {
+    <a [routerLink]="item.route" routerLinkActive="active" class="nav-item" [pTooltip]="isCollapsed() ? item.label : ''"
+      tooltipPosition="right">
+      <i class="pi {{ item.icon }}"></i>
+      @if (!isCollapsed()) {
+      <span>{{ item.label }}</span>
+      }
+    </a>
+    }
+  </nav>
+
+  <div class="sidebar-bottom-nav">
+    <a routerLink="/settings" routerLinkActive="active" class="nav-item" [pTooltip]="isCollapsed() ? 'Settings' : ''"
+      tooltipPosition="right">
+      <i class="pi pi-cog"></i>
+      @if (!isCollapsed()) {
+      <span>Settings</span>
+      }
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    @if (currentUser()) {
+    <div class="user-info">
+      <div class="user-avatar">
+        {{ currentUser()!.name.charAt(0).toUpperCase() }}
+      </div>
+      @if (!isCollapsed()) {
+      <div class="user-details">
+        <span class="user-name">{{ currentUser()!.name }}</span>
+        <span class="user-role">{{ currentUser()!.role }}</span>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</aside>
