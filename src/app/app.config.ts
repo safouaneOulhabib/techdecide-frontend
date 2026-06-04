@@ -7,6 +7,7 @@ import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from '@core/interceptors/jwt.interceptor';
+import { ConfirmationService } from 'primeng/api';
 
 const TechDecidePreset = definePreset(Aura, {
   semantic: {
@@ -38,6 +39,7 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.my-app-dark'
         }
       }
-    })
+    }),
+    ConfirmationService
   ]
 };
