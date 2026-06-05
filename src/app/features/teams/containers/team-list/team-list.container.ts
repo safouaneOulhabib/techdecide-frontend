@@ -13,6 +13,7 @@ import { OrganizationStore } from '@features/organizations/store/organization.st
 import { Team, CreateTeamRequest } from '@features/teams/models/team.model';
 import { Organization } from '@features/organizations/models/organization.model';
 import { ConfirmService } from '@core/services/confirm.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-team-list',
@@ -26,7 +27,8 @@ import { ConfirmService } from '@core/services/confirm.service';
     InputTextModule,
     SelectModule,
     ProgressSpinnerModule,
-    MessageModule
+    MessageModule,
+    SkeletonModule
   ],
   templateUrl: './team-list.container.html',
   styleUrl: './team-list.container.scss'

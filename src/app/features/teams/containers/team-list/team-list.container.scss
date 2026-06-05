@@ -28,7 +28,7 @@
       border-spacing: 0;
     }
 
-    .p-datatable-thead > tr > th {
+    .p-datatable-thead>tr>th {
       background: var(--p-surface-50);
       border-bottom: 1px solid var(--p-surface-200);
       border-top: none;
@@ -42,7 +42,7 @@
       color: var(--p-text-secondary-color);
     }
 
-    .p-datatable-tbody > tr {
+    .p-datatable-tbody>tr {
       border-bottom: 1px solid var(--p-surface-100);
       transition: background 0.15s;
 
@@ -54,7 +54,7 @@
         background: var(--p-surface-50) !important;
       }
 
-      > td {
+      >td {
         padding: 1rem 1.25rem;
         border: none;
         font-size: 0.875rem;
@@ -84,7 +84,9 @@
   justify-content: center;
   flex-shrink: 0;
 
-  i { font-size: 0.875rem; }
+  i {
+    font-size: 0.875rem;
+  }
 }
 
 .org-badge {
@@ -94,7 +96,9 @@
   font-size: 0.875rem;
   color: var(--p-text-secondary-color);
 
-  i { font-size: 0.75rem; }
+  i {
+    font-size: 0.75rem;
+  }
 }
 
 .text-secondary {
@@ -114,7 +118,9 @@
   color: var(--p-text-secondary-color);
   transition: all 0.15s;
 
-  i { font-size: 0.85rem; }
+  i {
+    font-size: 0.85rem;
+  }
 
   &:hover {
     background: #FEF2F2;
@@ -156,7 +162,8 @@
       font-size: 0.875rem;
     }
 
-    input, p-select {
+    input,
+    p-select {
       width: 100%;
     }
   }
@@ -165,4 +172,56 @@
 .mb {
   display: block;
   margin-bottom: 1rem;
+}
+
+.skeleton-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--p-text-secondary-color);
+    border-bottom: 1px solid var(--p-surface-200);
+  }
+
+  td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--p-surface-100);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.skeleton-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep {
+
+  .p-datatable-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .p-datatable-thead>tr>th,
+  .p-datatable-column-title {
+    background: var(--p-surface-0) !important;
+    border-bottom: 1px solid var(--p-surface-200);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: var(--p-text-secondary-color) !important;
+  }
 }

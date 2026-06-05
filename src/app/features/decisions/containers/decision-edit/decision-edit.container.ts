@@ -9,11 +9,12 @@ import { DecisionForm, DecisionFormData } from '@features/decisions/components/d
 import { Decision } from '@features/decisions/models/decision.model';
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
+import { DecisionFormSkeleton } from '@features/decisions/components/decision-form-skeleton/decision-form-skeleton';
 
 @Component({
   selector: 'app-decision-edit',
   standalone: true,
-  imports: [MessageModule, ProgressSpinnerModule, DecisionForm],
+  imports: [MessageModule, DecisionForm, DecisionFormSkeleton],
   templateUrl: './decision-edit.container.html',
   styleUrl: './decision-edit.container.scss'
 })
@@ -49,7 +50,7 @@ export class DecisionEditContainer implements OnInit {
       alternatives: data.alternatives
     }).subscribe({
       next: () => this.router.navigate(['/decisions', this.decisionId]),
-      error: () => {}
+      error: () => { }
     });
   }
 

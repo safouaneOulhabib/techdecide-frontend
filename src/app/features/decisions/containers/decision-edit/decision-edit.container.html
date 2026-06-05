@@ -3,24 +3,15 @@
     <h2>Edit Decision</h2>
   </div>
 
-  @if (loading()) {
-    <div class="loading">
-      <p-progressSpinner />
-    </div>
-  }
-
   @if (error()) {
-    <p-message severity="error" [text]="error()!" />
+  <p-message severity="error" [text]="error()!" />
   }
 
+  @if (loading() && !decision()) {
+  <app-decision-form-skeleton />
+  }
   @if (decision()) {
-    <app-decision-form
-      [existingDecision]="decision()"
-      [teams]="teams()"
-      [tags]="tags()"
-      [loading]="loading()"
-      (formSubmit)="onFormSubmit($event)"
-      (formCancel)="onFormCancel()"
-    />
+  <app-decision-form [existingDecision]="decision()" [teams]="teams()" [tags]="tags()" [loading]="loading()"
+    (formSubmit)="onFormSubmit($event)" (formCancel)="onFormCancel()" />
   }
 </div>

@@ -10,6 +10,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagStore } from '@features/tags/store/tag.store';
 import { Tag, CreateTagRequest } from '@features/tags/models/tag.model';
 import { ConfirmService } from '@core/services/confirm.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-tag-list',
@@ -20,7 +21,7 @@ import { ConfirmService } from '@core/services/confirm.service';
     TagModule,
     InputTextModule,
     ColorPickerModule,
-    ProgressSpinnerModule,
+    SkeletonModule,
     MessageModule,
     ConfirmDialogModule
   ],

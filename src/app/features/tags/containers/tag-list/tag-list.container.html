@@ -12,21 +12,41 @@
   <p-message severity="error" [text]="error()!" class="mb" />
   }
 
+  @if (loading()) {
   <div class="table-wrapper">
-    @if (loading()) {
-    <div class="loading">
-      <p-progressSpinner />
+    <div class="table-header">
+      <span>Tag</span>
+      <span>Color</span>
+      <span></span>
+    </div>
+    @for (item of [1,2,3,4,5]; track item) {
+    <div class="table-row">
+      <div class="tag-name">
+        <p-skeleton width="10px" height="10px" borderRadius="50%" />
+        <p-skeleton width="120px" height="16px" />
+      </div>
+      <div class="tag-color-value">
+        <p-skeleton width="20px" height="20px" borderRadius="4px" />
+        <p-skeleton width="80px" height="16px" />
+      </div>
+      <div class="tag-actions">
+        <p-skeleton width="28px" height="28px" borderRadius="6px" />
+      </div>
     </div>
     }
+  </div>
+  }
 
-    @if (!loading() && tags().length === 0) {
+  @if (!loading()){
+  <div class="table-wrapper">
+    @if (tags().length === 0) {
     <div class="empty-state">
       <i class="pi pi-tag"></i>
       <p>No tags yet. Create your first tag above.</p>
     </div>
     }
 
-    @if (!loading() && tags().length > 0) {
+    @if (tags().length > 0) {
     <div class="table-header">
       <span>Tag</span>
       <span>Color</span>
@@ -52,6 +72,6 @@
     }
     }
   </div>
-
+  }
   <p-confirmdialog />
 </div>
