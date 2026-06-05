@@ -11,6 +11,7 @@ import { OrganizationStore } from '@features/organizations/store/organization.st
 import { Organization, CreateOrganizationRequest } from '@features/organizations/models/organization.model';
 import { TableModule } from 'primeng/table';
 import { ConfirmService } from '@core/services/confirm.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-organization-list',
@@ -22,9 +23,9 @@ import { ConfirmService } from '@core/services/confirm.service';
     DialogModule,
     InputTextModule,
     TextareaModule,
-    ProgressSpinnerModule,
     TableModule,
-    MessageModule
+    MessageModule,
+    SkeletonModule
   ],
   templateUrl: './organization-list.container.html',
   styleUrl: './organization-list.container.scss'

@@ -1,11 +1,7 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
-import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { Decision, DecisionStatus } from '@features/decisions/models/decision.model';
@@ -19,12 +15,15 @@ import { CommentStore } from '@features/decisions/store/comment.store';
 import { VoteSummary } from '@features/decisions/components/vote-summary/vote-summary';
 import { DecisionStatusSelector } from '@features/decisions/components/decision-status-selector/decision-status-selector';
 import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-decision-detail',
   standalone: true,
   imports: [
     ButtonModule,
+    SkeletonModule,
     ProgressSpinnerModule,
     MessageModule,
     DatePipe,
@@ -83,5 +82,6 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.commentStore.clearComments();
+    this.decisionStore.clearSelected(); 
   }
 }

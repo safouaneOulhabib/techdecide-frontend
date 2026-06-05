@@ -12,6 +12,8 @@ import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionFilters, DecisionFiltersValue } from '@features/decisions/components/decision-filters/decision-filters';
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
+import { SkeletonModule } from 'primeng/skeleton';
+
 
 @Component({
   selector: 'app-decision-list',
@@ -21,7 +23,8 @@ import { Tag } from '@features/tags/models/tag.model';
     ProgressSpinnerModule,
     MessageModule,
     DecisionCard,
-    DecisionFilters
+    DecisionFilters,
+    SkeletonModule,
   ],
   templateUrl: './decision-list.container.html',
   styleUrl: './decision-list.container.scss'

@@ -5,21 +5,48 @@
   </div>
 
   @if (error()) {
-    <p-message severity="error" [text]="error()!" class="mb" />
+  <p-message severity="error" [text]="error()!" class="mb" />
   }
 
+  @if (loading()) {
   <div class="table-wrapper">
-    <p-table
-      [value]="organizations()"
-      [loading]="loading()"
-      [tableStyle]="{ 'min-width': '50rem' }"
-    >
+    <table class="skeleton-table">
+      <thead>
+        <tr>
+          <th style="width: 30%">Name</th>
+          <th style="width: 45%">Description</th>
+          <th style="width: 20%">Created</th>
+          <th style="width: 5%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of [1,2,3,4,5]; track item) {
+        <tr>
+          <td>
+            <div class="skeleton-name">
+              <p-skeleton width="34px" height="34px" borderRadius="8px" />
+              <p-skeleton width="140px" height="16px" />
+            </div>
+          </td>
+          <td><p-skeleton width="200px" height="16px" /></td>
+          <td><p-skeleton width="100px" height="16px" /></td>
+          <td><p-skeleton width="28px" height="28px" borderRadius="6px" /></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  @if (!loading()) {
+  <div class="table-wrapper">
+    <p-table [value]="organizations()" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Created</th>
-          <th style="width: 60px"></th>
+          <th style="width: 30%">Name</th>
+          <th style="width: 45%">Description</th>
+          <th style="width: 20%">Created</th>
+          <th style="width: 5%"></th>
         </tr>
       </ng-template>
 
@@ -56,13 +83,8 @@
       </ng-template>
     </p-table>
   </div>
-
-  <p-dialog
-    header="New Organization"
-    [(visible)]="dialogVisible"
-    [modal]="true"
-    [style]="{ width: '450px' }"
-  >
+  }
+  <p-dialog header="New Organization" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '450px' }">
     <div class="dialog-form">
       <div class="field">
         <label for="orgName">Name *</label>
@@ -70,7 +92,8 @@
       </div>
       <div class="field">
         <label for="orgDesc">Description</label>
-        <textarea id="orgDesc" pTextarea [(ngModel)]="newDescription" rows="3" placeholder="Description (optional)"></textarea>
+        <textarea id="orgDesc" pTextarea [(ngModel)]="newDescription" rows="3"
+          placeholder="Description (optional)"></textarea>
       </div>
     </div>
     <ng-template pTemplate="footer">

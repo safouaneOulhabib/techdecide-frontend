@@ -5,21 +5,47 @@
   </div>
 
   @if (error()) {
-    <p-message severity="error" [text]="error()!" class="mb" />
+  <p-message severity="error" [text]="error()!" class="mb" />
   }
 
+  @if (loading()) {
   <div class="table-wrapper">
-    <p-table
-      [value]="teams()"
-      [loading]="loading()"
-      [tableStyle]="{ 'min-width': '50rem' }"
-    >
+    <table class="skeleton-table">
+      <thead>
+        <tr>
+          <th style="width: 30%">Name</th>
+          <th style="width: 40%">Organization</th>
+          <th style="width: 25%">Created</th>
+          <th style="width: 5%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of [1,2,3,4,5]; track item) {
+        <tr>
+          <td>
+            <div class="skeleton-name">
+              <p-skeleton width="34px" height="34px" borderRadius="8px" />
+              <p-skeleton width="140px" height="16px" />
+            </div>
+          </td>
+          <td><p-skeleton width="160px" height="16px" /></td>
+          <td><p-skeleton width="100px" height="16px" /></td>
+          <td><p-skeleton width="28px" height="28px" borderRadius="6px" /></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+  @if (!loading()) {
+  <div class="table-wrapper">
+    <p-table [value]="teams()" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
-          <th>Name</th>
-          <th>Organization</th>
-          <th>Created</th>
-          <th style="width: 60px"></th>
+          <th style="width: 30%">Name</th>
+          <th style="width: 40%">Organization</th>
+          <th style="width: 25%">Created</th>
+          <th style="width: 5%"></th>
         </tr>
       </ng-template>
 
@@ -61,13 +87,8 @@
       </ng-template>
     </p-table>
   </div>
-
-  <p-dialog
-    header="New Team"
-    [(visible)]="dialogVisible"
-    [modal]="true"
-    [style]="{ width: '450px' }"
-  >
+  }
+  <p-dialog header="New Team" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '450px' }">
     <div class="dialog-form">
       <div class="field">
         <label for="teamName">Name *</label>
@@ -75,24 +96,14 @@
       </div>
       <div class="field">
         <label for="teamOrg">Organization *</label>
-        <p-select
-          id="teamOrg"
-          [(ngModel)]="selectedOrgId"
-          [options]="organizations()"
-          optionLabel="name"
-          optionValue="id"
-          placeholder="Select organization"
-        />
+        <p-select id="teamOrg" [(ngModel)]="selectedOrgId" [options]="organizations()" optionLabel="name"
+          optionValue="id" placeholder="Select organization" />
       </div>
     </div>
     <ng-template pTemplate="footer">
       <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false" />
-      <p-button
-        label="Create"
-        icon="pi pi-check"
-        (onClick)="onSubmit()"
-        [disabled]="!newTeamName.trim() || selectedOrgId === null"
-      />
+      <p-button label="Create" icon="pi pi-check" (onClick)="onSubmit()"
+        [disabled]="!newTeamName.trim() || selectedOrgId === null" />
     </ng-template>
   </p-dialog>
 </div>
