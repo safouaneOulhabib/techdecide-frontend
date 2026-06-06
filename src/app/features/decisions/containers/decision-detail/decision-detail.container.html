@@ -5,7 +5,7 @@
       <i class="pi pi-arrow-left"></i>
       Back
     </button>
-    @if (decision()) {
+    @if (decision() && canEditCurrent()) {
     <button class="btn-edit" (click)="onEdit()">
       <i class="pi pi-pencil"></i>
       Edit
@@ -48,10 +48,27 @@
   @if (decision()) {
   <div class="detail-card">
 
+    @if (decision()!.supersededById) {
+    <div class="superseded-banner" (click)="goToSuperseder()">
+      <i class="pi pi-info-circle"></i>
+      <span class="banner-text">
+        This decision has been superseded by
+        <strong>{{ decision()!.supersededByTitle || ('decision #' + decision()!.supersededById) }}</strong>
+      </span>
+      <i class="pi pi-arrow-right banner-arrow"></i>
+    </div>
+    }
+
     <div class="detail-top">
       <div class="detail-title-row">
         <h1>{{ decision()!.title }}</h1>
-        <app-decision-status-selector [currentStatus]="decision()!.status" (statusChange)="onStatusChange($event)" />
+        <div class="title-actions">
+          <app-decision-status-selector [currentStatus]="decision()!.status" (statusChange)="onStatusChange($event)" />
+          @if (canSupersedeCurrent()) {
+          <p-button label="Supersede" icon="pi pi-refresh" severity="secondary" [outlined]="true"
+            (onClick)="openSupersedeDialog()" />
+          }
+        </div>
       </div>
       <div class="header-meta">
         <app-decision-status-badge [status]="decision()!.status" />
@@ -120,5 +137,8 @@
     </div>
   </div>
   }
+
+  <app-decision-supersede-dialog [visible]="supersedeDialogVisible()" [candidates]="supersedeCandidates()"
+    (confirm)="onSupersedeConfirm($event)" (cancel)="onSupersedeCancel()" />
 
 </div>

@@ -36,8 +36,12 @@ export class DecisionService extends ApiService {
     return this.put<Decision>(`/decisions/${id}`, request);
   }
 
-  updateStatus(id: number, status: DecisionStatus) {
-    return this.patch<Decision>(`/decisions/${id}/status`, { status });
+  updateStatus(id: number, status: DecisionStatus, supersededById?: number) {
+    const body: { status: DecisionStatus; supersededById?: number } = { status };
+    if (supersededById != null) {
+      body.supersededById = supersededById;
+    }
+    return this.patch<Decision>(`/decisions/${id}/status`, body);
   }
 
   remove(id: number) {

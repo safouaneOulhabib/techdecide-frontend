@@ -95,8 +95,8 @@ export const DecisionStore = signalStore(
       );
     },
 
-    updateStatus(id: number, status: DecisionStatus) {
-      service.updateStatus(id, status).subscribe({
+    updateStatus(id: number, status: DecisionStatus, supersededById?: number) {
+      service.updateStatus(id, status, supersededById).subscribe({
         next: (updated) => patchState(store, (state) => ({
           decisions: state.decisions.map(d =>
             d.id === id ? updated : d

@@ -1,0 +1,43 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="!$event && onCancel()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '500px' }"
+  [breakpoints]="{ '768px': '90vw' }"
+  header="Supersede this decision">
+
+  @if (hasCandidates()) {
+    <div class="dialog-body">
+      <p class="hint">
+        Select the approved decision that replaces this one.
+      </p>
+      <p-select
+        [ngModel]="selectedId()"
+        (ngModelChange)="selectedId.set($event)"
+        [options]="candidates()"
+        optionLabel="title"
+        optionValue="id"
+        [filter]="true"
+        filterBy="title"
+        placeholder="Choose a decision"
+        appendTo="body"
+        styleClass="w-full" />
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>You need at least one other APPROVED decision before you can supersede this one.</p>
+    </div>
+  }
+
+  <div class="dialog-footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="onCancel()" />
+    <p-button
+      label="Supersede"
+      icon="pi pi-check"
+      [disabled]="!hasCandidates() || selectedId() == null"
+      (onClick)="onConfirm()" />
+  </div>
+</p-dialog>

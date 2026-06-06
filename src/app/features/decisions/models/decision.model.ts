@@ -16,6 +16,8 @@ export interface Decision {
   decision: string;
   consequences: string;
   status: DecisionStatus;
+  supersededById: number | null;
+  supersededByTitle: string | null;
   authorName: string;
   teamName: string;
   tags: Tag[];
