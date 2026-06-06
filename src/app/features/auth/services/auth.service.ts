@@ -58,11 +58,29 @@ export class AuthService extends ApiService {
   }
 
   private loadFromSession() {
-    const user = sessionStorage.getItem('auth_user');
-    if (user) {
-      const parsed = JSON.parse(user) as AuthResponse;
+    const raw = sessionStorage.getItem('auth_user');
+    if (!raw) return;
+
+    try {
+      const parsed = JSON.parse(raw) as AuthResponse;
+      if (!parsed.token || this.isTokenExpired(parsed.token)) {
+        sessionStorage.removeItem('auth_user');
+        return;
+      }
       this._token.set(parsed.token);
       this._currentUser.set(parsed);
+    } catch {
+      sessionStorage.removeItem('auth_user');
+    }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      // exp is in seconds
+      return typeof payload.exp === 'number' && payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
     }
   }
 }

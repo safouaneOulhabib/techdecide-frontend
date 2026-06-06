@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
+import { signalStore, withState, withMethods, withHooks, patchState } from '@ngrx/signals';
 import { AuthService } from '@features/auth/services/auth.service';
 import { AuthResponse, LoginRequest, RegisterRequest } from '@features/auth/models/auth.model';
 
@@ -62,5 +62,14 @@ export const AuthStore = signalStore(
       patchState(store, initialState);
     }
 
-  }))
+  })),
+
+  withHooks({
+    onInit(store, authService = inject(AuthService)) {
+      const user = authService.currentUser();
+      if (user) {
+        patchState(store, { user });
+      }
+    }
+  })
 );
