@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -7,6 +7,7 @@ import { DatePipe, SlicePipe } from '@angular/common';
 import { DecisionStatusBadge } from '../decision-status-badge/decision-status-badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmService } from '@core/services/confirm.service';
+import { canDelete } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-card',
@@ -21,6 +22,8 @@ export class DecisionCard {
   onView = output<number>();
 
   private readonly confirmService = inject(ConfirmService);
+
+  canDeleteCurrent = computed(() => canDelete(this.decision().status));
 
 
   onDeleteClick(event: Event) {

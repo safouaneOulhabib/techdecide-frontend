@@ -1,7 +1,8 @@
-import { Component, input, output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { DecisionStatus } from '@features/decisions/models/decision.model';
+import { allowedTransitions } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-status-selector',
@@ -19,8 +20,17 @@ export class DecisionStatusSelector {
     { label: 'Proposed', value: 'PROPOSED', severity: 'info' },
     { label: 'Approved', value: 'APPROVED', severity: 'success' },
     { label: 'Rejected', value: 'REJECTED', severity: 'danger' },
-    { label: 'Superseded', value: 'SUPERSEDED', severity: 'warn' }
   ];
+
+  visibleOptions = computed(() => {
+    const current = this.currentStatus();
+    const allowed = allowedTransitions(current);
+    return this.statusOptions.filter(
+      opt => opt.value === current || allowed.includes(opt.value)
+    );
+  });
+
+  hasTransitions = computed(() => allowedTransitions(this.currentStatus()).length > 0);
 
   onStatusChange(newStatus: DecisionStatus) {
     if (newStatus !== this.currentStatus()) {

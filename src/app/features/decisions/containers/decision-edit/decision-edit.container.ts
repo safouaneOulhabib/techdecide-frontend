@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, effect, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -10,6 +10,7 @@ import { Decision } from '@features/decisions/models/decision.model';
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
 import { DecisionFormSkeleton } from '@features/decisions/components/decision-form-skeleton/decision-form-skeleton';
+import { canEdit } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-edit',
@@ -32,6 +33,15 @@ export class DecisionEditContainer implements OnInit {
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
 
   private decisionId = 0;
+
+  constructor() {
+    effect(() => {
+      const d = this.decision();
+      if (d && !canEdit(d.status)) {
+        this.router.navigate(['/decisions', d.id]);
+      }
+    });
+  }
 
   ngOnInit() {
     this.decisionId = Number(this.route.snapshot.paramMap.get('id'));

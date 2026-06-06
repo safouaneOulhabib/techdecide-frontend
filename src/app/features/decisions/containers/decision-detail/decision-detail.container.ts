@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { Decision, DecisionStatus } from '@features/decisions/models/decision.model';
 import { OnDestroy } from '@angular/core';
@@ -17,6 +17,8 @@ import { DecisionStatusSelector } from '@features/decisions/components/decision-
 import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DecisionSupersedeDialog } from '@features/decisions/components/decision-supersede-dialog/decision-supersede-dialog';
+import { canDelete, canEdit, canSupersede } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-detail',
@@ -31,7 +33,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     CommentForm,
     CommentList,
     VoteSummary,
-    DecisionStatusSelector
+    DecisionStatusSelector,
+    DecisionSupersedeDialog
   ],
   templateUrl: './decision-detail.container.html',
   styleUrl: './decision-detail.container.scss'
@@ -47,6 +50,7 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   private readonly commentStore = inject(CommentStore);
   private readonly authStore = inject(AuthStore);
+  private readonly location = inject(Location);
 
   readonly comments: Signal<Comment[]> = this.commentStore.comments;
   readonly commentsLoading: Signal<boolean> = this.commentStore.loading;
@@ -54,14 +58,41 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   private decisionId = 0;
 
+  // Supersede dialog state
+  supersedeDialogVisible = signal(false);
+
+  // Candidates for superseding: approved decisions, excluding the current one
+  supersedeCandidates = computed(() =>
+    this.decisionStore.approvedDecisions().filter(d => d.id !== this.decisionId)
+  );
+
+  canSupersedeCurrent = computed(() => {
+    const d = this.decision();
+    return d ? canSupersede(d.status) : false;
+  });
+
+  canEditCurrent = computed(() => {
+    const d = this.decision();
+    return d ? canEdit(d.status) : false;
+  });
+
+  openSupersedeDialog() {
+    if (this.decisionStore.decisions().length === 0) {
+      this.decisionStore.loadAll();
+    }
+    this.supersedeDialogVisible.set(true);
+  }
+
   ngOnInit() {
-    this.decisionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.decisionStore.loadById(this.decisionId); // changed from this.store
-    this.commentStore.loadByDecision(this.decisionId);
+    this.route.paramMap.subscribe(params => {
+      this.decisionId = Number(params.get('id'));
+      this.decisionStore.loadById(this.decisionId);
+      this.commentStore.loadByDecision(this.decisionId);
+    });
   }
 
   goBack() {
-    this.router.navigate(['/decisions']);
+    this.location.back();
   }
 
   onCommentSubmit(request: CreateCommentRequest) {
@@ -80,8 +111,25 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.decisionStore.updateStatus(this.decisionId, status);
   }
 
+  onSupersedeConfirm(supersededById: number) {
+    this.decisionStore.updateStatus(this.decisionId, 'SUPERSEDED', supersededById);
+    this.supersedeDialogVisible.set(false);
+  }
+
+  onSupersedeCancel() {
+    this.supersedeDialogVisible.set(false);
+  }
+
+  goToSuperseder() {
+    const id = this.decision()?.supersededById;
+    if (id != null) {
+      this.router.navigate(['/decisions', id]);
+    }
+  }
+
+
   ngOnDestroy() {
     this.commentStore.clearComments();
-    this.decisionStore.clearSelected(); 
+    this.decisionStore.clearSelected();
   }
 }

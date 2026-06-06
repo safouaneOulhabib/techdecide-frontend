@@ -31,8 +31,10 @@
       </span>
     </div>
 
+    @if (canDeleteCurrent()) {
     <button class="btn-delete" (click)="onDeleteClick($event)">
       <i class="pi pi-trash"></i>
     </button>
+    }
   </div>
 </div>

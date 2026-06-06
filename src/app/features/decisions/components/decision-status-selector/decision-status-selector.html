@@ -1,10 +1,6 @@
-<div class="status-selector">
-  <p-select
-    [ngModel]="currentStatus()"
-    (ngModelChange)="onStatusChange($event)"
-    [options]="statusOptions"
-    optionLabel="label"
-    optionValue="value"
-    styleClass="w-full"
-  />
-</div>
+@if (hasTransitions()) {
+  <div class="status-selector">
+    <p-select [ngModel]="currentStatus()" (ngModelChange)="onStatusChange($event)" [options]="visibleOptions()"
+      optionLabel="label" optionValue="value" styleClass="w-full" />
+  </div>
+  }

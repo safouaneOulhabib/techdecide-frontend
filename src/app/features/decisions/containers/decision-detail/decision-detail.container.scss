@@ -152,3 +152,46 @@
   font-size: 0.875rem;
   color: var(--p-text-secondary-color);
 }
+
+.title-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.superseded-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: #FEF3C7;
+  border-bottom: 1px solid #FCD34D;
+  color: #92400E;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #FDE68A;
+
+    .banner-arrow {
+      transform: translateX(2px);
+    }
+  }
+
+  i {
+    font-size: 1rem;
+  }
+
+  .banner-text {
+    flex: 1;
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  .banner-arrow {
+    transition: transform 0.15s;
+  }
+}
