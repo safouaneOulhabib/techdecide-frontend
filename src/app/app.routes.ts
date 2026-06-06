@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
+import { guestGuard } from '@core/guards/guest.guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@layout/auth-layout/auth-layout')
         .then(m => m.AuthLayout),
+    canActivate: [guestGuard],
     loadChildren: () =>
       import('@features/auth/auth.routes')
         .then(m => m.AUTH_ROUTES)
@@ -51,6 +53,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'auth/login'
+    redirectTo: 'decisions'
   }
 ];
