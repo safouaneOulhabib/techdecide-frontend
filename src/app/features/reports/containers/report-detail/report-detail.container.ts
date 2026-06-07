@@ -55,7 +55,7 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
     const user = this.authStore.user();
     const report = this.report();
     if (!user || !report) return false;
-    return user.name === report.authorName;
+    return user.id === report.authorId;
   });
 
   sortedItems = computed(() => {
