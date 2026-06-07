@@ -1,0 +1,48 @@
+<div class="report-list">
+  <div class="page-header">
+    <h2>Reports</h2>
+    <p-button label="+ New Report" (onClick)="onCreateNew()" />
+  </div>
+
+  @if (loading() && reports().length === 0) {
+  <div class="reports-grid">
+    @for (item of [1,2,3,4,5,6]; track item) {
+    <div class="skeleton-card">
+      <div class="skeleton-body">
+        <p-skeleton width="70%" height="20px" />
+        <p-skeleton width="50%" height="14px" />
+      </div>
+      <div class="skeleton-footer">
+        <p-skeleton width="100px" height="22px" borderRadius="20px" />
+        <p-skeleton width="24px" height="24px" borderRadius="6px" />
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  @if (error()) {
+  <p-message severity="error" [text]="error()!" />
+  }
+
+  @if (!loading() && reports().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-book"></i>
+    <p>No reports yet. Create your first report.</p>
+    <p-button label="+ New Report" (onClick)="onCreateNew()" />
+  </div>
+  }
+
+  @if (!loading() || reports().length > 0) {
+  <div class="reports-grid">
+    @for (report of reports(); track report.id) {
+    <app-report-card
+      [report]="report"
+      [isOwner]="isOwner(report)"
+      (onView)="onView($event)"
+      (onDelete)="onDelete($event)"
+    />
+    }
+  </div>
+  }
+</div>

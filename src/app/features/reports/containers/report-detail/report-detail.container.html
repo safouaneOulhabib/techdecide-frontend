@@ -1,0 +1,98 @@
+<div class="report-detail">
+
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back
+    </button>
+    <div class="header-actions">
+      @if (isOwner() && !isEditMode()) {
+      <button class="btn-action btn-edit" (click)="enterEditMode()">
+        <i class="pi pi-pencil"></i>
+        Edit
+      </button>
+      }
+      @if (isOwner()) {
+      <button class="btn-action btn-delete" (click)="onDelete()">
+        <i class="pi pi-trash"></i>
+        Delete
+      </button>
+      }
+      <p-button
+        label="Export PDF"
+        icon="pi pi-download"
+        severity="secondary"
+        [outlined]="true"
+        [loading]="exportingPdf()"
+        [disabled]="!report()"
+        (onClick)="onExportPdf()"
+      />
+    </div>
+  </div>
+
+  @if (loading() && !report()) {
+  <div class="detail-document">
+    <p-skeleton width="60%" height="32px" class="mb-2" />
+    <p-skeleton width="40%" height="16px" />
+    <div style="height: 1.5rem"></div>
+    @for (s of [1,2,3]; track s) {
+    <div class="skeleton-item">
+      <p-skeleton width="80%" height="22px" />
+      <p-skeleton width="100px" height="20px" borderRadius="20px" />
+      <div style="height: 0.5rem"></div>
+      <p-skeleton width="100%" height="14px" />
+      <p-skeleton width="85%" height="14px" />
+    </div>
+    }
+  </div>
+  }
+
+  @if (error()) {
+  <p-message severity="error" [text]="error()!" />
+  }
+
+  @if (report()) {
+  <div class="detail-document">
+
+    @if (isEditMode()) {
+    <div class="edit-panel">
+      <div class="form-field">
+        <label>Title</label>
+        <input pInputText type="text" [ngModel]="editTitle()" (ngModelChange)="editTitle.set($event)" />
+      </div>
+      <div class="form-field">
+        <label>Introduction</label>
+        <textarea pTextarea rows="5" [ngModel]="editIntroduction()" (ngModelChange)="editIntroduction.set($event)"></textarea>
+      </div>
+      <div class="edit-actions">
+        <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancelEdit()" />
+        <p-button label="Save" [loading]="loading()" (onClick)="saveEdit()" />
+      </div>
+    </div>
+    } @else {
+    <h1 class="doc-title">{{ report()!.title }}</h1>
+    }
+
+    <p class="doc-subtitle">
+      by {{ report()!.authorName }} &bull; created {{ report()!.createdAt | date:'mediumDate' }}
+      @if (report()!.updatedAt) {
+       &bull; last edited {{ report()!.updatedAt | date:'mediumDate' }}
+      }
+    </p>
+
+    @if (report()!.introduction && !isEditMode()) {
+    <p class="doc-intro">{{ report()!.introduction }}</p>
+    }
+
+    <hr class="doc-divider" />
+
+    <div class="items-list">
+      @for (item of sortedItems(); track item.id) {
+      <app-report-item-card [item]="item" [position]="item.position" />
+      }
+    </div>
+
+  </div>
+  }
+
+</div>

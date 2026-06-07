@@ -1,0 +1,63 @@
+<div class="item-card">
+  <div class="item-header">
+    <span class="item-number">{{ position() + 1 }}.</span>
+    <h2 class="item-title">{{ item().decisionTitle }}</h2>
+    <app-decision-status-badge [status]="statusAsDecisionStatus" />
+  </div>
+
+  <div class="item-meta">
+    @if (item().decisionTeamName) {
+    <span class="meta-chip"><i class="pi pi-users"></i>{{ item().decisionTeamName }}</span>
+    }
+    @if (item().decisionAuthorName) {
+    <span class="meta-chip"><i class="pi pi-user"></i>{{ item().decisionAuthorName }}</span>
+    }
+    @if (item().decisionCreatedAt) {
+    <span class="meta-chip"><i class="pi pi-calendar"></i>{{ item().decisionCreatedAt | date:'mediumDate' }}</span>
+    }
+  </div>
+
+  @if (item().decisionContext) {
+  <div class="item-section">
+    <h3>Context</h3>
+    <p>{{ item().decisionContext }}</p>
+  </div>
+  }
+
+  @if (item().decisionContent) {
+  <div class="item-section">
+    <h3>Decision</h3>
+    <p>{{ item().decisionContent }}</p>
+  </div>
+  }
+
+  @if (item().decisionConsequences) {
+  <div class="item-section">
+    <h3>Consequences</h3>
+    <p>{{ item().decisionConsequences }}</p>
+  </div>
+  }
+
+  @if (item().alternatives.length > 0) {
+  <div class="item-section">
+    <h3>Alternatives Considered</h3>
+    <div class="alternatives-list">
+      @for (alt of item().alternatives; track alt.name) {
+      <div class="alternative-item">
+        <span class="alt-name">{{ alt.name }}</span>
+        @if (alt.rejectionReason) {
+        <span class="alt-reason">{{ alt.rejectionReason }}</span>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <div class="item-footer">
+    <a [routerLink]="['/decisions', item().originalDecisionId]" class="live-link" (click)="$event.stopPropagation()">
+      <i class="pi pi-arrow-right"></i>
+      View live decision
+    </a>
+  </div>
+</div>
