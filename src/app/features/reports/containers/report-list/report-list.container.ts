@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
@@ -24,10 +24,8 @@ export class ReportListContainer implements OnInit {
   readonly loading: Signal<boolean> = this.reportStore.loading;
   readonly error: Signal<string | null> = this.reportStore.error;
 
-  readonly currentUserName = computed(() => this.authStore.user()?.name ?? '');
-
   isOwner(report: ReportSummary): boolean {
-    return this.authStore.user()?.name === report.authorName;
+    return this.authStore.user()?.id === report.authorId;
   }
 
   ngOnInit() {
