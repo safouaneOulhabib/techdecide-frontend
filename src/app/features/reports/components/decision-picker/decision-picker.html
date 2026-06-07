@@ -1,0 +1,52 @@
+<div class="decision-picker">
+  <div class="picker-header">
+    <span class="selected-count">{{ selectedCount() }} selected</span>
+  </div>
+
+  <div class="picker-filters">
+    <input
+      pInputText
+      type="text"
+      placeholder="Search decisions..."
+      [value]="searchQuery()"
+      (input)="onSearchChange($any($event.target).value)"
+      class="search-input"
+    />
+    <p-select
+      [options]="teamOptions()"
+      [ngModel]="selectedTeamId()"
+      (ngModelChange)="onTeamChange($event)"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="All teams"
+      [style]="{ width: '100%' }"
+    />
+  </div>
+
+  <div class="picker-list">
+    @if (filteredDecisions().length === 0) {
+    <div class="picker-empty">No decisions match your filters.</div>
+    }
+
+    @for (decision of filteredDecisions(); track decision.id) {
+    <div class="picker-item" [class.selected]="isChecked(decision.id)" (click)="toggleDecision(decision.id)">
+      <p-checkbox
+        [binary]="true"
+        [ngModel]="isChecked(decision.id)"
+        (click)="$event.stopPropagation()"
+        (ngModelChange)="toggleDecision(decision.id)"
+      />
+      <div class="picker-item-info">
+        <span class="picker-item-title">{{ decision.title }}</span>
+        <div class="picker-item-meta">
+          <app-decision-status-badge [status]="decision.status" />
+          @if (decision.teamName) {
+          <span class="meta-team">{{ decision.teamName }}</span>
+          }
+          <span class="meta-author">{{ decision.authorName }}</span>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

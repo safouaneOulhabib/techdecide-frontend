@@ -48,6 +48,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('@features/tags/tags.routes')
             .then(m => m.TAG_ROUTES)
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('@features/reports/reports.routes')
+            .then(m => m.REPORT_ROUTES)
       }
     ]
   },
