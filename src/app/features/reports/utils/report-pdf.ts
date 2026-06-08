@@ -10,103 +10,172 @@ function slugify(title: string): string {
 function formatDate(iso: string | null): string {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric', month: 'long', day: 'numeric',
   });
 }
 
+const PAGE_MARGIN = 14;
+const PAGE_WIDTH = 210; // A4 mm
+const CONTENT_WIDTH = PAGE_WIDTH - PAGE_MARGIN * 2;
+const PAGE_HEIGHT = 297; // A4 mm
+const BOTTOM_MARGIN = 20;
+
 export async function buildPdf(report: Report): Promise<void> {
-  // Lazy-load pdfmake to avoid bloating the initial bundle (~500 KB minified)
-  const [pdfMakeModule, pdfFontsModule] = await Promise.all([
-    import('pdfmake/build/pdfmake'),
-    import('pdfmake/build/vfs_fonts')
-  ]);
-  const pdfMake = (pdfMakeModule as any).default ?? pdfMakeModule;
-  // pdfmake ≥0.3 renamed the property from `vfs` to `virtualfs`, and
-  // vfs_fonts now exports the font map directly (no nested `.vfs` key).
-  const pdfFonts = (pdfFontsModule as any).default ?? pdfFontsModule;
-  pdfMake.virtualfs = pdfFonts;
+  const { default: jsPDF } = await import('jspdf');
+  const { default: autoTable } = await import('jspdf-autotable');
 
-  const subtitle = `By ${report.authorName} · Created ${formatDate(report.createdAt)}` +
-    (report.updatedAt ? ` · Last edited ${formatDate(report.updatedAt)}` : '');
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  let y = PAGE_MARGIN;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const content: any[] = [
-    { text: report.title, style: 'reportTitle' },
-    { text: subtitle, style: 'subtitle', margin: [0, 4, 0, 16] },
-  ];
-
-  if (report.introduction) {
-    content.push({ text: report.introduction, style: 'intro', margin: [0, 0, 0, 16] });
+  function ensureSpace(needed: number): void {
+    if (y + needed > PAGE_HEIGHT - BOTTOM_MARGIN) {
+      doc.addPage();
+      y = PAGE_MARGIN;
+    }
   }
 
-  content.push({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1, lineColor: '#e2e8f0' }], margin: [0, 0, 0, 24] });
+  function addWrappedText(
+    text: string,
+    x: number,
+    fontSize: number,
+    color: [number, number, number],
+    bold = false,
+    lineHeightFactor = 1.4,
+  ): void {
+    doc.setFontSize(fontSize);
+    doc.setTextColor(...color);
+    doc.setFont('helvetica', bold ? 'bold' : 'normal');
+    const lines = doc.splitTextToSize(text, CONTENT_WIDTH - (x - PAGE_MARGIN));
+    const lineHeight = (fontSize * 0.352778) * lineHeightFactor; // pt → mm
+    for (const line of lines) {
+      ensureSpace(lineHeight);
+      doc.text(line as string, x, y);
+      y += lineHeight;
+    }
+  }
 
+  function addDivider(weight = 0.3): void {
+    ensureSpace(4);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(weight);
+    doc.line(PAGE_MARGIN, y, PAGE_MARGIN + CONTENT_WIDTH, y);
+    y += 4;
+  }
+
+  // ── Title ──────────────────────────────────────────────────────────────────
+  addWrappedText(report.title, PAGE_MARGIN, 20, [30, 41, 59], true);
+  y += 2;
+
+  // ── Subtitle ───────────────────────────────────────────────────────────────
+  const subtitle =
+    `By ${report.authorName} · Created ${formatDate(report.createdAt)}` +
+    (report.updatedAt ? ` · Last edited ${formatDate(report.updatedAt)}` : '');
+  addWrappedText(subtitle, PAGE_MARGIN, 9, [100, 116, 139]);
+  y += 4;
+
+  // ── Introduction ───────────────────────────────────────────────────────────
+  if (report.introduction) {
+    addWrappedText(report.introduction, PAGE_MARGIN, 10, [51, 65, 85], false, 1.5);
+    y += 4;
+  }
+
+  addDivider(0.5);
+  y += 4;
+
+  // ── Items ──────────────────────────────────────────────────────────────────
   report.items.forEach((item, idx) => {
-    content.push({ text: `${idx + 1}. ${item.decisionTitle}`, style: 'itemTitle', margin: [0, 0, 0, 6] });
-    content.push({ text: `Status: ${item.decisionStatus}`, style: 'statusLabel', margin: [0, 0, 0, 4] });
+    ensureSpace(14);
 
+    // Number + title
+    addWrappedText(`${idx + 1}. ${item.decisionTitle}`, PAGE_MARGIN, 13, [30, 41, 59], true);
+    y += 1;
+
+    // Status badge (filled rounded rect behind text)
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(79, 70, 229);
+    const statusText = item.decisionStatus.toUpperCase();
+    const textW = doc.getTextWidth(statusText);
+    const padH = 1.2;
+    const padV = 0.8;
+    const rectH = 4.5;
+    doc.setFillColor(238, 242, 255);
+    doc.roundedRect(PAGE_MARGIN, y - rectH + padV, textW + padH * 2, rectH, 0.8, 0.8, 'F');
+    doc.text(statusText, PAGE_MARGIN + padH, y);
+    y += 3;
+
+    // Meta line
     const meta: string[] = [];
     if (item.decisionTeamName) meta.push(`Team: ${item.decisionTeamName}`);
     if (item.decisionAuthorName) meta.push(`Author: ${item.decisionAuthorName}`);
-    if (item.decisionCreatedAt) meta.push(`Originally created ${formatDate(item.decisionCreatedAt)}`);
+    if (item.decisionCreatedAt) meta.push(`Created ${formatDate(item.decisionCreatedAt)}`);
     if (meta.length) {
-      content.push({ text: meta.join(' · '), style: 'meta', margin: [0, 0, 0, 12] });
+      addWrappedText(meta.join(' · '), PAGE_MARGIN, 8.5, [100, 116, 139]);
+      y += 2;
     }
 
+    // Context
     if (item.decisionContext) {
-      content.push({ text: 'Context', style: 'sectionHeading' });
-      content.push({ text: item.decisionContext, style: 'body', margin: [0, 4, 0, 10] });
+      addWrappedText('Context', PAGE_MARGIN, 9, [71, 85, 105], true);
+      y += 0.5;
+      addWrappedText(item.decisionContext, PAGE_MARGIN, 9.5, [51, 65, 85], false, 1.5);
+      y += 2;
     }
 
+    // Decision
     if (item.decisionContent) {
-      content.push({ text: 'Decision', style: 'sectionHeading' });
-      content.push({ text: item.decisionContent, style: 'body', margin: [0, 4, 0, 10] });
+      addWrappedText('Decision', PAGE_MARGIN, 9, [71, 85, 105], true);
+      y += 0.5;
+      addWrappedText(item.decisionContent, PAGE_MARGIN, 9.5, [51, 65, 85], false, 1.5);
+      y += 2;
     }
 
+    // Consequences
     if (item.decisionConsequences) {
-      content.push({ text: 'Consequences', style: 'sectionHeading' });
-      content.push({ text: item.decisionConsequences, style: 'body', margin: [0, 4, 0, 10] });
+      addWrappedText('Consequences', PAGE_MARGIN, 9, [71, 85, 105], true);
+      y += 0.5;
+      addWrappedText(item.decisionConsequences, PAGE_MARGIN, 9.5, [51, 65, 85], false, 1.5);
+      y += 2;
     }
 
+    // Alternatives table
     if (item.alternatives.length > 0) {
-      content.push({ text: 'Alternatives Considered', style: 'sectionHeading' });
-      item.alternatives.forEach(alt => {
-        content.push({
-          columns: [
-            { text: alt.name, style: 'altName', width: '*' },
-            { text: alt.rejectionReason ?? '', style: 'altReason', width: '*' }
-          ],
-          margin: [0, 2, 0, 2]
-        });
+      addWrappedText('Alternatives Considered', PAGE_MARGIN, 9, [71, 85, 105], true);
+      y += 1;
+
+      autoTable(doc, {
+        startY: y,
+        head: [['Alternative', 'Reason Rejected']],
+        body: item.alternatives.map(a => [a.name, a.rejectionReason ?? '']),
+        margin: { left: PAGE_MARGIN, right: PAGE_MARGIN },
+        styles: {
+          fontSize: 8.5,
+          cellPadding: 2,
+          textColor: [51, 65, 85] as [number, number, number],
+        },
+        headStyles: {
+          fillColor: [238, 242, 255] as [number, number, number],
+          textColor: [79, 70, 229] as [number, number, number],
+          fontStyle: 'bold',
+          fontSize: 8,
+        },
+        columnStyles: {
+          0: { cellWidth: CONTENT_WIDTH * 0.35 },
+          1: { cellWidth: CONTENT_WIDTH * 0.65 },
+        },
+        theme: 'plain',
       });
-      content.push({ text: '', margin: [0, 0, 0, 8] });
+
+      // jspdf-autotable stores the final Y on the doc instance
+      y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 3;
     }
 
     if (idx < report.items.length - 1) {
-      content.push({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#e2e8f0' }], margin: [0, 12, 0, 20] });
+      y += 2;
+      addDivider(0.3);
+      y += 4;
     }
   });
 
-  const docDef = {
-    content,
-    styles: {
-      reportTitle: { fontSize: 22, bold: true, color: '#1e293b' },
-      subtitle: { fontSize: 10, color: '#64748b' },
-      intro: { fontSize: 11, color: '#334155', lineHeight: 1.5 },
-      itemTitle: { fontSize: 14, bold: true, color: '#1e293b' },
-      statusLabel: { fontSize: 9, bold: true, color: '#4f46e5', background: '#eef2ff' },
-      meta: { fontSize: 9, color: '#64748b' },
-      sectionHeading: { fontSize: 10, bold: true, color: '#475569', margin: [0, 0, 0, 0] as [number, number, number, number] },
-      body: { fontSize: 10, color: '#334155', lineHeight: 1.5 },
-      altName: { fontSize: 10, bold: true, color: '#334155' },
-      altReason: { fontSize: 10, color: '#64748b' },
-    },
-    defaultStyle: { font: 'Roboto' },
-    info: {
-      title: report.title,
-      author: report.authorName,
-    }
-  };
-
-  pdfMake.createPdf(docDef).download(`${slugify(report.title)}.pdf`);
+  doc.save(`${slugify(report.title)}.pdf`);
 }
