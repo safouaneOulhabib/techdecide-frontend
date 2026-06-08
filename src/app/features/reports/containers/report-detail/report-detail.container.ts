@@ -6,7 +6,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SkeletonModule } from 'primeng/skeleton';
-import { DatePipe } from '@angular/common';
+import { DatePipe, LowerCasePipe } from '@angular/common';
 import { ReportStore } from '@features/reports/store/report.store';
 import { AuthStore } from '@features/auth/store/auth.store';
 import { ConfirmService } from '@core/services/confirm.service';
@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
     SkeletonModule,
     FormsModule,
     DatePipe,
+    LowerCasePipe,
     ReportItemCard
   ],
   templateUrl: './report-detail.container.html',
@@ -63,6 +64,21 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
     return [...r.items].sort((a, b) => a.position - b.position);
   });
 
+  statusSummary = computed(() => {
+    const r = this.report();
+    if (!r) return [];
+    const counts: Record<string, number> = {};
+    for (const item of r.items) {
+      counts[item.decisionStatus] = (counts[item.decisionStatus] ?? 0) + 1;
+    }
+    return Object.entries(counts)
+      .filter(([, count]) => count > 0)
+      .map(([status, count]) => ({
+        status,
+        label: `${count} ${status.charAt(0) + status.slice(1).toLowerCase()}`
+      }));
+  });
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.reportId = Number(params.get('id'));
@@ -92,7 +108,7 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
       introduction: this.editIntroduction().trim() || null
     }).subscribe({
       next: () => this.isEditMode.set(false),
-      error: () => {}
+      error: () => { }
     });
   }
 

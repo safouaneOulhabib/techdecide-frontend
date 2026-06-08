@@ -1,11 +1,13 @@
 export type ReportSummary = {
   id: number;
   title: string;
+  introduction: string | null;
   authorId: number;
   authorName: string;
   createdAt: string;
   updatedAt: string | null;
   itemCount: number;
+  statusCounts: Record<string, number>;
 };
 
 export type ReportItem = {

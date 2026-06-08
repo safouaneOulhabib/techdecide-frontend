@@ -1,19 +1,43 @@
 <div class="report-card" (click)="onView.emit(report().id)">
-  <div class="card-body">
-    <h3 class="card-title">{{ report().title }}</h3>
-    <p class="card-meta">by {{ report().authorName }} &bull; {{ report().createdAt | date:'mediumDate' }}</p>
-  </div>
 
-  <div class="card-footer">
-    <span class="item-count-badge">
-      <i class="pi pi-file"></i>
-      {{ report().itemCount }} decision{{ report().itemCount === 1 ? '' : 's' }}
-    </span>
-
+  <div class="card-top">
+    <div class="card-icon">
+      <i class="pi pi-file-edit"></i>
+    </div>
     @if (isOwner()) {
-    <button class="btn-delete" (click)="onDeleteClick($event)">
+    <button class="btn-delete" (click)="onDeleteClick($event)" title="Delete report">
       <i class="pi pi-trash"></i>
     </button>
     }
   </div>
+
+  <div class="card-body">
+    <h3 class="card-title">{{ report().title }}</h3>
+    @if (report().introduction) {
+    <p class="card-description">{{ report().introduction }}</p>
+    }
+  </div>
+
+  <div class="card-footer">
+    <div class="footer-meta">
+      <span class="meta-chip">
+        <i class="pi pi-file"></i>
+        {{ report().itemCount }} decision{{ report().itemCount === 1 ? '' : 's' }}
+      </span>
+      <span class="meta-chip">
+        <i class="pi pi-calendar"></i>
+        {{ report().createdAt | date:'mediumDate' }}
+      </span>
+    </div>
+    @if (statusBadges().length > 0) {
+    <div class="status-badges">
+      @for (badge of statusBadges(); track badge.status) {
+      <span class="status-badge status-{{ badge.status | lowercase }}">
+        {{ badge.label }}
+      </span>
+      }
+    </div>
+    }
+  </div>
+
 </div>

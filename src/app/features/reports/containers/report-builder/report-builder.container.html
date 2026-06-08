@@ -1,58 +1,62 @@
 <div class="report-builder">
-  <div class="page-header">
+
+  <div class="builder-header">
     <h2>New Report</h2>
+    <div class="header-actions">
+      <button class="btn-action" (click)="onCancel()">Cancel</button>
+      <button class="btn-action btn-primary" [disabled]="!canCreate() || loading()" (click)="onCreate()">
+        <i class="pi pi-check"></i>
+        {{ loading() ? 'Creating...' : 'Create Report' }}
+      </button>
+    </div>
   </div>
 
   @if (error()) {
-  <p-message severity="error" [text]="error()!" class="builder-error" />
+  <p-message severity="error" [text]="error()!" />
   }
 
   <div class="builder-layout">
     <div class="builder-metadata">
-      <h3>Report Details</h3>
-
-      <div class="form-field">
-        <label for="report-title">Title <span class="required">*</span></label>
-        <input
-          id="report-title"
-          pInputText
-          type="text"
-          placeholder="e.g. Q2 Architecture Review"
-          [ngModel]="title()"
-          (ngModelChange)="title.set($event)"
-        />
-      </div>
-
-      <div class="form-field">
-        <label for="report-intro">Introduction</label>
-        <textarea
-          id="report-intro"
-          pTextarea
-          placeholder="Optional introduction for this report..."
-          rows="6"
-          [ngModel]="introduction()"
-          (ngModelChange)="introduction.set($event)"
-        ></textarea>
+      <div class="section-card">
+        <h3>Report details</h3>
+        <div class="form-field">
+          <label for="report-title">Title <span class="required">*</span></label>
+          <input
+            id="report-title"
+            pInputText
+            type="text"
+            placeholder="e.g. Q2 Architecture Review"
+            [ngModel]="title()"
+            (ngModelChange)="title.set($event)"
+          />
+        </div>
+        <div class="form-field">
+          <label for="report-intro">
+            Introduction
+            <span class="optional">(optional)</span>
+          </label>
+          <textarea
+            id="report-intro"
+            pTextarea
+            placeholder="Provide context for this report..."
+            rows="6"
+            [ngModel]="introduction()"
+            (ngModelChange)="introduction.set($event)"
+          ></textarea>
+        </div>
       </div>
     </div>
 
     <div class="builder-picker">
-      <h3>Select Decisions <span class="required">*</span></h3>
-      <app-decision-picker
-        [decisions]="decisions()"
-        [teams]="teams()"
-        (selectedIds)="onDecisionIdsChange($event)"
-      />
+      <div class="section-card">
+        <h3>Select decisions <span class="required">*</span></h3>
+        <app-decision-picker
+          [decisions]="decisions()"
+          [teams]="teams()"
+          (selectedIds)="onDecisionIdsChange($event)"
+        />
+      </div>
     </div>
   </div>
 
-  <div class="builder-actions">
-    <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="onCancel()" />
-    <p-button
-      label="Create Report"
-      [disabled]="!canCreate()"
-      [loading]="loading()"
-      (onClick)="onCreate()"
-    />
-  </div>
 </div>
