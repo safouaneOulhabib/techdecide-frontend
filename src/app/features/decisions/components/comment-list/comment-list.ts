@@ -17,7 +17,7 @@ type TagSeverity = 'success' | 'danger' | 'secondary' |
 })
 export class CommentList {
   comments = input.required<Comment[]>();
-  currentUserName = input.required<string>();
+  currentUserId = input.required<number>();
   onDelete = output<number>();
 
   getVoteSeverity(vote: string | null): TagSeverity {
@@ -39,6 +39,6 @@ export class CommentList {
   }
 
   canDelete(comment: Comment): boolean {
-    return comment.authorName === this.currentUserName();
+    return comment.authorId === this.currentUserId();
   }
 }

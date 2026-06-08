@@ -130,7 +130,7 @@
         @if (commentsLoading()) {
         <div class="loading"><p-progressSpinner /></div>
         }
-        <app-comment-list [comments]="comments()" [currentUserName]="currentUser()?.name || ''"
+        <app-comment-list [comments]="comments()" [currentUserId]="currentUser()?.id || 0"
           (onDelete)="onCommentDelete($event)" />
       </div>
 
