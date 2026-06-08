@@ -1,6 +1,5 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
@@ -13,7 +12,7 @@ import { AuthStore } from '@features/auth/store/auth.store';
 import { ConfirmService } from '@core/services/confirm.service';
 import { ReportItemCard } from '@features/reports/components/report-item-card/report-item-card';
 import { Report } from '@features/reports/models/report.model';
-import { buildPdf } from '@features/reports/utils/report-pdf';
+import { ReportPdfService } from '@features/reports/services/report-pdf.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -36,9 +35,9 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
   private readonly reportStore = inject(ReportStore);
   private readonly authStore = inject(AuthStore);
   private readonly confirmService = inject(ConfirmService);
+  private readonly reportPdfService = inject(ReportPdfService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly location = inject(Location);
 
   readonly report: Signal<Report | null> = this.reportStore.selectedReport;
   readonly loading: Signal<boolean> = this.reportStore.loading;
@@ -49,7 +48,7 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
   isEditMode = signal(false);
   editTitle = signal('');
   editIntroduction = signal('');
-  exportingPdf = signal(false);
+  downloadingPdf = signal(false);
 
   isOwner = computed(() => {
     const user = this.authStore.user();
@@ -72,7 +71,7 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/reports']);
   }
 
   enterEditMode() {
@@ -107,14 +106,19 @@ export class ReportDetailContainer implements OnInit, OnDestroy {
     );
   }
 
-  async onExportPdf() {
+  onPreviewPdf() {
+    if (!this.report()) return;
+    this.router.navigate(['/reports', this.reportId, 'pdf-preview']);
+  }
+
+  onDownloadPdf() {
     const r = this.report();
     if (!r) return;
-    this.exportingPdf.set(true);
+    this.downloadingPdf.set(true);
     try {
-      await buildPdf(r);
+      this.reportPdfService.download(r);
     } finally {
-      this.exportingPdf.set(false);
+      this.downloadingPdf.set(false);
     }
   }
 

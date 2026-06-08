@@ -7,26 +7,25 @@
     </button>
     <div class="header-actions">
       @if (isOwner() && !isEditMode()) {
-      <button class="btn-action btn-edit" (click)="enterEditMode()">
+      <button class="btn-header-action" (click)="enterEditMode()">
         <i class="pi pi-pencil"></i>
         Edit
       </button>
       }
+      <button class="btn-header-action" [disabled]="!report()" (click)="onPreviewPdf()">
+        <i class="pi pi-eye"></i>
+        Preview PDF
+      </button>
+      <button class="btn-header-action" [disabled]="!report() || downloadingPdf()" (click)="onDownloadPdf()">
+        <i class="pi pi-download"></i>
+        Download PDF
+      </button>
       @if (isOwner()) {
-      <button class="btn-action btn-delete" (click)="onDelete()">
+      <button class="btn-header-action btn-danger" (click)="onDelete()">
         <i class="pi pi-trash"></i>
         Delete
       </button>
       }
-      <p-button
-        label="Export PDF"
-        icon="pi pi-download"
-        severity="secondary"
-        [outlined]="true"
-        [loading]="exportingPdf()"
-        [disabled]="!report()"
-        (onClick)="onExportPdf()"
-      />
     </div>
   </div>
 
