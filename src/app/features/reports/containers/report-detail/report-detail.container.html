@@ -7,21 +7,21 @@
     </button>
     <div class="header-actions">
       @if (isOwner() && !isEditMode()) {
-      <button class="btn-header-action" (click)="enterEditMode()">
+      <button class="btn-action" (click)="enterEditMode()">
         <i class="pi pi-pencil"></i>
         Edit
       </button>
       }
-      <button class="btn-header-action" [disabled]="!report()" (click)="onPreviewPdf()">
+      <button class="btn-action" [disabled]="!report()" (click)="onPreviewPdf()">
         <i class="pi pi-eye"></i>
         Preview PDF
       </button>
-      <button class="btn-header-action" [disabled]="!report() || downloadingPdf()" (click)="onDownloadPdf()">
+      <button class="btn-action" [disabled]="!report() || downloadingPdf()" (click)="onDownloadPdf()">
         <i class="pi pi-download"></i>
         Download PDF
       </button>
       @if (isOwner()) {
-      <button class="btn-header-action btn-danger" (click)="onDelete()">
+      <button class="btn-action btn-danger" (click)="onDelete()">
         <i class="pi pi-trash"></i>
         Delete
       </button>
@@ -31,7 +31,7 @@
 
   @if (loading() && !report()) {
   <div class="detail-document">
-    <p-skeleton width="60%" height="32px" class="mb-2" />
+    <p-skeleton width="60%" height="32px" styleClass="mb-2" />
     <p-skeleton width="40%" height="16px" />
     <div style="height: 1.5rem"></div>
     @for (s of [1,2,3]; track s) {
@@ -72,18 +72,30 @@
     <h1 class="doc-title">{{ report()!.title }}</h1>
     }
 
-    <p class="doc-subtitle">
-      by {{ report()!.authorName }} &bull; created {{ report()!.createdAt | date:'mediumDate' }}
+    <div class="doc-meta">
+      <span class="meta-chip"><i class="pi pi-user"></i>{{ report()!.authorName }}</span>
+      <span class="meta-chip"><i class="pi pi-calendar"></i>Created {{ report()!.createdAt | date:'mediumDate' }}</span>
       @if (report()!.updatedAt) {
-       &bull; last edited {{ report()!.updatedAt | date:'mediumDate' }}
+      <span class="meta-chip"><i class="pi pi-clock"></i>Edited {{ report()!.updatedAt | date:'mediumDate' }}</span>
       }
-    </p>
+      <span class="meta-chip"><i class="pi pi-file"></i>{{ report()!.items.length }} decisions</span>
+    </div>
 
     @if (report()!.introduction && !isEditMode()) {
-    <p class="doc-intro">{{ report()!.introduction }}</p>
+    <div class="doc-intro">
+      <p class="intro-label">Introduction</p>
+      <p class="intro-text">{{ report()!.introduction }}</p>
+    </div>
     }
 
-    <hr class="doc-divider" />
+    <div class="items-header">
+      <span class="items-count">{{ report()!.items.length }} decision snapshots</span>
+      <div class="items-status-summary">
+        @for (badge of statusSummary(); track badge.status) {
+        <span class="status-badge status-{{ badge.status | lowercase }}">{{ badge.label }}</span>
+        }
+      </div>
+    </div>
 
     <div class="items-list">
       @for (item of sortedItems(); track item.id) {

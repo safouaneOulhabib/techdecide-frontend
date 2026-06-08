@@ -33,16 +33,20 @@
   </div>
   }
 
-  @if (!loading() || reports().length > 0) {
-  <div class="reports-grid">
-    @for (report of reports(); track report.id) {
-    <app-report-card
-      [report]="report"
-      [isOwner]="isOwner(report)"
-      (onView)="onView($event)"
-      (onDelete)="onDelete($event)"
-    />
-    }
-  </div>
+@if (!loading() || reports().length > 0) {
+<div class="reports-grid">
+  @for (report of reports(); track report.id) {
+  <app-report-card
+    [report]="report"
+    [isOwner]="isOwner(report)"
+    (onView)="onView($event)"
+    (onDelete)="onDelete($event)"
+  />
   }
+  <div class="new-report-card" (click)="onCreateNew()">
+    <i class="pi pi-plus"></i>
+    <p>New Report</p>
+  </div>
+</div>
+}
 </div>

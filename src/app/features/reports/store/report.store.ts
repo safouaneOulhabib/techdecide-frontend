@@ -55,11 +55,16 @@ export const ReportStore = signalStore(
             reports: [...state.reports, {
               id: report.id,
               title: report.title,
+              introduction: report.introduction,
               authorId: report.authorId,
               authorName: report.authorName,
               createdAt: report.createdAt,
               updatedAt: report.updatedAt,
-              itemCount: report.items.length
+              itemCount: report.items.length,
+              statusCounts: report.items.reduce((acc, item) => {
+                acc[item.decisionStatus] = (acc[item.decisionStatus] ?? 0) + 1;
+                return acc;
+              }, {} as Record<string, number>)
             }],
             loading: false
           })),
