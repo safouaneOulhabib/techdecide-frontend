@@ -21,8 +21,10 @@ export async function buildPdf(report: Report): Promise<void> {
     import('pdfmake/build/vfs_fonts')
   ]);
   const pdfMake = (pdfMakeModule as any).default ?? pdfMakeModule;
+  // pdfmake ≥0.3 renamed the property from `vfs` to `virtualfs`, and
+  // vfs_fonts now exports the font map directly (no nested `.vfs` key).
   const pdfFonts = (pdfFontsModule as any).default ?? pdfFontsModule;
-  pdfMake.vfs = pdfFonts.vfs;
+  pdfMake.virtualfs = pdfFonts;
 
   const subtitle = `By ${report.authorName} · Created ${formatDate(report.createdAt)}` +
     (report.updatedAt ? ` · Last edited ${formatDate(report.updatedAt)}` : '');
