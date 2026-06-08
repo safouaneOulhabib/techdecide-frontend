@@ -14,6 +14,12 @@ export const REPORT_ROUTES: Routes = [
         .then(m => m.ReportBuilderContainer)
   },
   {
+    path: ':id/pdf-preview',
+    loadComponent: () =>
+      import('./containers/report-pdf-preview/report-pdf-preview.container')
+        .then(m => m.ReportPdfPreviewContainer)
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./containers/report-detail/report-detail.container')
