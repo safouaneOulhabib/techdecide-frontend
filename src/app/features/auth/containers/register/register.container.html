@@ -1,57 +1,75 @@
-<div class="register-card">
-  <div class="register-header">
-    <h1>TechDecide</h1>
-    <p>Create your account</p>
-  </div>
+<div class="auth-layout">
 
-  @if (error()) {
-    <p-message severity="error" [text]="error()!" />
-  }
-
-  <div class="register-form">
-    <div class="field">
-      <label for="name">Full Name</label>
-      <input
-        pInputText
-        id="name"
-        type="text"
-        [(ngModel)]="credentials.name"
-        placeholder="John Doe"
-      />
+  <div class="auth-left">
+    <div class="brand">
+      <div class="brand-icon">TD</div>
+      <span class="brand-name">TechDecide</span>
     </div>
 
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        pInputText
-        id="email"
-        type="email"
-        [(ngModel)]="credentials.email"
-        placeholder="you@company.com"
-      />
+    <div class="form-area">
+      <div class="form-title">
+        <h2>Create your account</h2>
+        <p>Start managing decisions with your team today</p>
+      </div>
+
+      @if (error()) {
+      <p-message severity="error" [text]="error()!" styleClass="w-full mb-3" />
+      }
+
+      <div class="field">
+        <label for="name">Full name</label>
+        <input pInputText id="name" type="text"
+          [(ngModel)]="credentials.name"
+          placeholder="John Doe" />
+      </div>
+
+      <div class="field">
+        <label for="email">Work email</label>
+        <input pInputText id="email" type="email"
+          [(ngModel)]="credentials.email"
+          placeholder="you@company.com" />
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password id="password"
+          [(ngModel)]="credentials.password"
+          placeholder="Min. 8 characters"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full" />
+      </div>
+
+      <p-button label="Create account →" [loading]="loading()"
+        (onClick)="onSubmit()" styleClass="w-full" />
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">or</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a routerLink="/auth/login">Sign in</a>
+      </div>
     </div>
 
-    <div class="field">
-      <label for="password">Password</label>
-      <p-password
-        id="password"
-        [(ngModel)]="credentials.password"
-        placeholder="Min. 8 characters"
-        [toggleMask]="true"
-        styleClass="w-full"
-      />
+    <p class="copyright">© 2026 TechDecide · All rights reserved</p>
+  </div>
+
+  <div class="auth-right">
+    <div class="right-body">
+      <h3>Stop losing track of why decisions were made.</h3>
+      <p>TechDecide gives your engineering team a single place to log, discuss, and govern architectural decisions.</p>
+      <ul class="feature-list">
+        <li><span class="feature-check">✓</span>Full ADR governance workflow</li>
+        <li><span class="feature-check">✓</span>Team-based decision tracking</li>
+        <li><span class="feature-check">✓</span>Exportable PDF reports</li>
+        <li><span class="feature-check">✓</span>Vote and comment on decisions</li>
+      </ul>
     </div>
-
-    <p-button
-      label="Create account"
-      [loading]="loading()"
-      (onClick)="onSubmit()"
-      styleClass="w-full"
-    />
+    <p class="right-footer">Trusted by engineering teams worldwide</p>
   </div>
 
-  <div class="register-footer">
-    <span>Already have an account?</span>
-    <a routerLink="/auth/login">Sign in</a>
-  </div>
 </div>
