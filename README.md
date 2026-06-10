@@ -1,59 +1,111 @@
-# TechdecideFrontend
+# TechDecide Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+Angular SPA for [TechDecide](https://github.com/safouaneOulhabib/techdecide-api) — a Technical Decision Hub for Agile Teams. Teams log, govern, discuss, and export Architecture Decision Records (ADRs) through a formal lifecycle.
 
-## Development server
+## Tech Stack
 
-To start a local development server, run:
+| Layer         | Technology                          |
+|---------------|-------------------------------------|
+| Framework     | Angular 21 (standalone components)  |
+| Language      | TypeScript 5.9 (strict mode)        |
+| State         | NgRx SignalStore (`@ngrx/signals`)  |
+| UI Library    | PrimeNG 21 + custom Indigo preset   |
+| Icons         | PrimeIcons                          |
+| PDF           | jsPDF + jspdf-autotable             |
+| Package mgr   | npm 10                              |
+
+## Local Development Setup
+
+### Prerequisites
+
+- Node.js 20+ and npm 10+
+- The [TechDecide API](https://github.com/safouaneOulhabib/techdecide-api) running on `http://localhost:8080`
+
+### 1 — Install dependencies
+
+```bash
+npm install
+```
+
+### 2 — Start the dev server
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The app opens at **http://localhost:4200**. The Angular app calls the backend directly via the URL in `src/environments/environment.ts`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### 3 — Production build
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Output is written to `dist/techdecide-frontend/`.
 
-## Running unit tests
+## Environment Setup
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### API Base URL
 
-```bash
-ng test
+The backend URL is configured in [`src/environments/environment.ts`](src/environments/environment.ts):
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api'
+};
 ```
 
-## Running end-to-end tests
+Change `apiUrl` to point at your deployed backend for production builds. The environment file is imported throughout the app via the `@env` path alias.
 
-For end-to-end (e2e) testing, run:
+### Path Aliases
 
-```bash
-ng e2e
+| Alias       | Resolves to            |
+|-------------|------------------------|
+| `@core`     | `src/app/core`         |
+| `@features` | `src/app/features`     |
+| `@shared`   | `src/app/shared`       |
+| `@layout`   | `src/app/layout`       |
+| `@env`      | `src/environments`     |
+
+## Folder Structure
+
+```
+src/
+  app/
+    core/              App-wide singletons loaded once at startup
+      auth/            AuthStore, AuthService, JWT interceptor, guards
+    features/          One folder per product domain
+      auth/            Login and register pages
+      decisions/       Decision list, detail, form, lifecycle governance
+      reports/         Report builder, detail, inline edit, PDF preview
+      organizations/   Organization CRUD
+      teams/           Team CRUD
+      tags/            Tag CRUD
+    layout/            App shell — sidebar, top navbar
+    shared/            Reusable UI components (no business logic)
+  environments/
+    environment.ts     API URL and feature flags
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Each feature folder follows a consistent internal structure:
 
-## Additional Resources
+```
+features/<feature>/
+  models/        Type definitions (always `type`, never `interface`)
+  services/      HTTP-only services returning Observable<T>
+  store/         NgRx SignalStore — state, loading, error
+  components/    Dumb components (inputs/outputs only, no DI)
+  containers/    Smart components (inject Store only)
+  utils/         Pure business logic helpers with no Angular DI
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Authentication
+
+JWT tokens are stored in `sessionStorage` under key `auth_user`. The JWT interceptor automatically attaches the token to every request except `/api/auth/login` and `/api/auth/register`. Tokens are validated on app load — expired tokens clear immediately.
+
+Any 401 response from the API redirects to `/auth/login`.
+
+## License
+
+MIT — see [LICENSE](../LICENSE) in the monorepo root.
