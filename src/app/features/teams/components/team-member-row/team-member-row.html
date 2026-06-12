@@ -18,9 +18,10 @@
   <td class="col-role">
     @if (isAppAdmin() && !isSelf) {
       <p-select
-        [options]="roleOptions"
+        [options]="computedRoleOptions"
         optionLabel="label"
         optionValue="value"
+        optionDisabled="disabled"
         [ngModel]="member().teamRole"
         (ngModelChange)="onRoleSelect($event)"
         styleClass="role-select"

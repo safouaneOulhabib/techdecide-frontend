@@ -20,14 +20,18 @@ export class TeamMemberRow {
   currentUserId = input.required<number>();
   isAppAdmin = input.required<boolean>();
   isTeamAdminOrAppAdmin = input.required<boolean>();
+  hasTeamAdmin = input.required<boolean>();
 
   onRemove = output<number>();
   onRoleChange = output<{ userId: number; role: string }>();
 
-  readonly roleOptions = [
-    { label: 'Team Admin', value: 'TEAM_ADMIN' },
-    { label: 'Member', value: 'MEMBER' },
-  ];
+  get computedRoleOptions() {
+    const teamAdminTaken = this.hasTeamAdmin() && this.member().teamRole !== 'TEAM_ADMIN';
+    return [
+      { label: 'Team Admin', value: 'TEAM_ADMIN', disabled: teamAdminTaken },
+      { label: 'Member', value: 'MEMBER', disabled: false },
+    ];
+  }
 
   get isSelf(): boolean {
     return this.member().userId === this.currentUserId();

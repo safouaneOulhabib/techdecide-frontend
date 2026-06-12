@@ -15,6 +15,7 @@ export class TeamMemberList {
   currentUserId = input.required<number>();
   isAppAdmin = input.required<boolean>();
   isTeamAdminOrAppAdmin = input.required<boolean>();
+  hasTeamAdmin = input.required<boolean>();
   loading = input.required<boolean>();
 
   onRemove = output<number>();

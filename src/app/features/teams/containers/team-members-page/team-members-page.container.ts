@@ -37,6 +37,9 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
   readonly statsTeamAdmins = computed(() =>
     this.store.members().filter(m => m.teamRole === 'TEAM_ADMIN').length
   );
+  readonly hasTeamAdmin = computed(() =>
+    this.store.members().some(m => m.teamRole === 'TEAM_ADMIN')
+  );
 
   readonly searchTerm = signal('');
   readonly roleFilter = signal('ALL');
