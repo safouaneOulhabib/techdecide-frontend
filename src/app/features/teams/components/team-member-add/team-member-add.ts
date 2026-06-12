@@ -1,25 +1,35 @@
 import { Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { AvailableUser } from '@features/teams/models/team-member.model';
 
 @Component({
   selector: 'app-team-member-add',
   standalone: true,
-  imports: [FormsModule, ButtonModule, InputNumberModule],
+  imports: [FormsModule, ButtonModule, SelectModule],
   templateUrl: './team-member-add.html',
   styleUrl: './team-member-add.scss',
 })
 export class TeamMemberAdd {
   loading = input.required<boolean>();
-  onAssign = output<number>();
+  availableUsers = input.required<AvailableUser[]>();
+  onAssign = output<{ userId: number; role: string }>();
 
-  userId = signal<number | null>(null);
+  selectedUserId = signal<number | null>(null);
+  selectedRole = signal<string>('MEMBER');
+
+  readonly roleOptions = [
+    { label: 'Member', value: 'MEMBER' },
+    { label: 'Tech Lead', value: 'TECH_LEAD' },
+    { label: 'Admin', value: 'ADMIN' },
+  ];
 
   submit() {
-    const id = this.userId();
-    if (id == null || id <= 0) return;
-    this.onAssign.emit(id);
-    this.userId.set(null);
+    const userId = this.selectedUserId();
+    if (userId == null) return;
+    this.onAssign.emit({ userId, role: this.selectedRole() });
+    this.selectedUserId.set(null);
+    this.selectedRole.set('MEMBER');
   }
 }

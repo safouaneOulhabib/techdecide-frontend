@@ -1,16 +1,18 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { TeamMemberService } from '@features/teams/services/team-member.service';
-import { TeamMember } from '@features/teams/models/team-member.model';
+import { TeamMember, AvailableUser } from '@features/teams/models/team-member.model';
 
 export type TeamMemberState = {
   members: TeamMember[];
+  availableUsers: AvailableUser[];
   loading: boolean;
   error: string | null;
 };
 
 const initialState: TeamMemberState = {
   members: [],
+  availableUsers: [],
   loading: false,
   error: null,
 };
@@ -21,9 +23,13 @@ export const TeamMemberStore = signalStore(
   withMethods((store, service = inject(TeamMemberService)) => ({
 
     loadMembers(teamId: number) {
-      patchState(store, { loading: true, error: null });
+      patchState(store, (s) => ({ ...s, loading: true, error: null }));
       service.getMembers(teamId).subscribe({
-        next: (members) => patchState(store, (s) => ({ ...s, members, loading: false })),
+        next: (members) => patchState(store, (s) => ({
+          ...s,
+          members,
+          loading: false,
+        })),
         error: (err) => patchState(store, (s) => ({
           ...s,
           error: err.error?.message || 'Failed to load members',
@@ -32,12 +38,23 @@ export const TeamMemberStore = signalStore(
       });
     },
 
-    assignMember(teamId: number, userId: number) {
-      patchState(store, { loading: true, error: null });
-      service.assignMember(teamId, { userId }).subscribe({
+    loadAvailableUsers(teamId: number) {
+      service.getAvailableUsers(teamId).subscribe({
+        next: (availableUsers) => patchState(store, (s) => ({
+          ...s,
+          availableUsers,
+        })),
+        error: () => {},
+      });
+    },
+
+    assignMember(teamId: number, userId: number, role: string) {
+      patchState(store, (s) => ({ ...s, loading: true, error: null }));
+      service.assignMember(teamId, { userId, role }).subscribe({
         next: (member) => patchState(store, (s) => ({
           ...s,
           members: [...s.members.filter(m => m.userId !== member.userId), member],
+          availableUsers: s.availableUsers.filter(u => u.id !== userId),
           loading: false,
         })),
         error: (err) => patchState(store, (s) => ({
@@ -75,7 +92,8 @@ export const TeamMemberStore = signalStore(
     },
 
     clearMembers() {
-      patchState(store, initialState);
+      patchState(store, () => initialState);
     },
+
   }))
 );

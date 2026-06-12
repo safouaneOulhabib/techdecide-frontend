@@ -1,30 +1,85 @@
 <div class="team-members-page">
 
+  <!-- Header -->
   <div class="page-header">
-    <button class="btn-back" (click)="goBack()">
-      <i class="pi pi-arrow-left"></i>
-      Back
-    </button>
-    <h2 class="page-title">Team Members</h2>
+    <div>
+      <button class="btn-back" (click)="goBack()">
+        <i class="pi pi-arrow-left"></i>
+        Back
+      </button>
+      <h2 class="page-title">Team Members</h2>
+    </div>
   </div>
 
+  <!-- Error -->
   @if (error()) {
     <p-message severity="error" [text]="error()!" styleClass="mb-4" />
   }
 
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <p class="stat-label">Total members</p>
+      <p class="stat-value">{{ statsTotal() }}</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Tech leads</p>
+      <p class="stat-value">{{ statsTechLeads() }}</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Admins</p>
+      <p class="stat-value">{{ statsAdmins() }}</p>
+    </div>
+  </div>
+
+  <!-- Table card -->
   <div class="page-card">
 
+    <!-- Toolbar -->
+    <div class="table-toolbar">
+      <div class="search-wrap">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input
+          type="text"
+          placeholder="Search members..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          class="search-input"
+          aria-label="Search members"
+        />
+      </div>
+      <select
+        class="role-filter"
+        [ngModel]="roleFilter()"
+        (ngModelChange)="roleFilter.set($event)"
+        aria-label="Filter by role"
+      >
+        <option value="ALL">All roles</option>
+        <option value="ADMIN">ADMIN</option>
+        <option value="TECH_LEAD">TECH_LEAD</option>
+        <option value="MEMBER">MEMBER</option>
+      </select>
+    </div>
+
+    <!-- Member list -->
     <app-team-member-list
-      [members]="members()"
+      [members]="filteredMembers()"
       [currentUserId]="currentUserId()"
       [isAdmin]="isAdmin()"
+      [isAdminOrTechLead]="isAdminOrTechLead()"
       [loading]="loading()"
       (onRemove)="onRemove($event)"
-      (onRoleChange)="onRoleChange($event)" />
+      (onRoleChange)="onRoleChange($event)"
+    />
 
+    <!-- Add member panel -->
     @if (isAdminOrTechLead()) {
       <div class="divider"></div>
-      <app-team-member-add [loading]="loading()" (onAssign)="onAssign($event)" />
+      <app-team-member-add
+        [availableUsers]="availableUsers()"
+        [loading]="loading()"
+        (onAssign)="onAssign($event)"
+      />
     }
 
   </div>

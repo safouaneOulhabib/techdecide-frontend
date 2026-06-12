@@ -1,13 +1,14 @@
 .member-add {
-  padding: 1rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--p-surface-50);
 
   .add-title {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--p-text-muted-color);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
+    margin: 0 0 0.75rem;
   }
 
   .add-form {
@@ -15,9 +16,12 @@
     gap: 0.75rem;
     align-items: center;
 
-    .add-input {
+    .add-user-select {
       flex: 1;
-      max-width: 200px;
+    }
+
+    .add-role-select {
+      width: 150px;
     }
   }
 }

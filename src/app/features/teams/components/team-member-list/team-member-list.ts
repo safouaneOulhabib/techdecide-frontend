@@ -14,6 +14,7 @@ export class TeamMemberList {
   members = input.required<TeamMember[]>();
   currentUserId = input.required<number>();
   isAdmin = input.required<boolean>();
+  isAdminOrTechLead = input.required<boolean>();
   loading = input.required<boolean>();
 
   onRemove = output<number>();

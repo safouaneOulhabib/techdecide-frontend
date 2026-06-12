@@ -1,18 +1,52 @@
-<tr class="member-row">
-  <td class="col-name">{{ member().name }}</td>
-  <td class="col-email">{{ member().email }}</td>
+ <!-- Member cell with avatar -->
+  <td class="col-name">
+    <div class="member-cell">
+      <div class="avatar" [style]="getAvatarStyle(member().role)">
+        {{ getInitials(member().name) }}
+      </div>
+      <div>
+        <span class="member-name">{{ member().name }}</span>
+        @if (isSelf) {
+          <span class="you-badge">You</span>
+        }
+        <p class="member-email">{{ member().email }}</p>
+      </div>
+    </div>
+  </td>
+
+  <!-- Role -->
   <td class="col-role">
     @if (isAdmin() && !isSelf) {
-      <p-select [options]="roleOptions" optionLabel="label" optionValue="value"
-        [ngModel]="member().role" (ngModelChange)="onRoleSelect($event)" styleClass="role-select" />
+      <p-select
+        [options]="roleOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="member().role"
+        (ngModelChange)="onRoleSelect($event)"
+        styleClass="role-select"
+      />
     } @else {
-      <p-tag [value]="member().role" [severity]="getRoleSeverity(member().role)" />
+      <span class="role-badge" [style]="getRoleBadgeStyle(member().role)">
+        {{ member().role }}
+      </span>
     }
   </td>
+
+  <!-- Joined date -->
+  <td class="col-joined">
+    {{ member().createdAt | date:'mediumDate' }}
+  </td>
+
+  <!-- Actions -->
   <td class="col-actions">
-    @if (!isSelf) {
-      <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
-        size="small" (onClick)="onRemove.emit(member().userId)" />
+    @if (!isSelf && isAdminOrTechLead()) {
+      <p-button
+        icon="pi pi-trash"
+        severity="danger"
+        [text]="true"
+        [rounded]="true"
+        size="small"
+        (onClick)="onRemove.emit(member().userId)"
+      />
     }
   </td>
-</tr>
