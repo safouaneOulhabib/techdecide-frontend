@@ -48,9 +48,9 @@ export const TeamMemberStore = signalStore(
       });
     },
 
-    assignMember(teamId: number, userId: number, role: string) {
+    assignMember(teamId: number, userId: number) {
       patchState(store, (s) => ({ ...s, loading: true, error: null }));
-      service.assignMember(teamId, { userId, teamRole: role }).subscribe({
+      service.assignMember(teamId, { userId }).subscribe({
         next: (member) => patchState(store, (s) => ({
           ...s,
           members: [...s.members.filter(m => m.userId !== member.userId), member],
@@ -79,7 +79,7 @@ export const TeamMemberStore = signalStore(
     },
 
     changeRole(teamId: number, userId: number, role: string) {
-      service.changeRole(teamId, userId, { teamRole: role }).subscribe({
+      service.changeRole(teamId, userId, { role }).subscribe({
         next: (updated) => patchState(store, (s) => ({
           ...s,
           members: s.members.map(m => m.userId === userId ? updated : m),

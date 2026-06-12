@@ -14,21 +14,14 @@ import { AvailableUser } from '@features/teams/models/team-member.model';
 export class TeamMemberAdd {
   loading = input.required<boolean>();
   availableUsers = input.required<AvailableUser[]>();
-  onAssign = output<{ userId: number; role: string }>();
+  onAssign = output<{ userId: number }>();
 
   selectedUserId = signal<number | null>(null);
-  selectedRole = signal<string>('MEMBER');
-
-  readonly roleOptions = [
-    { label: 'Member', value: 'MEMBER' },
-    { label: 'Team Admin', value: 'TEAM_ADMIN' },
-  ];
 
   submit() {
     const userId = this.selectedUserId();
     if (userId == null) return;
-    this.onAssign.emit({ userId, role: this.selectedRole() });
+    this.onAssign.emit({ userId });
     this.selectedUserId.set(null);
-    this.selectedRole.set('MEMBER');
   }
 }

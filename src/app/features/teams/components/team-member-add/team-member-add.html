@@ -12,15 +12,6 @@
       class="add-user-select"
     />
 
-    <p-select
-      [options]="roleOptions"
-      optionLabel="label"
-      optionValue="value"
-      [ngModel]="selectedRole()"
-      (ngModelChange)="selectedRole.set($event)"
-      class="add-role-select"
-    />
-
     <p-button
       label="Assign"
       icon="pi pi-user-plus"

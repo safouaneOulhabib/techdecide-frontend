@@ -69,8 +69,8 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  onAssign(event: { userId: number; role: string }) {
-    this.store.assignMember(this.teamId, event.userId, event.role);
+  onAssign(event: { userId: number }) {
+    this.store.assignMember(this.teamId, event.userId);
   }
 
   onRemove(userId: number) {
