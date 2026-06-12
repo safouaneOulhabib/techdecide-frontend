@@ -13,10 +13,10 @@ fs.mkdirSync('e2e/.auth', { recursive: true });
 
 for (const user of users) {
   setup(`authenticate ${user.email}`, async ({ page }) => {
-    await page.goto('/login');
-    await page.getByLabel(/email/i).fill(user.email);
-    await page.getByLabel(/password/i).fill('Test1234!');
-    await page.getByRole('button', { name: /log in|sign in/i }).click();
+    await page.goto('/auth/login');
+    await page.locator('#email').fill(user.email);
+    await page.locator('p-password input').fill('Test1234!');
+    await page.getByRole('button', { name: /sign in/i }).click();
     await expect(page).toHaveURL(/decisions/, { timeout: 8000 });
     await page.context().storageState({ path: `e2e/.auth/${user.file}.json` });
   });
