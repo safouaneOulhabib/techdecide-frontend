@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -55,6 +55,20 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
   });
 
   private teamId = 0;
+
+  constructor() {
+    // After members load, enforce that TEAM_ADMIN can only manage their own team
+    effect(() => {
+      if (this.store.loading()) return;
+      if (this.authStore.isAppAdmin()) return;
+      if (this.teamId === 0) return;
+      const userId = this.currentUserId();
+      const isMember = this.store.members().some(m => m.userId === userId);
+      if (!isMember) {
+        this.router.navigate(['/decisions']);
+      }
+    });
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {

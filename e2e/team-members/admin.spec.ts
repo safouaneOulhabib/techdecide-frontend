@@ -53,10 +53,13 @@ test.describe('Admin — team members', () => {
 
   test('TEAM_ADMIN option disabled when team already has one', async ({ page }) => {
     await page.goto('/teams/1/members');
-    // Find any MEMBER row and open its role dropdown
-    const memberRow = page.locator('tbody tr').filter({ hasText: /MEMBER/ }).first();
+    await page.locator('tbody tr').first().waitFor({ state: 'visible' });
+    // Use the native role filter to show only MEMBER rows
+    await page.locator('.role-filter').selectOption('MEMBER');
+    // Now the first (and only) visible data row is the MEMBER
+    const memberRow = page.locator('tbody tr').first();
     await memberRow.locator('p-select').click();
-    // PrimeNG option with aria-disabled when disabled
+    // PrimeNG renders disabled options with aria-disabled="true"
     const teamAdminOption = page.locator('.p-select-option').filter({ hasText: /team admin/i }).first();
     await expect(teamAdminOption).toHaveAttribute('aria-disabled', 'true', { timeout: 3000 });
   });
