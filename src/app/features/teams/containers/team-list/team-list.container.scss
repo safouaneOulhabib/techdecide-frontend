@@ -105,6 +105,36 @@
   color: var(--p-text-secondary-color);
 }
 
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.btn-members {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--p-text-secondary-color);
+  transition: all 0.15s;
+
+  i {
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    background: var(--p-primary-50);
+    color: var(--p-primary-color);
+  }
+}
+
 .btn-delete {
   width: 32px;
   height: 32px;
