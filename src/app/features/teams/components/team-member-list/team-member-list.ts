@@ -13,8 +13,8 @@ import { TeamMemberRow } from '@features/teams/components/team-member-row/team-m
 export class TeamMemberList {
   members = input.required<TeamMember[]>();
   currentUserId = input.required<number>();
-  isAdmin = input.required<boolean>();
-  isAdminOrTechLead = input.required<boolean>();
+  isAppAdmin = input.required<boolean>();
+  isTeamAdminOrAppAdmin = input.required<boolean>();
   loading = input.required<boolean>();
 
   onRemove = output<number>();

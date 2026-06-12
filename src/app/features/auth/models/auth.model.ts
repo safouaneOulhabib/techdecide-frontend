@@ -1,18 +1,19 @@
-export interface RegisterRequest {
+export type RegisterRequest = {
   name: string;
   email: string;
   password: string;
-}
+};
 
-export interface LoginRequest {
+export type LoginRequest = {
   email: string;
   password: string;
-}
+};
 
-export interface AuthResponse {
+export type AuthResponse = {
   id: number;
   token: string;
   email: string;
   name: string;
-  role: string;
-}
+  appRole: string;
+  teamRole: string | null;
+};

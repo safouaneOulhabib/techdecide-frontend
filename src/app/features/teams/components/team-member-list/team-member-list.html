@@ -34,8 +34,8 @@
     </thead>
     <tbody>
       @for (member of members(); track member.userId) {
-      <tr app-team-member-row [member]="member" [currentUserId]="currentUserId()" [isAdmin]="isAdmin()"
-        [isAdminOrTechLead]="isAdminOrTechLead()" (onRemove)="onRemove.emit($event)"
+      <tr app-team-member-row [member]="member" [currentUserId]="currentUserId()" [isAppAdmin]="isAppAdmin()"
+        [isTeamAdminOrAppAdmin]="isTeamAdminOrAppAdmin()" (onRemove)="onRemove.emit($event)"
         (onRoleChange)="onRoleChange.emit($event)">
       </tr>
       }
