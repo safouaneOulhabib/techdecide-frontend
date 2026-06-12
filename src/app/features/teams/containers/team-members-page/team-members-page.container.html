@@ -23,12 +23,8 @@
       <p class="stat-value">{{ statsTotal() }}</p>
     </div>
     <div class="stat-card">
-      <p class="stat-label">Tech leads</p>
-      <p class="stat-value">{{ statsTechLeads() }}</p>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Admins</p>
-      <p class="stat-value">{{ statsAdmins() }}</p>
+      <p class="stat-label">Team admins</p>
+      <p class="stat-value">{{ statsTeamAdmins() }}</p>
     </div>
   </div>
 
@@ -55,8 +51,7 @@
         aria-label="Filter by role"
       >
         <option value="ALL">All roles</option>
-        <option value="ADMIN">ADMIN</option>
-        <option value="TECH_LEAD">TECH_LEAD</option>
+        <option value="TEAM_ADMIN">TEAM_ADMIN</option>
         <option value="MEMBER">MEMBER</option>
       </select>
     </div>
@@ -65,15 +60,15 @@
     <app-team-member-list
       [members]="filteredMembers()"
       [currentUserId]="currentUserId()"
-      [isAdmin]="isAdmin()"
-      [isAdminOrTechLead]="isAdminOrTechLead()"
+      [isAppAdmin]="isAppAdmin()"
+      [isTeamAdminOrAppAdmin]="isTeamAdminOrAppAdmin()"
       [loading]="loading()"
       (onRemove)="onRemove($event)"
       (onRoleChange)="onRoleChange($event)"
     />
 
     <!-- Add member panel -->
-    @if (isAdminOrTechLead()) {
+    @if (isTeamAdminOrAppAdmin()) {
       <div class="divider"></div>
       <app-team-member-add
         [availableUsers]="availableUsers()"

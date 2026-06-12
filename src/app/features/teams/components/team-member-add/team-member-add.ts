@@ -21,8 +21,7 @@ export class TeamMemberAdd {
 
   readonly roleOptions = [
     { label: 'Member', value: 'MEMBER' },
-    { label: 'Tech Lead', value: 'TECH_LEAD' },
-    { label: 'Admin', value: 'ADMIN' },
+    { label: 'Team Admin', value: 'TEAM_ADMIN' },
   ];
 
   submit() {

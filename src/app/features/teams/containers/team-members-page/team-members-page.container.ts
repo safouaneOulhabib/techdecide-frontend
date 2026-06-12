@@ -30,18 +30,12 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
   readonly error: Signal<string | null> = this.store.error;
 
   readonly currentUserId = computed(() => this.authStore.user()?.id ?? 0);
-  readonly isAdmin = computed(() => this.authStore.user()?.role === 'ADMIN');
-  readonly isAdminOrTechLead = computed(() => {
-    const role = this.authStore.user()?.role;
-    return role === 'ADMIN' || role === 'TECH_LEAD';
-  });
+  readonly isAppAdmin = this.authStore.isAppAdmin;
+  readonly isTeamAdminOrAppAdmin = this.authStore.isTeamAdminOrAppAdmin;
 
   readonly statsTotal = computed(() => this.store.members().length);
-  readonly statsTechLeads = computed(() =>
-    this.store.members().filter(m => m.role === 'TECH_LEAD').length
-  );
-  readonly statsAdmins = computed(() =>
-    this.store.members().filter(m => m.role === 'ADMIN').length
+  readonly statsTeamAdmins = computed(() =>
+    this.store.members().filter(m => m.teamRole === 'TEAM_ADMIN').length
   );
 
   readonly searchTerm = signal('');
@@ -53,7 +47,7 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
     return this.store.members().filter(m =>
       (m.name.toLowerCase().includes(search) ||
        m.email.toLowerCase().includes(search)) &&
-      (role === 'ALL' || m.role === role)
+      (role === 'ALL' || m.teamRole === role)
     );
   });
 
@@ -61,8 +55,7 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      const role = this.authStore.user()?.role;
-      if (role === 'MEMBER') {
+      if (!this.authStore.isTeamAdminOrAppAdmin()) {
         this.router.navigate(['/decisions']);
         return;
       }
@@ -92,16 +85,13 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   }
 
-  getAvatarStyle(role: string): string {
-    if (role === 'ADMIN') return 'background:#EEEDFE; color:#3C3489';
-    if (role === 'TECH_LEAD') return 'background:#E6F1FB; color:#0C447C';
+  getAvatarStyle(teamRole: string): string {
+    if (teamRole === 'TEAM_ADMIN') return 'background:#E6F1FB; color:#0C447C';
     return 'background:var(--surface-100); color:var(--text-color-secondary)';
   }
 
-  getRoleBadgeStyle(role: string): string {
-    if (role === 'ADMIN')
-      return 'background:#EEEDFE; color:#3C3489; border:0.5px solid #AFA9EC';
-    if (role === 'TECH_LEAD')
+  getRoleBadgeStyle(teamRole: string): string {
+    if (teamRole === 'TEAM_ADMIN')
       return 'background:#E6F1FB; color:#0C447C; border:0.5px solid #85B7EB';
     return 'background:var(--surface-100); color:var(--text-color-secondary); border:0.5px solid var(--surface-border)';
   }

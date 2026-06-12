@@ -1,6 +1,6 @@
-import { inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { signalStore, withState, withMethods, withHooks, patchState } from '@ngrx/signals';
+import { signalStore, withComputed, withState, withMethods, withHooks, patchState } from '@ngrx/signals';
 import { AuthService } from '@features/auth/services/auth.service';
 import { AuthResponse, LoginRequest, RegisterRequest } from '@features/auth/models/auth.model';
 
@@ -20,6 +20,14 @@ export const AuthStore = signalStore(
   { providedIn: 'root' },
 
   withState(initialState),
+
+  withComputed((store) => ({
+    isAppAdmin: computed(() => store.user()?.appRole === 'APP_ADMIN'),
+    isTeamAdmin: computed(() => store.user()?.teamRole === 'TEAM_ADMIN'),
+    isTeamAdminOrAppAdmin: computed(() =>
+      store.user()?.appRole === 'APP_ADMIN' || store.user()?.teamRole === 'TEAM_ADMIN'
+    ),
+  })),
 
   withMethods((store, authService = inject(AuthService), router = inject(Router)) => ({
 

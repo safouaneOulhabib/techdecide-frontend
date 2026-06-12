@@ -18,15 +18,14 @@ selector: '[app-team-member-row]',
 export class TeamMemberRow {
   member = input.required<TeamMember>();
   currentUserId = input.required<number>();
-  isAdmin = input.required<boolean>();
-  isAdminOrTechLead = input.required<boolean>();  // add this
+  isAppAdmin = input.required<boolean>();
+  isTeamAdminOrAppAdmin = input.required<boolean>();
 
   onRemove = output<number>();
   onRoleChange = output<{ userId: number; role: string }>();
 
   readonly roleOptions = [
-    { label: 'Admin', value: 'ADMIN' },
-    { label: 'Tech Lead', value: 'TECH_LEAD' },
+    { label: 'Team Admin', value: 'TEAM_ADMIN' },
     { label: 'Member', value: 'MEMBER' },
   ];
 
@@ -39,23 +38,19 @@ export class TeamMemberRow {
   }
 
   getAvatarStyle(role: string): string {
-    if (role === 'ADMIN') return 'background:#EEEDFE; color:#3C3489';
-    if (role === 'TECH_LEAD') return 'background:#E6F1FB; color:#0C447C';
+    if (role === 'TEAM_ADMIN') return 'background:#E6F1FB; color:#0C447C';
     return 'background:var(--p-surface-100); color:var(--p-text-muted-color)';
   }
 
   getRoleBadgeStyle(role: string): string {
-    if (role === 'ADMIN')
-      return 'background:#EEEDFE; color:#3C3489; border:0.5px solid #AFA9EC';
-    if (role === 'TECH_LEAD')
+    if (role === 'TEAM_ADMIN')
       return 'background:#E6F1FB; color:#0C447C; border:0.5px solid #85B7EB';
     return 'background:var(--p-surface-100); color:var(--p-text-muted-color); border:0.5px solid var(--p-content-border-color)';
   }
 
   getRoleSeverity(role: string): TagSeverity {
     const map: Record<string, TagSeverity> = {
-      ADMIN: 'danger',
-      TECH_LEAD: 'warn',
+      TEAM_ADMIN: 'info',
       MEMBER: 'secondary',
     };
     return map[role] ?? 'secondary';

@@ -1,7 +1,7 @@
  <!-- Member cell with avatar -->
   <td class="col-name">
     <div class="member-cell">
-      <div class="avatar" [style]="getAvatarStyle(member().role)">
+      <div class="avatar" [style]="getAvatarStyle(member().teamRole)">
         {{ getInitials(member().name) }}
       </div>
       <div>
@@ -16,18 +16,18 @@
 
   <!-- Role -->
   <td class="col-role">
-    @if (isAdmin() && !isSelf) {
+    @if (isAppAdmin() && !isSelf) {
       <p-select
         [options]="roleOptions"
         optionLabel="label"
         optionValue="value"
-        [ngModel]="member().role"
+        [ngModel]="member().teamRole"
         (ngModelChange)="onRoleSelect($event)"
         styleClass="role-select"
       />
     } @else {
-      <span class="role-badge" [style]="getRoleBadgeStyle(member().role)">
-        {{ member().role }}
+      <span class="role-badge" [style]="getRoleBadgeStyle(member().teamRole)">
+        {{ member().teamRole }}
       </span>
     }
   </td>
@@ -39,7 +39,7 @@
 
   <!-- Actions -->
   <td class="col-actions">
-    @if (!isSelf && isAdminOrTechLead()) {
+    @if (!isSelf && isTeamAdminOrAppAdmin()) {
       <p-button
         icon="pi pi-trash"
         severity="danger"

@@ -2,18 +2,18 @@ export type TeamMember = {
   userId: number;
   name: string;
   email: string;
-  role: string;
+  teamRole: string;
   teamId: number;
   createdAt: string;
 };
 
 export type AssignMemberRequest = {
   userId: number;
-  role: string;
+  teamRole: string;
 };
 
 export type ChangeRoleRequest = {
-  role: string;
+  teamRole: string;
 };
 
 export type TeamMemberState = {
