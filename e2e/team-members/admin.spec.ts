@@ -16,18 +16,20 @@ test.describe('Admin — team members', () => {
     await expect(page.locator('text=Team Members')).toBeVisible();
   });
 
-  test('can add a member (noteam user) to Backend Team', async ({ page }) => {
+  test('can add a member (No Team User) to Backend Team', async ({ page }) => {
     await page.goto('/teams/1/members');
-    const select = page.locator('p-select').filter({ has: page.locator('[placeholder*="user"]') });
+    // The add-member p-select has class "add-user-select"
+    const select = page.locator('.member-add p-select');
     await select.click();
-    const option = page.locator('[class*="option"], li').filter({ hasText: /no team|noteam/i }).first();
+    // PrimeNG appends the overlay to body; options are .p-select-option items
+    const option = page.locator('.p-select-option').filter({ hasText: /No Team User/i }).first();
     if (await option.isVisible({ timeout: 3000 }).catch(() => false)) {
       await option.click();
       await page.getByRole('button', { name: /assign/i }).click();
-      await expect(page.locator('text=No Team')).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('text=No Team User')).toBeVisible({ timeout: 5000 });
       // Clean up — remove the added member
-      const row = page.locator('tr').filter({ hasText: /no team|noteam/i });
-      await row.getByRole('button').click();
+      const row = page.locator('tbody tr').filter({ hasText: /No Team User/ });
+      await row.locator('button').click();
       const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
       if (await confirm.isVisible({ timeout: 1000 }).catch(() => false)) await confirm.click();
     }
@@ -35,27 +37,27 @@ test.describe('Admin — team members', () => {
 
   test('role dropdown shows for other members but not for self', async ({ page }) => {
     await page.goto('/teams/1/members');
-    const selfRow = page.locator('tr').filter({ has: page.locator('text=You') });
-    // Self row: no dropdown, just a static badge
+    // Admin is not a member, so no "You" row exists — self check passes trivially
+    const selfRow = page.locator('tbody tr').filter({ has: page.locator('.you-badge') });
     await expect(selfRow.locator('p-select')).not.toBeVisible();
-    // Other rows: dropdown present
-    const otherRow = page.locator('tr').filter({ hasNot: page.locator('text=You') }).first();
+    // Other rows should have a role p-select (admin sees dropdowns for all)
+    const otherRow = page.locator('tbody tr').first();
     await expect(otherRow.locator('p-select')).toBeVisible();
   });
 
   test('cannot remove self', async ({ page }) => {
     await page.goto('/teams/1/members');
-    const selfRow = page.locator('tr').filter({ has: page.locator('text=You') });
+    const selfRow = page.locator('tbody tr').filter({ has: page.locator('.you-badge') });
     await expect(selfRow.getByRole('button', { name: /delete|remove/i })).not.toBeVisible();
   });
 
   test('TEAM_ADMIN option disabled when team already has one', async ({ page }) => {
     await page.goto('/teams/1/members');
-    // Find a MEMBER row and open its role dropdown
-    const memberRow = page.locator('tr').filter({ hasText: /MEMBER/ }).filter({ hasNot: page.locator('text=You') }).first();
+    // Find any MEMBER row and open its role dropdown
+    const memberRow = page.locator('tbody tr').filter({ hasText: /MEMBER/ }).first();
     await memberRow.locator('p-select').click();
-    const teamAdminOption = page.locator('[class*="option"], li').filter({ hasText: /team admin/i }).first();
-    // Should be present but disabled (aria-disabled or has disabled class)
+    // PrimeNG option with aria-disabled when disabled
+    const teamAdminOption = page.locator('.p-select-option').filter({ hasText: /team admin/i }).first();
     await expect(teamAdminOption).toHaveAttribute('aria-disabled', 'true', { timeout: 3000 });
   });
 

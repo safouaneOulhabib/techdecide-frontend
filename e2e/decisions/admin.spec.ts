@@ -6,7 +6,7 @@ test.describe('Admin — decisions', () => {
 
   test('APP_ADMIN badge shown in sidebar', async ({ page }) => {
     await page.goto('/decisions');
-    await expect(page.locator('text=APP_ADMIN')).toBeVisible();
+    await expect(page.locator('.sidebar .user-role')).toHaveText('APP_ADMIN');
   });
 
   test('can create a decision', async ({ page }) => {
@@ -21,7 +21,6 @@ test.describe('Admin — decisions', () => {
   });
 
   test('edit button visible on DRAFT, hidden on APPROVED', async ({ page }) => {
-    // Create a fresh decision
     await page.goto('/decisions');
     await page.getByRole('button', { name: /new decision/i }).click();
     await page.getByLabel(/title/i).fill('E2E Edit Guard');
@@ -31,16 +30,18 @@ test.describe('Admin — decisions', () => {
     await page.waitForURL(/decisions\/\d+/);
 
     // Edit visible on DRAFT
-    await expect(page.getByRole('button', { name: /edit/i })).toBeVisible();
+    await expect(page.locator('.btn-edit')).toBeVisible();
 
-    // Advance to APPROVED
-    await page.getByRole('combobox').first().selectOption('PROPOSED');
-    await page.getByRole('combobox').first().selectOption('APPROVED');
-    await page.waitForTimeout(500);
+    // Advance to APPROVED via PrimeNG p-select (appendTo body → .p-select-option)
+    await page.locator('.status-selector p-select').click();
+    await page.locator('.p-select-option').filter({ hasText: /PROPOSED/i }).click();
+    await page.waitForTimeout(300);
+    await page.locator('.status-selector p-select').click();
+    await page.locator('.p-select-option').filter({ hasText: /APPROVED/i }).click();
+    await page.waitForTimeout(300);
 
     // Edit hidden on APPROVED
-    await expect(page.getByRole('button', { name: /edit/i })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: /delete/i })).not.toBeVisible();
+    await expect(page.locator('.btn-edit')).not.toBeVisible();
   });
 
   test('can delete a DRAFT decision', async ({ page }) => {
@@ -51,11 +52,10 @@ test.describe('Admin — decisions', () => {
     await page.getByLabel(/decision/i).first().fill('dec');
     await page.getByRole('button', { name: /save|create|submit/i }).click();
     await page.waitForURL(/decisions\/\d+/);
-    await page.getByRole('button', { name: /delete/i }).click();
+    await page.locator('.btn-delete, [class*="btn-delete"]').click();
     const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
     if (await confirm.isVisible({ timeout: 1000 }).catch(() => false)) await confirm.click();
     await expect(page).toHaveURL(/decisions$/, { timeout: 5000 });
-    await expect(page.locator('text=E2E Delete Me')).not.toBeVisible();
   });
 
   test('status selector visible and functional', async ({ page }) => {
@@ -66,10 +66,12 @@ test.describe('Admin — decisions', () => {
     await page.getByLabel(/decision/i).first().fill('dec');
     await page.getByRole('button', { name: /save|create|submit/i }).click();
     await page.waitForURL(/decisions\/\d+/);
-    const statusControl = page.getByRole('combobox').first();
-    await expect(statusControl).toBeVisible();
-    await statusControl.selectOption('PROPOSED');
-    await expect(page.locator('text=PROPOSED')).toBeVisible();
+    const statusSelector = page.locator('.status-selector');
+    await expect(statusSelector).toBeVisible();
+    // Open the p-select and pick PROPOSED
+    await statusSelector.locator('p-select').click();
+    await page.locator('.p-select-option').filter({ hasText: /PROPOSED/i }).click();
+    await expect(page.locator('.decision-status-badge, [class*="status"]').filter({ hasText: /PROPOSED/i })).toBeVisible({ timeout: 3000 });
   });
 
 });

@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Reports', () => {
+test.describe('Admin reports', () => {
+  test.use({ storageState: 'e2e/.auth/admin.json' });
 
-  test('admin: can create a report', async ({ page }) => {
-    test.use({ storageState: 'e2e/.auth/admin.json' });
+  test('can create a report', async ({ page }) => {
     await page.goto('/reports/new');
     await page.getByLabel(/title/i).fill('E2E Admin Report');
     await page.getByRole('button', { name: /save|create|submit/i }).click();
@@ -11,8 +11,7 @@ test.describe('Reports', () => {
     await expect(page.locator('text=E2E Admin Report')).toBeVisible();
   });
 
-  test('admin: can edit own report', async ({ page }) => {
-    test.use({ storageState: 'e2e/.auth/admin.json' });
+  test('can edit own report', async ({ page }) => {
     await page.goto('/reports');
     await page.locator('[class*="report-card"], tr').filter({ hasText: /E2E Admin Report/ }).first().click();
     await page.getByRole('button', { name: /edit/i }).click();
@@ -20,23 +19,27 @@ test.describe('Reports', () => {
     await page.getByRole('button', { name: /save|update/i }).click();
     await expect(page.locator('text=E2E Admin Report Updated')).toBeVisible({ timeout: 5000 });
   });
+});
 
-  test('backend-member: cannot edit another users report', async ({ page }) => {
-    test.use({ storageState: 'e2e/.auth/backend-member.json' });
+test.describe('Backend member reports', () => {
+  test.use({ storageState: 'e2e/.auth/backend-member.json' });
+
+  test('cannot edit another users report', async ({ page }) => {
     await page.goto('/reports');
-    // Open first report (likely owned by admin)
     await page.locator('[class*="report-card"], tr').first().click();
     await expect(page.getByRole('button', { name: /edit/i })).not.toBeVisible();
     await expect(page.getByRole('button', { name: /delete/i })).not.toBeVisible();
   });
+});
 
-  test('backend-admin: can create and delete own report', async ({ page }) => {
-    test.use({ storageState: 'e2e/.auth/backend-admin.json' });
+test.describe('Backend admin reports', () => {
+  test.use({ storageState: 'e2e/.auth/backend-admin.json' });
+
+  test('can create and delete own report', async ({ page }) => {
     await page.goto('/reports/new');
     await page.getByLabel(/title/i).fill('E2E Backend Admin Report');
     await page.getByRole('button', { name: /save|create|submit/i }).click();
     await page.waitForURL(/reports\/\d+|reports$/);
-    // Delete it
     const deleteBtn = page.getByRole('button', { name: /delete/i });
     if (await deleteBtn.isVisible()) {
       await deleteBtn.click();
@@ -45,5 +48,4 @@ test.describe('Reports', () => {
       await expect(page).toHaveURL(/reports$/, { timeout: 5000 });
     }
   });
-
 });
