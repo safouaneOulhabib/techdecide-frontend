@@ -9,11 +9,10 @@ export type TeamMember = {
 
 export type AssignMemberRequest = {
   userId: number;
-  teamRole: string;
 };
 
 export type ChangeRoleRequest = {
-  teamRole: string;
+  role: string;
 };
 
 export type TeamMemberState = {
