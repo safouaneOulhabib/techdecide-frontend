@@ -1,0 +1,33 @@
+<div class="member-add">
+  <h3 class="add-title">Add Member</h3>
+  <div class="add-form">
+
+    <p-select
+      [options]="availableUsers()"
+      optionLabel="name"
+      optionValue="id"
+      [ngModel]="selectedUserId()"
+      (ngModelChange)="selectedUserId.set($event)"
+      placeholder="Select a user..."
+      class="add-user-select"
+    />
+
+    <p-select
+      [options]="roleOptions"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="selectedRole()"
+      (ngModelChange)="selectedRole.set($event)"
+      class="add-role-select"
+    />
+
+    <p-button
+      label="Assign"
+      icon="pi pi-user-plus"
+      [disabled]="!selectedUserId() || loading()"
+      [loading]="loading()"
+      (onClick)="submit()"
+    />
+
+  </div>
+</div>

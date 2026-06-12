@@ -1,0 +1,39 @@
+.member-list {
+  .members-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead tr {
+      border-bottom: 1px solid var(--p-content-border-color);
+
+      th {
+        padding: 0.625rem 1rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--p-text-muted-color);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--p-content-border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: var(--p-content-hover-background);
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--p-text-muted-color);
+    font-size: 0.9rem;
+  }
+}

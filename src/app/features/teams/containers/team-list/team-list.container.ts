@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, Signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -8,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { TooltipModule } from 'primeng/tooltip';
 import { TeamStore } from '@features/teams/store/team.store';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
 import { Team, CreateTeamRequest } from '@features/teams/models/team.model';
@@ -28,6 +30,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     SelectModule,
     ProgressSpinnerModule,
     MessageModule,
+    TooltipModule,
     SkeletonModule
   ],
   templateUrl: './team-list.container.html',
@@ -36,6 +39,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class TeamListContainer implements OnInit {
   private readonly teamStore = inject(TeamStore);
   private readonly orgStore = inject(OrganizationStore);
+  private readonly router = inject(Router);
 
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly loading: Signal<boolean> = this.teamStore.loading;
@@ -68,10 +72,14 @@ export class TeamListContainer implements OnInit {
     this.dialogVisible = false;
   }
 
- onDelete(id: number) {
-  this.confirmService.confirm(
-    'Are you sure you want to delete this team?',
-    () => this.teamStore.remove(id)
-  );
-}
+  onViewMembers(id: number) {
+    this.router.navigate(['/teams', id, 'members']);
+  }
+
+  onDelete(id: number) {
+    this.confirmService.confirm(
+      'Are you sure you want to delete this team?',
+      () => this.teamStore.remove(id)
+    );
+  }
 }
