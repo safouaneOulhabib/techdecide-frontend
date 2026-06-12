@@ -1,0 +1,26 @@
+.member-row {
+  td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+  }
+
+  .col-name {
+    font-weight: 500;
+  }
+
+  .col-email {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+  }
+
+  .col-role {
+    .role-select {
+      width: 130px;
+    }
+  }
+
+  .col-actions {
+    text-align: right;
+    width: 60px;
+  }
+}

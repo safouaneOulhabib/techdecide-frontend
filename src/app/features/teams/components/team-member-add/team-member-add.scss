@@ -1,0 +1,23 @@
+.member-add {
+  padding: 1rem 0;
+
+  .add-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--p-text-muted-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .add-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    .add-input {
+      flex: 1;
+      max-width: 200px;
+    }
+  }
+}

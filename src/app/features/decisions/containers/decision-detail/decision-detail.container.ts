@@ -76,6 +76,11 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     return d ? canEdit(d.status) : false;
   });
 
+  isAdminOrTechLead = computed(() => {
+    const role = this.authStore.user()?.role;
+    return role === 'ADMIN' || role === 'TECH_LEAD';
+  });
+
   openSupersedeDialog() {
     if (this.decisionStore.decisions().length === 0) {
       this.decisionStore.loadAll();

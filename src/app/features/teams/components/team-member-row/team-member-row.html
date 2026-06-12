@@ -1,0 +1,18 @@
+<tr class="member-row">
+  <td class="col-name">{{ member().name }}</td>
+  <td class="col-email">{{ member().email }}</td>
+  <td class="col-role">
+    @if (isAdmin() && !isSelf) {
+      <p-select [options]="roleOptions" optionLabel="label" optionValue="value"
+        [ngModel]="member().role" (ngModelChange)="onRoleSelect($event)" styleClass="role-select" />
+    } @else {
+      <p-tag [value]="member().role" [severity]="getRoleSeverity(member().role)" />
+    }
+  </td>
+  <td class="col-actions">
+    @if (!isSelf) {
+      <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+        size="small" (onClick)="onRemove.emit(member().userId)" />
+    }
+  </td>
+</tr>

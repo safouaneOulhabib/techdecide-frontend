@@ -1,0 +1,49 @@
+.team-members-page {
+  padding: 1.5rem;
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .btn-back {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--p-text-muted-color);
+      font-size: 0.875rem;
+      padding: 0.375rem 0.5rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+
+      &:hover {
+        background: var(--p-content-hover-background);
+        color: var(--p-text-color);
+      }
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--p-text-color);
+      margin: 0;
+    }
+  }
+
+  .page-card {
+    background: var(--p-content-background);
+    border: 1px solid var(--p-content-border-color);
+    border-radius: 10px;
+    overflow: hidden;
+
+    .divider {
+      height: 1px;
+      background: var(--p-content-border-color);
+      margin: 0 1rem;
+    }
+  }
+}

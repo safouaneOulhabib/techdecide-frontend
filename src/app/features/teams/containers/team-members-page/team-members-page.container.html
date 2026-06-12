@@ -1,0 +1,32 @@
+<div class="team-members-page">
+
+  <div class="page-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back
+    </button>
+    <h2 class="page-title">Team Members</h2>
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" styleClass="mb-4" />
+  }
+
+  <div class="page-card">
+
+    <app-team-member-list
+      [members]="members()"
+      [currentUserId]="currentUserId()"
+      [isAdmin]="isAdmin()"
+      [loading]="loading()"
+      (onRemove)="onRemove($event)"
+      (onRoleChange)="onRoleChange($event)" />
+
+    @if (isAdminOrTechLead()) {
+      <div class="divider"></div>
+      <app-team-member-add [loading]="loading()" (onAssign)="onAssign($event)" />
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,41 @@
+<div class="member-list">
+  @if (loading() && !members().length) {
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Role</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of [1,2,3]; track s) {
+          <tr>
+            <td><p-skeleton width="120px" height="16px" /></td>
+            <td><p-skeleton width="180px" height="16px" /></td>
+            <td><p-skeleton width="80px" height="24px" borderRadius="12px" /></td>
+            <td></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (members().length === 0) {
+    <p class="empty-state">No members in this team yet.</p>
+  } @else {
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Role</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (member of members(); track member.userId) {
+          <app-team-member-row
+            [member]="member"
+            [currentUserId]="currentUserId()"
+            [isAdmin]="isAdmin()"
+            (onRemove)="onRemove.emit($event)"
+            (onRoleChange)="onRoleChange.emit($event)" />
+        }
+      </tbody>
+    </table>
+  }
+</div>
