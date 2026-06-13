@@ -16,4 +16,5 @@ export type AuthResponse = {
   name: string;
   appRole: string;
   teamRole: string | null;
+  teamId: number | null;
 };

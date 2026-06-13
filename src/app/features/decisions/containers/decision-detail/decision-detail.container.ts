@@ -66,9 +66,15 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.decisionStore.approvedDecisions().filter(d => d.id !== this.decisionId)
   );
 
+  readonly teamRole = computed(() => this.authStore.user()?.teamRole ?? null);
+  readonly appRole = computed(() => this.authStore.user()?.appRole ?? 'USER');
+
   canSupersedeCurrent = computed(() => {
     const d = this.decision();
-    return d ? canSupersede(d.status) : false;
+    if (!d || !canSupersede(d.status)) return false;
+    const role = this.appRole();
+    const tRole = this.teamRole();
+    return role === 'APP_ADMIN' || tRole === 'TEAM_ADMIN';
   });
 
   canEditCurrent = computed(() => {

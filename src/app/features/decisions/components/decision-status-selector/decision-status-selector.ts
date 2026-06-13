@@ -13,6 +13,8 @@ import { allowedTransitions } from '@features/decisions/utils/decision-governanc
 })
 export class DecisionStatusSelector {
   currentStatus = input.required<DecisionStatus>();
+  teamRole = input<string | null>(null);
+  appRole = input<string>('USER');
   statusChange = output<DecisionStatus>();
 
   statusOptions: { label: string; value: DecisionStatus; severity: string }[] = [
@@ -24,13 +26,15 @@ export class DecisionStatusSelector {
 
   visibleOptions = computed(() => {
     const current = this.currentStatus();
-    const allowed = allowedTransitions(current);
+    const allowed = allowedTransitions(current, this.teamRole(), this.appRole());
     return this.statusOptions.filter(
       opt => opt.value === current || allowed.includes(opt.value)
     );
   });
 
-  hasTransitions = computed(() => allowedTransitions(this.currentStatus()).length > 0);
+  hasTransitions = computed(() =>
+    allowedTransitions(this.currentStatus(), this.teamRole(), this.appRole()).length > 0
+  );
 
   onStatusChange(newStatus: DecisionStatus) {
     if (newStatus !== this.currentStatus()) {

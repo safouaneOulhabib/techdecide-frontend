@@ -82,11 +82,18 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="4">
-            <div class="empty-state">
-              <i class="pi pi-users"></i>
-              <p>No teams found</p>
-              <p-button label="Create your first team" (onClick)="openDialog()" />
-            </div>
+            @if (isAppAdmin()) {
+              <div class="empty-state">
+                <i class="pi pi-users"></i>
+                <p>No teams found</p>
+                <p-button label="Create your first team" (onClick)="openDialog()" />
+              </div>
+            } @else {
+              <div class="empty-state">
+                <i class="pi pi-lock"></i>
+                <p>You are not assigned to a team yet.</p>
+              </div>
+            }
           </td>
         </tr>
       </ng-template>
