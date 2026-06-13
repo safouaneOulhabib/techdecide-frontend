@@ -37,7 +37,7 @@ test.describe('Decisions — MEMBER1', () => {
     // Cleanup
     const card = page.locator('.decision-card').filter({ hasText: title }).first();
     await card.locator('.btn-delete').click();
-    const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
+    const confirm = page.getByRole('button', { name: /delete|confirm|yes|ok/i });
     if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
     await expect(page.locator('.decision-card').filter({ hasText: title })).not.toBeVisible({ timeout: 5000 });
   });
@@ -134,7 +134,7 @@ test.describe('Decisions — MEMBER1', () => {
     const card = page.locator('.decision-card').filter({ hasText: title }).first();
     await card.waitFor({ state: 'visible', timeout: 5000 });
     await card.locator('.btn-delete').click();
-    const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
+    const confirm = page.getByRole('button', { name: /delete|confirm|yes|ok/i });
     if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
     await expect(page.locator('.decision-card').filter({ hasText: title })).not.toBeVisible({ timeout: 5000 });
   });
