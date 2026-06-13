@@ -6,6 +6,7 @@ const users = [
   { email: 'teamadmin.backend@techdecide.com',       file: 'backend-admin' },
   { email: 'member.backend@techdecide.com',          file: 'backend-member' },
   { email: 'teamadmin.devops@techdecide.com',        file: 'devops-admin' },
+  { email: 'member.devops@techdecide.com',           file: 'devops-member' },
   { email: 'noteam@techdecide.com',                  file: 'no-team' },
 ];
 

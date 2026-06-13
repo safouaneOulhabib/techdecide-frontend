@@ -5,7 +5,7 @@ const TRANSITIONS_APP_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   PROPOSED:   ['APPROVED', 'REJECTED', 'DRAFT'],
   APPROVED:   [],
   REJECTED:   ['DRAFT'],
-  SUPERSEDED: []
+  SUPERSEDED: [],
 };
 
 const TRANSITIONS_TEAM_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
@@ -13,7 +13,7 @@ const TRANSITIONS_TEAM_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   PROPOSED:   ['APPROVED', 'REJECTED', 'DRAFT'],
   APPROVED:   [],
   REJECTED:   [],
-  SUPERSEDED: []
+  SUPERSEDED: [],
 };
 
 const TRANSITIONS_MEMBER: Record<DecisionStatus, DecisionStatus[]> = {
@@ -21,7 +21,7 @@ const TRANSITIONS_MEMBER: Record<DecisionStatus, DecisionStatus[]> = {
   PROPOSED:   [],
   APPROVED:   [],
   REJECTED:   [],
-  SUPERSEDED: []
+  SUPERSEDED: [],
 };
 
 export function allowedTransitions(
@@ -35,11 +35,11 @@ export function allowedTransitions(
 }
 
 export function canEdit(status: DecisionStatus): boolean {
-  return status === 'DRAFT' || status === 'PROPOSED';
+  return status === 'DRAFT';
 }
 
 export function canDelete(status: DecisionStatus): boolean {
-  return status === 'DRAFT' || status === 'PROPOSED' || status === 'REJECTED';
+  return status === 'DRAFT';
 }
 
 export function canSupersede(status: DecisionStatus): boolean {

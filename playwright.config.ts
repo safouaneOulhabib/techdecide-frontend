@@ -37,6 +37,11 @@ export default defineConfig({
       dependencies: ['setup'],
     },
     {
+      name: 'devops-member',
+      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/devops-member.json' },
+      dependencies: ['setup'],
+    },
+    {
       name: 'no-team',
       use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/no-team.json' },
       dependencies: ['setup'],

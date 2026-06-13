@@ -72,9 +72,7 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
   canSupersedeCurrent = computed(() => {
     const d = this.decision();
     if (!d || !canSupersede(d.status)) return false;
-    const role = this.appRole();
-    const tRole = this.teamRole();
-    return role === 'APP_ADMIN' || tRole === 'TEAM_ADMIN';
+    return this.appRole() === 'APP_ADMIN' || this.teamRole() === 'TEAM_ADMIN';
   });
 
   canEditCurrent = computed(() => {

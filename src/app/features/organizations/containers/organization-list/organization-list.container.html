@@ -1,7 +1,9 @@
 <div class="organization-list">
   <div class="page-header">
     <h2>Organizations</h2>
-    <p-button label="New Organization" icon="pi pi-plus" (onClick)="openDialog()" />
+    @if (isAppAdmin()) {
+      <p-button label="New Organization" icon="pi pi-plus" (onClick)="openDialog()" />
+    }
   </div>
 
   @if (error()) {
@@ -63,9 +65,11 @@
           <td class="text-secondary">{{ org.description || '—' }}</td>
           <td class="text-secondary">{{ org.createdAt | date:'mediumDate' }}</td>
           <td>
-            <button class="btn-delete" (click)="onDelete(org.id)">
-              <i class="pi pi-trash"></i>
-            </button>
+            @if (isAppAdmin()) {
+              <button class="btn-delete" (click)="onDelete(org.id)">
+                <i class="pi pi-trash"></i>
+              </button>
+            }
           </td>
         </tr>
       </ng-template>

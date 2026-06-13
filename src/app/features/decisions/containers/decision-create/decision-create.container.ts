@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { DecisionStore } from '@features/decisions/store/decision.store';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { TeamStore } from '@features/teams/store/team.store';
 import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionForm, DecisionFormData } from '@features/decisions/components/decision-form/decision-form';
-import { AuthStore } from '@features/auth/store/auth.store';
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
 

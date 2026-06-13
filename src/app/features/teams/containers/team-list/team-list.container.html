@@ -1,7 +1,9 @@
 <div class="team-list">
   <div class="page-header">
     <h2>Teams</h2>
-    <p-button label="New Team" icon="pi pi-plus" (onClick)="openDialog()" />
+    @if (isAppAdmin()) {
+      <p-button label="New Team" icon="pi pi-plus" (onClick)="openDialog()" />
+    }
   </div>
 
   @if (error()) {
@@ -71,9 +73,11 @@
               <button class="btn-members" (click)="onViewMembers(team.id)" pTooltip="View Members" tooltipPosition="top">
                 <i class="pi pi-users"></i>
               </button>
-              <button class="btn-delete" (click)="onDelete(team.id)">
-                <i class="pi pi-trash"></i>
-              </button>
+              @if (isAppAdmin()) {
+                <button class="btn-delete" (click)="onDelete(team.id)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              }
             </div>
           </td>
         </tr>

@@ -18,10 +18,10 @@ export class DecisionStatusSelector {
   statusChange = output<DecisionStatus>();
 
   statusOptions: { label: string; value: DecisionStatus; severity: string }[] = [
-    { label: 'Draft', value: 'DRAFT', severity: 'secondary' },
-    { label: 'Proposed', value: 'PROPOSED', severity: 'info' },
-    { label: 'Approved', value: 'APPROVED', severity: 'success' },
-    { label: 'Rejected', value: 'REJECTED', severity: 'danger' },
+    { label: 'Draft',     value: 'DRAFT',      severity: 'secondary' },
+    { label: 'Proposed',  value: 'PROPOSED',   severity: 'info'      },
+    { label: 'Approved',  value: 'APPROVED',   severity: 'success'   },
+    { label: 'Rejected',  value: 'REJECTED',   severity: 'danger'    },
   ];
 
   visibleOptions = computed(() => {

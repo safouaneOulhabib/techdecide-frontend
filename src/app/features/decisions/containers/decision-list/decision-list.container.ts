@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { DecisionStore } from '@features/decisions/store/decision.store';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { DecisionCard } from '@features/decisions/components/decision-card/decision-card';
 import { Decision } from '@features/decisions/models/decision.model';
 import { signal, computed } from '@angular/core';
@@ -13,7 +14,6 @@ import { DecisionFilters, DecisionFiltersValue } from '@features/decisions/compo
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
 import { SkeletonModule } from 'primeng/skeleton';
-import { AuthStore } from '@features/auth/store/auth.store';
 
 
 @Component({
