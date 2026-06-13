@@ -16,7 +16,7 @@
 
   <!-- Role -->
   <td class="col-role">
-    @if (isAppAdmin() && !isSelf) {
+    @if (isTeamAdminOrAppAdmin() && !isSelf) {
       <p-select
         [options]="computedRoleOptions"
         optionLabel="label"

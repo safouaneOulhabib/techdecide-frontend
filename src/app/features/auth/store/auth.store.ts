@@ -27,6 +27,7 @@ export const AuthStore = signalStore(
     isTeamAdminOrAppAdmin: computed(() =>
       store.user()?.appRole === 'APP_ADMIN' || store.user()?.teamRole === 'TEAM_ADMIN'
     ),
+    hasTeam: computed(() => store.user()?.teamId != null),
   })),
 
   withMethods((store, authService = inject(AuthService), router = inject(Router)) => ({

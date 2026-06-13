@@ -13,6 +13,7 @@ import { DecisionFilters, DecisionFiltersValue } from '@features/decisions/compo
 import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
 import { SkeletonModule } from 'primeng/skeleton';
+import { AuthStore } from '@features/auth/store/auth.store';
 
 
 @Component({
@@ -32,6 +33,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class DecisionListContainer implements OnInit {
   private readonly store = inject(DecisionStore);
   private readonly router = inject(Router);
+  private readonly authStore = inject(AuthStore);
 
   readonly allDecisions: Signal<Decision[]> = this.store.decisions;
   readonly loading: Signal<boolean> = this.store.loading;
@@ -42,6 +44,8 @@ export class DecisionListContainer implements OnInit {
 
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
+
+  readonly hasTeam = this.authStore.hasTeam;
 
   activeFilters = signal<DecisionFiltersValue>({
     keyword: '',

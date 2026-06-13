@@ -12,6 +12,7 @@ import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
 import { TeamStore } from '@features/teams/store/team.store';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { Team, CreateTeamRequest } from '@features/teams/models/team.model';
 import { Organization } from '@features/organizations/models/organization.model';
 import { ConfirmService } from '@core/services/confirm.service';
@@ -39,12 +40,15 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class TeamListContainer implements OnInit {
   private readonly teamStore = inject(TeamStore);
   private readonly orgStore = inject(OrganizationStore);
+  private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
 
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly loading: Signal<boolean> = this.teamStore.loading;
   readonly error: Signal<string | null> = this.teamStore.error;
   readonly organizations: Signal<Organization[]> = this.orgStore.organizations;
+  readonly isAppAdmin = this.authStore.isAppAdmin;
+  readonly hasTeam = this.authStore.hasTeam;
   private readonly confirmService = inject(ConfirmService);
 
   dialogVisible = false;
