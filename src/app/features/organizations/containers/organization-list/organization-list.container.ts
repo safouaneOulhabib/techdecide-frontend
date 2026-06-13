@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
 import { Organization, CreateOrganizationRequest } from '@features/organizations/models/organization.model';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { TableModule } from 'primeng/table';
 import { ConfirmService } from '@core/services/confirm.service';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -32,6 +33,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 })
 export class OrganizationListContainer implements OnInit {
   private readonly store = inject(OrganizationStore);
+  readonly isAppAdmin = inject(AuthStore).isAppAdmin;
 
   readonly organizations: Signal<Organization[]> = this.store.organizations;
   readonly loading: Signal<boolean> = this.store.loading;

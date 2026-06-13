@@ -63,12 +63,14 @@
       <div class="detail-title-row">
         <h1>{{ decision()!.title }}</h1>
         <div class="title-actions">
-          @if (isTeamAdminOrAppAdmin()) {
-            <app-decision-status-selector [currentStatus]="decision()!.status" (statusChange)="onStatusChange($event)" />
-            @if (canSupersedeCurrent()) {
-              <p-button label="Supersede" icon="pi pi-refresh" severity="secondary" [outlined]="true"
-                (onClick)="openSupersedeDialog()" />
-            }
+          <app-decision-status-selector
+            [currentStatus]="decision()!.status"
+            [teamRole]="teamRole()"
+            [appRole]="appRole()"
+            (statusChange)="onStatusChange($event)" />
+          @if (canSupersedeCurrent()) {
+            <p-button label="Supersede" icon="pi pi-refresh" severity="secondary" [outlined]="true"
+              (onClick)="openSupersedeDialog()" />
           }
         </div>
       </div>

@@ -1,21 +1,99 @@
+import * as fs from 'fs';
 import { Page } from '@playwright/test';
 
-export async function createDraftDecision(page: Page, title: string, teamId = 1): Promise<string> {
-  await page.goto('/decisions/new');
-  await page.getByLabel(/title/i).fill(title);
-  await page.getByLabel(/context/i).fill('Test context');
-  await page.getByLabel(/decision/i).first().fill('Test decision body');
-  // Pick the first available team if a team selector exists
-  const teamSelect = page.locator('[formcontrolname="teamId"], [name="teamId"]').first();
-  if (await teamSelect.isVisible()) await teamSelect.selectOption({ index: 0 });
-  await page.getByRole('button', { name: /save|create|submit/i }).click();
-  await page.waitForURL(/decisions\/\d+/);
-  return page.url();
+const API = 'http://localhost:8080/api';
+
+/** Read JWT token from a saved Playwright storageState JSON file. */
+export function getToken(authFile: string): string {
+  const raw = JSON.parse(fs.readFileSync(`e2e/.auth/${authFile}.json`, 'utf-8'));
+  const entry = raw.origins?.[0]?.localStorage?.find(
+    (i: { name: string }) => i.name === 'auth_user'
+  );
+  return JSON.parse(entry?.value ?? '{}')?.token ?? '';
 }
 
-export async function advanceStatus(page: Page, status: string) {
-  const selector = page.getByRole('combobox').filter({ hasText: /draft|proposed|approved/i }).first();
-  await selector.selectOption(status);
-  const confirm = page.getByRole('button', { name: /confirm|ok|yes/i });
-  if (await confirm.isVisible({ timeout: 1000 }).catch(() => false)) await confirm.click();
+export interface DecisionPayload {
+  title: string;
+  context: string;
+  decision: string;
+  teamId: number;
+}
+
+/** Create a decision via the REST API. Returns the new decision id. */
+export async function createDecisionApi(
+  page: Page,
+  token: string,
+  payload: DecisionPayload
+): Promise<number> {
+  const res = await page.request.post(`${API}/decisions`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: payload,
+  });
+  const body = await res.json();
+  return body.id as number;
+}
+
+/** Update decision status via the REST API. */
+export async function updateStatusApi(
+  page: Page,
+  token: string,
+  id: number,
+  status: string
+): Promise<void> {
+  await page.request.patch(`${API}/decisions/${id}/status`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { status },
+  });
+}
+
+/** Delete a decision via the REST API (admin token recommended). */
+export async function deleteDecisionApi(
+  page: Page,
+  token: string,
+  id: number
+): Promise<void> {
+  await page.request.delete(`${API}/decisions/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+/** Post a comment via the REST API. Returns the comment id. */
+export async function createCommentApi(
+  page: Page,
+  token: string,
+  decisionId: number,
+  content: string
+): Promise<number> {
+  const res = await page.request.post(`${API}/decisions/${decisionId}/comments`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { content },
+  });
+  const body = await res.json();
+  return body.id as number;
+}
+
+/** Create a report via the REST API. Returns the new report id. */
+export async function createReportApi(
+  page: Page,
+  token: string,
+  title: string,
+  decisionIds: number[]
+): Promise<number> {
+  const res = await page.request.post(`${API}/reports`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { title, introduction: null, decisionIds },
+  });
+  const body = await res.json();
+  return body.id as number;
+}
+
+/** Delete a report via the REST API. */
+export async function deleteReportApi(
+  page: Page,
+  token: string,
+  id: number
+): Promise<void> {
+  await page.request.delete(`${API}/reports/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

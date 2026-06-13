@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { DecisionStore } from '@features/decisions/store/decision.store';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { TeamStore } from '@features/teams/store/team.store';
 import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionForm, DecisionFormData } from '@features/decisions/components/decision-form/decision-form';
@@ -21,6 +22,7 @@ export class DecisionCreateContainer implements OnInit {
   private readonly teamStore = inject(TeamStore);
   private readonly tagStore = inject(TagStore);
   private readonly router = inject(Router);
+  readonly hasTeam = inject(AuthStore).hasTeam;
 
   readonly loading: Signal<boolean> = this.decisionStore.loading;
   readonly error: Signal<string | null> = this.decisionStore.error;
@@ -28,6 +30,7 @@ export class DecisionCreateContainer implements OnInit {
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
 
   ngOnInit() {
+    if (!this.hasTeam()) { this.router.navigate(['/decisions']); return; }
     this.teamStore.loadAll();
     this.tagStore.loadAll();
   }

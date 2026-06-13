@@ -12,6 +12,7 @@ import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
 import { TeamStore } from '@features/teams/store/team.store';
 import { OrganizationStore } from '@features/organizations/store/organization.store';
+import { AuthStore } from '@features/auth/store/auth.store';
 import { Team, CreateTeamRequest } from '@features/teams/models/team.model';
 import { Organization } from '@features/organizations/models/organization.model';
 import { ConfirmService } from '@core/services/confirm.service';
@@ -40,6 +41,7 @@ export class TeamListContainer implements OnInit {
   private readonly teamStore = inject(TeamStore);
   private readonly orgStore = inject(OrganizationStore);
   private readonly router = inject(Router);
+  readonly isAppAdmin = inject(AuthStore).isAppAdmin;
 
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly loading: Signal<boolean> = this.teamStore.loading;
