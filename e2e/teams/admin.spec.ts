@@ -30,13 +30,14 @@ test.describe('Teams — APP_ADMIN', () => {
     // Select first available organization
     await page.locator('#teamOrg').click();
     await page.locator('.p-select-option').first().click();
-    await page.getByRole('button', { name: /^create$/i }).click();
+    await page.locator('.p-dialog-footer').getByRole('button', { name: /create/i }).click();
+    // Wait for the dialog backdrop to fully clear before interacting with the table
+    await page.locator('.p-dialog-mask').waitFor({ state: 'detached', timeout: 3000 }).catch(() => null);
     await expect(page.locator(`text=${name}`)).toBeVisible({ timeout: 5000 });
     // Delete
     const row = page.locator('p-table tbody tr').filter({ hasText: name });
     await row.locator('.btn-delete').click();
-    const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
-    if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
+    await page.getByRole('button', { name: /delete/i }).click({ timeout: 3000 }).catch(() => null);
     await expect(page.locator(`text=${name}`)).not.toBeVisible({ timeout: 5000 });
   });
 
