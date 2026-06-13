@@ -28,11 +28,11 @@ test.describe('Admin reports', () => {
     await item.click();
     await page.waitForURL(/\/reports\/\d+/, { timeout: 5000 });
     // Click the Edit button to enter edit mode
-    await page.getByRole('button', { name: /^edit$/i }).click();
+    await page.getByRole('button', { name: /edit/i }).click();
     // Edit panel uses a plain <input> with no id — select by container
     await page.locator('.edit-panel input[type="text"]').fill('E2E Admin Report Updated');
     // Save button is a p-button rendering as a native <button>
-    await page.getByRole('button', { name: /^save$/i }).click();
+    await page.getByRole('button', { name: /save/i }).click();
     await expect(page.locator('text=E2E Admin Report Updated')).toBeVisible({ timeout: 5000 });
   });
 });
@@ -46,7 +46,7 @@ test.describe('Backend member reports', () => {
     await item.waitFor({ state: 'visible', timeout: 5000 });
     await item.click();
     await page.waitForURL(/\/reports\/\d+/, { timeout: 5000 });
-    await expect(page.getByRole('button', { name: /^edit$/i })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /edit/i })).not.toBeVisible();
     await expect(page.getByRole('button', { name: /delete/i })).not.toBeVisible();
   });
 });
