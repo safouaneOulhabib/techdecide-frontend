@@ -36,7 +36,7 @@ export class AuthService extends ApiService {
   }
 
   logout() {
-    sessionStorage.clear();
+    localStorage.removeItem('auth_user');
     this._token.set(null);
     this._currentUser.set(null);
     this.router.navigate(['/auth/login']);
@@ -54,23 +54,23 @@ export class AuthService extends ApiService {
     this._token.set(response.token);
     this._currentUser.set(response);
     // sessionStorage survives refresh but clears on tab close — acceptable tradeoff
-    sessionStorage.setItem('auth_user', JSON.stringify(response));
+    localStorage.setItem('auth_user', JSON.stringify(response));
   }
 
   private loadFromSession() {
-    const raw = sessionStorage.getItem('auth_user');
+    const raw = localStorage.getItem('auth_user');
     if (!raw) return;
 
     try {
       const parsed = JSON.parse(raw) as AuthResponse;
       if (!parsed.token || this.isTokenExpired(parsed.token)) {
-        sessionStorage.removeItem('auth_user');
+        localStorage.removeItem('auth_user');
         return;
       }
       this._token.set(parsed.token);
       this._currentUser.set(parsed);
     } catch {
-      sessionStorage.removeItem('auth_user');
+      localStorage.removeItem('auth_user');
     }
   }
 
