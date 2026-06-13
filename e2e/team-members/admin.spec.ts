@@ -59,9 +59,9 @@ test.describe('Admin — team members', () => {
     // Now the first (and only) visible data row is the MEMBER
     const memberRow = page.locator('tbody tr').first();
     await memberRow.locator('p-select').click();
-    // PrimeNG renders disabled options with aria-disabled="true"
+    // PrimeNG marks disabled options with data-p-disabled="true" (aria-disabled is not set)
     const teamAdminOption = page.locator('.p-select-option').filter({ hasText: /team admin/i }).first();
-    await expect(teamAdminOption).toHaveAttribute('aria-disabled', 'true', { timeout: 3000 });
+    await expect(teamAdminOption).toHaveAttribute('data-p-disabled', 'true', { timeout: 3000 });
   });
 
 });

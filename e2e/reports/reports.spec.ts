@@ -22,13 +22,17 @@ test.describe('Admin reports', () => {
 
   test('can edit own report', async ({ page }) => {
     await page.goto('/reports');
-    // Find the report card or row with the title
+    // Find the report card with the title and navigate to detail
     const item = page.locator('.report-card, [class*="report-card"]').filter({ hasText: /E2E Admin Report/ }).first();
     await item.waitFor({ state: 'visible', timeout: 5000 });
     await item.click();
-    await page.getByRole('button', { name: /edit/i }).click();
-    await page.locator('#report-title').fill('E2E Admin Report Updated');
-    await page.locator('.btn-action.btn-primary').click();
+    await page.waitForURL(/\/reports\/\d+/, { timeout: 5000 });
+    // Click the Edit button to enter edit mode
+    await page.getByRole('button', { name: /^edit$/i }).click();
+    // Edit panel uses a plain <input> with no id — select by container
+    await page.locator('.edit-panel input[type="text"]').fill('E2E Admin Report Updated');
+    // Save button is a p-button rendering as a native <button>
+    await page.getByRole('button', { name: /^save$/i }).click();
     await expect(page.locator('text=E2E Admin Report Updated')).toBeVisible({ timeout: 5000 });
   });
 });
@@ -41,7 +45,8 @@ test.describe('Backend member reports', () => {
     const item = page.locator('.report-card, [class*="report-card"]').first();
     await item.waitFor({ state: 'visible', timeout: 5000 });
     await item.click();
-    await expect(page.getByRole('button', { name: /edit/i })).not.toBeVisible();
+    await page.waitForURL(/\/reports\/\d+/, { timeout: 5000 });
+    await expect(page.getByRole('button', { name: /^edit$/i })).not.toBeVisible();
     await expect(page.getByRole('button', { name: /delete/i })).not.toBeVisible();
   });
 });

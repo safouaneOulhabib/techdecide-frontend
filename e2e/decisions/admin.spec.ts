@@ -26,30 +26,30 @@ test.describe('Admin — decisions', () => {
 
   test('can create a decision', async ({ page }) => {
     await createDecision(page, 'E2E Admin Decision');
-    await expect(page.locator('.decision-card').filter({ hasText: 'E2E Admin Decision' })).toBeVisible();
+    await expect(page.locator('.decision-card').filter({ hasText: 'E2E Admin Decision' }).first()).toBeVisible();
   });
 
   test('edit button visible on DRAFT, hidden on APPROVED', async ({ page }) => {
     await createDecision(page, 'E2E Edit Guard');
-    // Open the new decision detail page
-    await page.locator('.decision-card').filter({ hasText: 'E2E Edit Guard' }).click();
+    // Open the new decision detail page (.first() guards against accumulated cards from prior runs)
+    await page.locator('.decision-card').filter({ hasText: 'E2E Edit Guard' }).first().click();
     await page.waitForURL(/decisions\/\d+/);
 
     // Edit visible on DRAFT
     await expect(page.locator('.btn-edit')).toBeVisible();
 
-    // Advance to PROPOSED
+    // Advance to PROPOSED — dropdown labels are title-case, not ALLCAPS
     await page.locator('.status-selector p-select').click();
-    await page.locator('.p-select-option').filter({ hasText: /^PROPOSED$/ }).click();
+    await page.locator('.p-select-option').filter({ hasText: /^Proposed$/ }).click();
     await page.waitForTimeout(400);
 
     // Try to advance to APPROVED
-    const approvedOption = page.locator('.p-select-option').filter({ hasText: /^APPROVED$/ });
+    const approvedOption = page.locator('.p-select-option').filter({ hasText: /^Approved$/ });
     if (await approvedOption.isVisible({ timeout: 500 }).catch(() => false)) {
       await approvedOption.click();
     } else {
       await page.locator('.status-selector p-select').click();
-      await page.locator('.p-select-option').filter({ hasText: /APPROVED/ }).first().click();
+      await page.locator('.p-select-option').filter({ hasText: /Approved/ }).first().click();
     }
     await page.waitForTimeout(400);
 
@@ -58,28 +58,31 @@ test.describe('Admin — decisions', () => {
   });
 
   test('can delete a DRAFT decision', async ({ page }) => {
-    await createDecision(page, 'E2E Delete Me');
+    // Use a unique title to avoid strict-mode violations from accumulated test data
+    const uid = Date.now();
+    const title = `E2E Delete Me ${uid}`;
+    await createDecision(page, title);
     // Delete button is on the card in the list
-    const card = page.locator('.decision-card').filter({ hasText: 'E2E Delete Me' });
+    const card = page.locator('.decision-card').filter({ hasText: title });
     await card.locator('.btn-delete').click();
     // Confirm deletion if dialog appears
     const confirm = page.getByRole('button', { name: /confirm|yes|delete/i });
     if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
-    await expect(page.locator('.decision-card').filter({ hasText: 'E2E Delete Me' })).not.toBeVisible({ timeout: 5000 });
+    await expect(page.locator('.decision-card').filter({ hasText: title })).not.toBeVisible({ timeout: 5000 });
   });
 
   test('status selector visible and functional', async ({ page }) => {
     await createDecision(page, 'E2E Status Flow');
-    // Open the decision detail
-    await page.locator('.decision-card').filter({ hasText: 'E2E Status Flow' }).click();
+    // Open the decision detail (.first() in case of leftover cards from prior runs)
+    await page.locator('.decision-card').filter({ hasText: 'E2E Status Flow' }).first().click();
     await page.waitForURL(/decisions\/\d+/);
     // Status selector should be visible for APP_ADMIN
     const statusSelector = page.locator('.status-selector');
     await expect(statusSelector).toBeVisible();
-    // Open and pick PROPOSED
+    // Open and pick Proposed (dropdown labels are title-case)
     await statusSelector.locator('p-select').click();
-    await page.locator('.p-select-option').filter({ hasText: /^PROPOSED$/ }).click();
-    await expect(page.locator('.decision-status-badge, app-decision-status-badge').filter({ hasText: /PROPOSED/ })).toBeVisible({ timeout: 3000 });
+    await page.locator('.p-select-option').filter({ hasText: /^Proposed$/ }).click();
+    await expect(page.locator('.decision-status-badge, app-decision-status-badge').filter({ hasText: /PROPOSED/i })).toBeVisible({ timeout: 3000 });
   });
 
 });
