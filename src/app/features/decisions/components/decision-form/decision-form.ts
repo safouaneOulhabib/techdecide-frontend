@@ -84,6 +84,11 @@ export class DecisionForm implements OnInit {
           rejectionReason: a.rejectionReason || ''
         }))
       });
+    } else {
+      const onlyTeam = this.teams();
+      if (onlyTeam.length === 1) {
+        this.form.update(f => ({ ...f, teamId: onlyTeam[0].id }));
+      }
     }
   }
 

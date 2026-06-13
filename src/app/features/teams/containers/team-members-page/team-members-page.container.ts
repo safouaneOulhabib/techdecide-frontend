@@ -72,13 +72,11 @@ export class TeamMembersPageContainer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      if (!this.authStore.isTeamAdminOrAppAdmin()) {
-        this.router.navigate(['/decisions']);
-        return;
-      }
       this.teamId = Number(params.get('id'));
       this.store.loadMembers(this.teamId);
-      this.store.loadAvailableUsers(this.teamId);
+      if (this.authStore.isTeamAdminOrAppAdmin()) {
+        this.store.loadAvailableUsers(this.teamId);
+      }
     });
   }
 

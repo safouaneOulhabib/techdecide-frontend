@@ -1,7 +1,9 @@
 <div class="report-list">
   <div class="page-header">
     <h2>Reports</h2>
-    <p-button label="+ New Report" (onClick)="onCreateNew()" />
+    @if (hasTeam()) {
+      <p-button label="+ New Report" (onClick)="onCreateNew()" />
+    }
   </div>
 
   @if (loading() && reports().length === 0) {
@@ -26,11 +28,19 @@
   }
 
   @if (!loading() && reports().length === 0) {
-  <div class="empty-state">
-    <i class="pi pi-book"></i>
-    <p>No reports yet. Create your first report.</p>
-    <p-button label="+ New Report" (onClick)="onCreateNew()" />
-  </div>
+    @if (!hasTeam()) {
+      <div class="empty-state">
+        <i class="pi pi-lock"></i>
+        <p>You are not assigned to a team yet.</p>
+        <p class="empty-state-sub">Contact your administrator to get access.</p>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <i class="pi pi-book"></i>
+        <p>No reports yet. Create your first report.</p>
+        <p-button label="+ New Report" (onClick)="onCreateNew()" />
+      </div>
+    }
   }
 
 @if (!loading() || reports().length > 0) {
@@ -43,10 +53,12 @@
     (onDelete)="onDelete($event)"
   />
   }
-  <div class="new-report-card" (click)="onCreateNew()">
-    <i class="pi pi-plus"></i>
-    <p>New Report</p>
-  </div>
+  @if (hasTeam()) {
+    <div class="new-report-card" (click)="onCreateNew()">
+      <i class="pi pi-plus"></i>
+      <p>New Report</p>
+    </div>
+  }
 </div>
 }
 </div>

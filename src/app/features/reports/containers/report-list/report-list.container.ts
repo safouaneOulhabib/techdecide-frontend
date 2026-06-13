@@ -24,6 +24,8 @@ export class ReportListContainer implements OnInit {
   readonly loading: Signal<boolean> = this.reportStore.loading;
   readonly error: Signal<string | null> = this.reportStore.error;
 
+  readonly hasTeam = this.authStore.hasTeam;
+
   isOwner(report: ReportSummary): boolean {
     return this.authStore.user()?.id === report.authorId;
   }

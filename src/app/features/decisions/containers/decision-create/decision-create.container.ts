@@ -21,16 +21,20 @@ export class DecisionCreateContainer implements OnInit {
   private readonly decisionStore = inject(DecisionStore);
   private readonly teamStore = inject(TeamStore);
   private readonly tagStore = inject(TagStore);
+  private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
-  readonly hasTeam = inject(AuthStore).hasTeam;
 
   readonly loading: Signal<boolean> = this.decisionStore.loading;
   readonly error: Signal<string | null> = this.decisionStore.error;
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
+  readonly hasTeam = this.authStore.hasTeam;
 
   ngOnInit() {
-    if (!this.hasTeam()) { this.router.navigate(['/decisions']); return; }
+    if (!this.hasTeam()) {
+      this.router.navigate(['/decisions']);
+      return;
+    }
     this.teamStore.loadAll();
     this.tagStore.loadAll();
   }

@@ -33,7 +33,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 export class DecisionListContainer implements OnInit {
   private readonly store = inject(DecisionStore);
   private readonly router = inject(Router);
-  readonly hasTeam = inject(AuthStore).hasTeam;
+  private readonly authStore = inject(AuthStore);
 
   readonly allDecisions: Signal<Decision[]> = this.store.decisions;
   readonly loading: Signal<boolean> = this.store.loading;
@@ -44,6 +44,8 @@ export class DecisionListContainer implements OnInit {
 
   readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
+
+  readonly hasTeam = this.authStore.hasTeam;
 
   activeFilters = signal<DecisionFiltersValue>({
     keyword: '',
