@@ -25,8 +25,7 @@ test.describe('Organizations — APP_ADMIN', () => {
     // Delete
     const row = page.locator('p-table tbody tr').filter({ hasText: name });
     await row.locator('.btn-delete').click();
-    const confirm = page.getByRole('button', { name: /delete|confirm|yes|ok/i });
-    if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
+    await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
     await expect(page.locator(`text=${name}`)).not.toBeVisible({ timeout: 5000 });
   });
 
