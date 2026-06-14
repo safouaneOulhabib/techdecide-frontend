@@ -37,8 +37,7 @@ test.describe('Comments — MEMBER1', () => {
       // Delete via trash button in comment-actions
       const commentItem = page.locator('.comment-item').filter({ hasText: 'Comment to delete' });
       await commentItem.locator('.comment-actions button').click();
-      const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
-      if (await confirm.isVisible({ timeout: 1000 }).catch(() => false)) await confirm.click();
+      await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
       await expect(page.locator('.comment-content').filter({ hasText: 'Comment to delete' }))
         .not.toBeVisible({ timeout: 5000 });
     } finally {
