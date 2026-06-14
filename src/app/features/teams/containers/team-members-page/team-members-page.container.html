@@ -1,14 +1,11 @@
 <div class="team-members-page">
 
-  <!-- Header -->
-  <div class="page-header">
-    <div>
-      <button class="btn-back" (click)="goBack()">
-        <i class="pi pi-arrow-left"></i>
-        Back
-      </button>
-      <h2 class="page-title">Team Members</h2>
-    </div>
+  <!-- Header row: just the back button, standalone -->
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back
+    </button>
   </div>
 
   <!-- Error -->
@@ -28,8 +25,13 @@
     </div>
   </div>
 
-  <!-- Table card -->
+  <!-- Table card with title inside -->
   <div class="page-card">
+
+    <!-- Card title -->
+    <div class="card-title-row">
+      <h1 class="page-title">Team Members</h1>
+    </div>
 
     <!-- Toolbar -->
     <div class="table-toolbar">
