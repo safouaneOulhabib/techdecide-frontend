@@ -14,6 +14,10 @@ fs.mkdirSync('e2e/.auth', { recursive: true });
 
 for (const user of users) {
   setup(`authenticate ${user.email}`, async ({ page }) => {
+    // Dismiss Vite HMR error overlay if it appears during startup
+    await page.addLocatorHandler(page.locator('vite-error-overlay'), async () => {
+      await page.keyboard.press('Escape');
+    });
     await page.goto('/auth/login');
     await page.locator('#email').fill(user.email);
     await page.locator('p-password input').fill('Test1234!');
