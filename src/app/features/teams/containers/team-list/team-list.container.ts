@@ -56,6 +56,7 @@ export class TeamListContainer implements OnInit {
   selectedOrgId: number | null = null;
 
   ngOnInit() {
+    if (!this.hasTeam() && !this.isAppAdmin()) return;
     this.teamStore.loadAll();
     this.orgStore.loadAll();
   }

@@ -10,6 +10,15 @@
   <p-message severity="error" [text]="error()!" class="mb" />
   }
 
+  @if (!hasTeam() && !isAppAdmin()) {
+  <div class="table-wrapper">
+    <div class="empty-state">
+      <i class="pi pi-lock"></i>
+      <p>You are not assigned to a team yet.</p>
+    </div>
+  </div>
+  }
+  @if (hasTeam() || isAppAdmin()) {
   @if (loading()) {
   <div class="table-wrapper">
     <table class="skeleton-table">
@@ -103,6 +112,7 @@
       </ng-template>
     </p-table>
   </div>
+  }
   }
   <p-dialog header="New Team" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '450px' }">
     <div class="dialog-form">
