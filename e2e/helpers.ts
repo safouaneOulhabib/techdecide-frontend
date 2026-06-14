@@ -17,6 +17,7 @@ export interface DecisionPayload {
   context: string;
   decision: string;
   teamId: number;
+  tagIds?: number[];
 }
 
 /** Create a decision via the REST API. Returns the new decision id. */

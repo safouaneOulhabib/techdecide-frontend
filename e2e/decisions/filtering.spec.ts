@@ -89,18 +89,14 @@ test.describe('Decisions — Filtering', () => {
     const adminToken = getToken('admin');
     const uid = Date.now();
 
-    // Create a tag and a decision tagged with it via API
+    // Create tag first, then create the decision with that tag attached via tagIds
     const tagId = await createTagApi(page, adminToken, `E2E Tag Filter ${uid}`, '#6366f1');
     const taggedId = await createDecisionApi(page, token, {
-      title: `E2E Tagged Decision ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: `E2E Tagged Decision ${uid}`, context: 'ctx', decision: 'dec',
+      teamId: BACKEND_TEAM_ID, tagIds: [tagId],
     });
     const untaggedId = await createDecisionApi(page, token, {
       title: `E2E Untagged Decision ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
-    });
-
-    // Tag the decision via API
-    await page.request.post(`http://localhost:8080/api/decisions/${taggedId}/tags/${tagId}`, {
-      headers: { Authorization: `Bearer ${token}` },
     });
 
     try {

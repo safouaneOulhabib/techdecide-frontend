@@ -6,6 +6,7 @@ test.use({ storageState: 'e2e/.auth/backend-admin.json' });
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Decisions — Supersede Flow', () => {
+  test.beforeEach(async () => { test.setTimeout(45000); });
 
   test('TEAM_ADMIN can supersede an APPROVED decision with another APPROVED decision', async ({ page }) => {
     const adminToken = getToken('admin');

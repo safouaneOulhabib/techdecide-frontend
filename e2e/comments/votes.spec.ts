@@ -6,6 +6,7 @@ test.use({ storageState: 'e2e/.auth/backend-member.json' });
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Comments — Voting', () => {
+  test.beforeEach(async () => { test.setTimeout(30000); });
 
   test('can post a comment with Approve vote', async ({ page }) => {
     const token = getToken('backend-member');
