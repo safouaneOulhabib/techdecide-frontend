@@ -1,11 +1,13 @@
 <div class="tag-list">
   <div class="page-header">
     <h2>Tags</h2>
+    @if (isAppAdmin()) {
     <div class="create-form">
       <input pInputText [(ngModel)]="newTagName" placeholder="Tag name" (keyup.enter)="onCreateTag()" />
       <p-colorpicker [(ngModel)]="newTagColor" />
       <p-button label="New Tag" icon="pi pi-plus" (onClick)="onCreateTag()" [disabled]="!newTagName.trim()" />
     </div>
+    }
   </div>
 
   @if (error()) {
@@ -17,7 +19,7 @@
     <div class="table-header">
       <span>Tag</span>
       <span>Color</span>
-      <span></span>
+      @if (isAppAdmin()) { <span></span> }
     </div>
     @for (item of [1,2,3,4,5]; track item) {
     <div class="table-row">
@@ -29,9 +31,11 @@
         <p-skeleton width="20px" height="20px" borderRadius="4px" />
         <p-skeleton width="80px" height="16px" />
       </div>
+      @if (isAppAdmin()) {
       <div class="tag-actions">
         <p-skeleton width="28px" height="28px" borderRadius="6px" />
       </div>
+      }
     </div>
     }
   </div>
@@ -42,7 +46,11 @@
     @if (tags().length === 0) {
     <div class="empty-state">
       <i class="pi pi-tag"></i>
-      <p>No tags yet. Create your first tag above.</p>
+      @if (isAppAdmin()) {
+      <p>No tags yet. Create your first tag.</p>
+      } @else {
+      <p>No tags yet. Contact your administrator to create tags.</p>
+      }
     </div>
     }
 
@@ -50,7 +58,7 @@
     <div class="table-header">
       <span>Tag</span>
       <span>Color</span>
-      <span></span>
+      @if (isAppAdmin()) { <span></span> }
     </div>
 
     @for (tag of tags(); track tag.id) {
@@ -63,11 +71,13 @@
         <span class="color-swatch" [style.background]="tag.color"></span>
         <span>{{ tag.color }}</span>
       </div>
+      @if (isAppAdmin()) {
       <div class="tag-actions">
         <button class="btn-delete" (click)="onDeleteTag(tag)">
           <i class="pi pi-trash"></i>
         </button>
       </div>
+      }
     </div>
     }
     }
