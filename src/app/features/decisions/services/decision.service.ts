@@ -20,10 +20,6 @@ export class DecisionService extends ApiService {
     return this.get<Decision>(`/decisions/${id}`);
   }
 
-  getByTeam(teamId: number) {
-    return this.get<Decision[]>(`/decisions/team/${teamId}`);
-  }
-
   search(keyword: string) {
     return this.get<Decision[]>(`/decisions/search?keyword=${keyword}`);
   }

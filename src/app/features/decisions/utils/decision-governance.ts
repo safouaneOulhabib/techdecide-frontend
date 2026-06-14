@@ -1,6 +1,6 @@
 import { DecisionStatus } from '../models/decision.model';
 
-const TRANSITIONS_APP_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
+const TRANSITIONS_GOVERN_APP_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   DRAFT:      ['PROPOSED'],
   PROPOSED:   ['APPROVED', 'REJECTED', 'DRAFT'],
   APPROVED:   [],
@@ -8,7 +8,7 @@ const TRANSITIONS_APP_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   SUPERSEDED: [],
 };
 
-const TRANSITIONS_TEAM_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
+const TRANSITIONS_GOVERN_TEAM_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   DRAFT:      ['PROPOSED'],
   PROPOSED:   ['APPROVED', 'REJECTED', 'DRAFT'],
   APPROVED:   [],
@@ -16,30 +16,25 @@ const TRANSITIONS_TEAM_ADMIN: Record<DecisionStatus, DecisionStatus[]> = {
   SUPERSEDED: [],
 };
 
-const TRANSITIONS_MEMBER: Record<DecisionStatus, DecisionStatus[]> = {
-  DRAFT:      ['PROPOSED'],
-  PROPOSED:   [],
-  APPROVED:   [],
-  REJECTED:   [],
-  SUPERSEDED: [],
-};
-
+/**
+ * Returns allowed status transitions based on per-actor DTO flags.
+ * canGovern: TEAM_ADMIN of an involved team or APP_ADMIN
+ * canPropose: any involved-team member (or APP_ADMIN)
+ * appRole: needed to distinguish APP_ADMIN REJECTED→DRAFT privilege
+ */
 export function allowedTransitions(
   status: DecisionStatus,
-  teamRole: string | null = null,
+  canPropose: boolean,
+  canGovern: boolean,
   appRole: string = 'USER'
 ): DecisionStatus[] {
-  if (appRole === 'APP_ADMIN') return TRANSITIONS_APP_ADMIN[status];
-  if (teamRole === 'TEAM_ADMIN') return TRANSITIONS_TEAM_ADMIN[status];
-  return TRANSITIONS_MEMBER[status];
-}
-
-export function canEdit(status: DecisionStatus): boolean {
-  return status === 'DRAFT';
-}
-
-export function canDelete(status: DecisionStatus): boolean {
-  return status === 'DRAFT';
+  if (canGovern) {
+    return appRole === 'APP_ADMIN'
+      ? TRANSITIONS_GOVERN_APP_ADMIN[status]
+      : TRANSITIONS_GOVERN_TEAM_ADMIN[status];
+  }
+  if (canPropose && status === 'DRAFT') return ['PROPOSED'];
+  return [];
 }
 
 export function canSupersede(status: DecisionStatus): boolean {

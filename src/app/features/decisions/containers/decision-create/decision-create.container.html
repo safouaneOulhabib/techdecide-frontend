@@ -7,11 +7,28 @@
     <p-message severity="error" [text]="error()!" />
   }
 
-  <app-decision-form
-    [teams]="teams()"
-    [tags]="tags()"
-    [loading]="loading()"
-    (formSubmit)="onFormSubmit($event)"
-    (formCancel)="onFormCancel()"
-  />
+  @if (!hasTeam()) {
+    <div class="empty-state">
+      <i class="pi pi-lock"></i>
+      <p>You are not assigned to a team yet.</p>
+      <p class="empty-state-sub">Contact your administrator to get access.</p>
+    </div>
+  } @else if (projects().length === 0 && !loading()) {
+    <div class="empty-state">
+      <i class="pi pi-folder-open"></i>
+      <p>No projects available.</p>
+      <p class="empty-state-sub">Your team must be assigned to a project before creating decisions.</p>
+    </div>
+  } @else {
+    <app-decision-form
+      [projects]="projects()"
+      [projectTeams]="projectTeams()"
+      [tags]="tags()"
+      [loading]="loading()"
+      [ownTeamId]="currentTeamId"
+      (formSubmit)="onFormSubmit($event)"
+      (formCancel)="onFormCancel()"
+      (projectChange)="onProjectChange($event)"
+    />
+  }
 </div>

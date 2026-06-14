@@ -2,12 +2,11 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { Decision } from '@features/decisions/models/decision.model';
+import { Decision, TeamRef } from '@features/decisions/models/decision.model';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { DecisionStatusBadge } from '../decision-status-badge/decision-status-badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmService } from '@core/services/confirm.service';
-import { canDelete } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-card',
@@ -23,8 +22,8 @@ export class DecisionCard {
 
   private readonly confirmService = inject(ConfirmService);
 
-  canDeleteCurrent = computed(() => canDelete(this.decision().status));
-
+  visibleTeams = computed((): TeamRef[] => this.decision().teams.slice(0, 2));
+  hiddenTeamCount = computed((): number => Math.max(0, this.decision().teams.length - 2));
 
   onDeleteClick(event: Event) {
     event.stopPropagation();

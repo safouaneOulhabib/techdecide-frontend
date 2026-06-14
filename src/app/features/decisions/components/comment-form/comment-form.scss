@@ -22,3 +22,9 @@
   gap: 1rem;
   flex-wrap: wrap;
 }
+
+.vote-disabled-note {
+  font-size: 0.8125rem;
+  color: var(--p-text-muted-color);
+  font-style: italic;
+}

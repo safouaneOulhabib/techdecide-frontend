@@ -18,7 +18,7 @@ import { DecisionStatusBadge } from '@features/decisions/components/decision-sta
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DecisionSupersedeDialog } from '@features/decisions/components/decision-supersede-dialog/decision-supersede-dialog';
-import { canDelete, canEdit, canSupersede } from '@features/decisions/utils/decision-governance';
+import { canSupersede } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-detail',
@@ -58,29 +58,25 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   private decisionId = 0;
 
-  // Supersede dialog state
   supersedeDialogVisible = signal(false);
 
-  // Candidates for superseding: approved decisions, excluding the current one
   supersedeCandidates = computed(() =>
     this.decisionStore.approvedDecisions().filter(d => d.id !== this.decisionId)
   );
 
-  readonly teamRole = computed(() => this.authStore.user()?.teamRole ?? null);
   readonly appRole = computed(() => this.authStore.user()?.appRole ?? 'USER');
+
+  // Permission flags sourced directly from the backend DTO
+  canGoverncurrent = computed(() => this.decision()?.canGovern ?? false);
+  canProposeCurrent = computed(() => this.decision()?.canPropose ?? false);
+  canVoteCurrent = computed(() => this.decision()?.canVote ?? false);
+  canEditCurrent = computed(() => this.decision()?.canEdit ?? false);
+  canDeleteCurrent = computed(() => this.decision()?.canDelete ?? false);
 
   canSupersedeCurrent = computed(() => {
     const d = this.decision();
-    if (!d || !canSupersede(d.status)) return false;
-    return this.appRole() === 'APP_ADMIN' || this.teamRole() === 'TEAM_ADMIN';
+    return !!d && canSupersede(d.status) && (this.decision()?.canGovern ?? false);
   });
-
-  canEditCurrent = computed(() => {
-    const d = this.decision();
-    return d ? canEdit(d.status) : false;
-  });
-
-  isTeamAdminOrAppAdmin = this.authStore.isTeamAdminOrAppAdmin;
 
   openSupersedeDialog() {
     if (this.decisionStore.decisions().length === 0) {
@@ -113,6 +109,11 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.router.navigate(['/decisions', this.decisionId, 'edit']);
   }
 
+  onDelete() {
+    this.decisionStore.remove(this.decisionId);
+    this.router.navigate(['/decisions']);
+  }
+
   onStatusChange(status: DecisionStatus) {
     this.decisionStore.updateStatus(this.decisionId, status);
   }
@@ -132,7 +133,6 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
       this.router.navigate(['/decisions', id]);
     }
   }
-
 
   ngOnDestroy() {
     this.commentStore.clearComments();
