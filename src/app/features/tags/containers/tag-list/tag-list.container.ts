@@ -6,7 +6,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagStore } from '@features/tags/store/tag.store';
 import { Tag, CreateTagRequest } from '@features/tags/models/tag.model';
 import { ConfirmService } from '@core/services/confirm.service';
@@ -22,8 +21,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     InputTextModule,
     ColorPickerModule,
     SkeletonModule,
-    MessageModule,
-    ConfirmDialogModule
+    MessageModule
   ],
   templateUrl: './tag-list.container.html',
   styleUrl: './tag-list.container.scss'

@@ -17,6 +17,7 @@ export interface DecisionPayload {
   context: string;
   decision: string;
   teamId: number;
+  tagIds?: number[];
 }
 
 /** Create a decision via the REST API. Returns the new decision id. */
@@ -33,17 +34,20 @@ export async function createDecisionApi(
   return body.id as number;
 }
 
-/** Update decision status via the REST API. */
+/** Update decision status via the REST API. Throws if the request fails. */
 export async function updateStatusApi(
   page: Page,
   token: string,
   id: number,
   status: string
 ): Promise<void> {
-  await page.request.patch(`${API}/decisions/${id}/status`, {
+  const res = await page.request.patch(`${API}/decisions/${id}/status`, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     data: { status },
   });
+  if (!res.ok()) {
+    throw new Error(`updateStatusApi(${id}, ${status}) failed: ${res.status()} ${await res.text()}`);
+  }
 }
 
 /** Delete a decision via the REST API (admin token recommended). */
@@ -57,19 +61,42 @@ export async function deleteDecisionApi(
   });
 }
 
-/** Post a comment via the REST API. Returns the comment id. */
+/** Post a comment via the REST API, with optional vote. Returns the comment id. */
 export async function createCommentApi(
   page: Page,
   token: string,
   decisionId: number,
-  content: string
+  content: string,
+  vote?: 'APPROVE' | 'REJECT' | 'ABSTAIN'
 ): Promise<number> {
   const res = await page.request.post(`${API}/decisions/${decisionId}/comments`, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    data: { content },
+    data: vote ? { content, vote } : { content },
   });
   const body = await res.json();
   return body.id as number;
+}
+
+/** Create a tag via the REST API. Returns the new tag id. */
+export async function createTagApi(
+  page: Page,
+  token: string,
+  name: string,
+  color: string
+): Promise<number> {
+  const res = await page.request.post(`${API}/tags`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { name, color },
+  });
+  const body = await res.json();
+  return body.id as number;
+}
+
+/** Delete a tag via the REST API. */
+export async function deleteTagApi(page: Page, token: string, id: number): Promise<void> {
+  await page.request.delete(`${API}/tags/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
 
 /** Create a report via the REST API. Returns the new report id. */

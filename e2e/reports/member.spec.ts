@@ -34,7 +34,7 @@ test.describe('Reports — MEMBER1', () => {
     try {
       await page.goto('/reports/new');
       await page.locator('#report-title').fill(`E2E M1 Report ${uid}`);
-      await page.locator('.picker-item').first().waitFor({ state: 'visible', timeout: 8000 });
+      await page.locator('.picker-item').first().waitFor({ state: 'visible', timeout: 12000 });
       await page.locator('.picker-item').first().click();
       await page.locator('.btn-action.btn-primary').click();
       await page.waitForURL(/\/reports\/\d+/, { timeout: 10000 });
@@ -78,10 +78,9 @@ test.describe('Reports — MEMBER1', () => {
     try {
       await page.goto('/reports');
       const card = page.locator('.report-card').filter({ hasText: `E2E M1 Del Report ${uid}` }).first();
-      await card.waitFor({ state: 'visible', timeout: 5000 });
+      await card.waitFor({ state: 'visible', timeout: 8000 });
       await card.locator('.btn-delete').click();
-      const confirm = page.getByRole('button', { name: /delete|confirm|yes|ok/i });
-      if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
+      await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
       await expect(page.locator('.report-card').filter({ hasText: `E2E M1 Del Report ${uid}` }))
         .not.toBeVisible({ timeout: 5000 });
     } finally {

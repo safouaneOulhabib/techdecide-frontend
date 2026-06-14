@@ -25,8 +25,7 @@ test.describe('Decisions — TEAM_ADMIN1', () => {
     await expect(page.locator('.decision-card').filter({ hasText: title }).first()).toBeVisible();
     const card = page.locator('.decision-card').filter({ hasText: title }).first();
     await card.locator('.btn-delete').click();
-    const confirm = page.getByRole('button', { name: /confirm|yes|ok/i });
-    if (await confirm.isVisible({ timeout: 1500 }).catch(() => false)) await confirm.click();
+    await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
   });
 
   test('status selector shows APPROVED and REJECTED options on PROPOSED decision', async ({ page }) => {
