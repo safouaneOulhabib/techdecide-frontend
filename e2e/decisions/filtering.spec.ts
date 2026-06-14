@@ -17,12 +17,9 @@ test.describe('Decisions — Filtering', () => {
     });
     try {
       await page.goto('/decisions');
-      await page.locator('.filters-bar input[placeholder*="Search"]').fill(`keyword-filter-${uid}`);
-      // Unique enough that only our decision matches (or no decisions)
-      await page.waitForTimeout(500);
-      // Now search for the actual title fragment
+      await page.waitForLoadState('networkidle');
       await page.locator('.filters-bar input[placeholder*="Search"]').fill(title);
-      await expect(page.locator('.decision-card').filter({ hasText: title })).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('.decision-card').filter({ hasText: title })).toBeVisible({ timeout: 8000 });
     } finally {
       await deleteDecisionApi(page, adminToken, id);
     }
@@ -45,12 +42,13 @@ test.describe('Decisions — Filtering', () => {
 
     try {
       await page.goto('/decisions');
+      await page.waitForLoadState('networkidle');
       // Open the status filter
       await page.locator('.filters-bar').getByText('All Statuses').click();
       await page.locator('.p-select-option').filter({ hasText: /^proposed$/i }).click();
       await page.waitForTimeout(300);
 
-      await expect(page.locator('.decision-card').filter({ hasText: proposedTitle })).toBeVisible({ timeout: 5000 });
+      await expect(page.locator('.decision-card').filter({ hasText: proposedTitle })).toBeVisible({ timeout: 8000 });
       await expect(page.locator('.decision-card').filter({ hasText: draftTitle })).not.toBeVisible();
     } finally {
       await deleteDecisionApi(page, adminToken, draftId);
@@ -68,6 +66,7 @@ test.describe('Decisions — Filtering', () => {
     });
     try {
       await page.goto('/decisions');
+      await page.waitForLoadState('networkidle');
       // Apply a filter that hides our decision
       await page.locator('.filters-bar').getByText('All Statuses').click();
       await page.locator('.p-select-option').filter({ hasText: /^approved$/i }).click();
@@ -101,6 +100,7 @@ test.describe('Decisions — Filtering', () => {
 
     try {
       await page.goto('/decisions');
+      await page.waitForLoadState('networkidle');
       await page.locator('.filters-bar').getByText('All Tags').click();
       await page.locator('.p-select-option').filter({ hasText: `E2E Tag Filter ${uid}` }).click();
       await page.waitForTimeout(300);

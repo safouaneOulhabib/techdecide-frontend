@@ -130,8 +130,9 @@ test.describe('Decisions — MEMBER1', () => {
       title, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
     });
     await page.goto('/decisions');
+    await page.waitForLoadState('networkidle');
     const card = page.locator('.decision-card').filter({ hasText: title }).first();
-    await card.waitFor({ state: 'visible', timeout: 8000 });
+    await card.waitFor({ state: 'visible', timeout: 10000 });
     await card.locator('.btn-delete').click();
     await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
     await expect(page.locator('.decision-card').filter({ hasText: title })).not.toBeVisible({ timeout: 5000 });

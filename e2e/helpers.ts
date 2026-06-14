@@ -34,17 +34,20 @@ export async function createDecisionApi(
   return body.id as number;
 }
 
-/** Update decision status via the REST API. */
+/** Update decision status via the REST API. Throws if the request fails. */
 export async function updateStatusApi(
   page: Page,
   token: string,
   id: number,
   status: string
 ): Promise<void> {
-  await page.request.patch(`${API}/decisions/${id}/status`, {
+  const res = await page.request.patch(`${API}/decisions/${id}/status`, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     data: { status },
   });
+  if (!res.ok()) {
+    throw new Error(`updateStatusApi(${id}, ${status}) failed: ${res.status()} ${await res.text()}`);
+  }
 }
 
 /** Delete a decision via the REST API (admin token recommended). */

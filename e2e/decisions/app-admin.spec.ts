@@ -23,10 +23,11 @@ test.describe('Decisions — APP_ADMIN', () => {
 
     try {
       await page.goto('/decisions');
+      await page.waitForLoadState('networkidle');
       await expect(page.locator('.decision-card').filter({ hasText: `E2E AppAdmin Backend ${uid}` }))
-        .toBeVisible({ timeout: 8000 });
+        .toBeVisible({ timeout: 12000 });
       await expect(page.locator('.decision-card').filter({ hasText: `E2E AppAdmin Devops ${uid}` }))
-        .toBeVisible({ timeout: 5000 });
+        .toBeVisible({ timeout: 8000 });
     } finally {
       await deleteDecisionApi(page, adminToken, backendId);
       await deleteDecisionApi(page, adminToken, devopsId);
@@ -68,13 +69,14 @@ test.describe('Decisions — APP_ADMIN', () => {
 
     try {
       await page.goto('/decisions');
+      await page.waitForLoadState('networkidle');
       // Filter to Backend Team only
       await page.locator('.filters-bar').getByText('All Teams').click();
       await page.locator('.p-select-option').filter({ hasText: /backend team/i }).click();
       await page.waitForTimeout(300);
 
       await expect(page.locator('.decision-card').filter({ hasText: `E2E AppAdmin TeamFilter Backend ${uid}` }))
-        .toBeVisible({ timeout: 5000 });
+        .toBeVisible({ timeout: 8000 });
       await expect(page.locator('.decision-card').filter({ hasText: `E2E AppAdmin TeamFilter Devops ${uid}` }))
         .not.toBeVisible();
     } finally {

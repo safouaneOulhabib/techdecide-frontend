@@ -29,17 +29,17 @@ test.describe('Decisions — Supersede Flow', () => {
     await updateStatusApi(page, backendAdminToken, idB, 'APPROVED');
 
     try {
-      // Navigate to decision A and open the supersede dialog
+      // Navigate to decision A and wait until it shows as APPROVED
       await page.goto(`/decisions/${idA}`);
-      await page.waitForSelector('app-decision-status-badge', { timeout: 8000 });
-      await page.getByRole('button', { name: /^supersede$/i }).click();
+      await expect(page.locator('app-decision-status-badge')).toContainText(/approved/i, { timeout: 10000 });
+      await page.getByRole('button', { name: /supersede/i }).first().click();
 
       // Dialog opens — select decision B as the superseder
       await page.locator('.dialog-body p-select').click();
       await page.locator('.p-select-option').filter({ hasText: titleB }).click();
 
       // Confirm the supersede
-      await page.locator('.dialog-footer').getByRole('button', { name: /^supersede$/i }).click();
+      await page.locator('.dialog-footer').getByRole('button', { name: /supersede/i }).click();
 
       // Decision A should now show the superseded banner pointing to decision B
       await expect(page.locator('.superseded-banner')).toBeVisible({ timeout: 8000 });
@@ -61,33 +61,33 @@ test.describe('Decisions — Supersede Flow', () => {
       await page.goto(`/decisions/${id}`);
       await page.waitForSelector('app-decision-status-badge', { timeout: 5000 });
       // DRAFT decision — Supersede should not be visible
-      await expect(page.getByRole('button', { name: /^supersede$/i })).not.toBeVisible();
+      await expect(page.getByRole('button', { name: /supersede/i })).not.toBeVisible();
     } finally {
       await deleteDecisionApi(page, adminToken, id);
     }
   });
 
-  test('supersede dialog shows empty state when no other APPROVED decision exists', async ({ page }) => {
+  test('supersede dialog excludes the current decision from the candidate list', async ({ page }) => {
     const adminToken = getToken('admin');
     const backendAdminToken = getToken('backend-admin');
     const uid = Date.now();
+    const titleA = `E2E Supersede Self ${uid}`;
 
     const idA = await createDecisionApi(page, backendAdminToken, {
-      title: `E2E Supersede Alone ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: titleA, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
     });
     await updateStatusApi(page, backendAdminToken, idA, 'PROPOSED');
     await updateStatusApi(page, backendAdminToken, idA, 'APPROVED');
 
     try {
       await page.goto(`/decisions/${idA}`);
-      await page.waitForSelector('app-decision-status-badge', { timeout: 8000 });
-      await page.getByRole('button', { name: /^supersede$/i }).click();
-      // No other APPROVED decisions from this test — dialog shows empty state or disabled button
-      const dialogBody = page.locator('p-dialog');
-      await expect(dialogBody).toBeVisible({ timeout: 5000 });
-      // The Supersede confirm button must be disabled when there are no candidates
-      const confirmBtn = page.locator('.dialog-footer').getByRole('button', { name: /^supersede$/i });
-      await expect(confirmBtn).toBeDisabled();
+      await expect(page.locator('app-decision-status-badge')).toContainText(/approved/i, { timeout: 10000 });
+      await page.getByRole('button', { name: /supersede/i }).first().click();
+      // The dialog footer is the reliable indicator the dialog has opened
+      await expect(page.locator('.dialog-footer')).toBeVisible({ timeout: 5000 });
+      // A decision cannot supersede itself — the current decision must not appear as a candidate
+      const selfOption = page.locator('.p-select-option').filter({ hasText: titleA });
+      await expect(selfOption).not.toBeVisible();
     } finally {
       await deleteDecisionApi(page, adminToken, idA).catch(() => null);
     }

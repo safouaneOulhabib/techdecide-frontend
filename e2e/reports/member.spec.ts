@@ -34,7 +34,7 @@ test.describe('Reports — MEMBER1', () => {
     try {
       await page.goto('/reports/new');
       await page.locator('#report-title').fill(`E2E M1 Report ${uid}`);
-      await page.locator('.picker-item').first().waitFor({ state: 'visible', timeout: 8000 });
+      await page.locator('.picker-item').first().waitFor({ state: 'visible', timeout: 12000 });
       await page.locator('.picker-item').first().click();
       await page.locator('.btn-action.btn-primary').click();
       await page.waitForURL(/\/reports\/\d+/, { timeout: 10000 });

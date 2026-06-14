@@ -16,7 +16,7 @@ test.describe('Comments — Voting', () => {
     try {
       await page.goto(`/decisions/${id}`);
       await page.locator('textarea[placeholder*="thoughts"]').fill('Looks good to me');
-      await page.locator('p-selectbutton button').filter({ hasText: /approve/i }).click();
+      await page.locator('p-selectbutton').getByRole('button', { name: /approve/i }).click();
       await page.getByRole('button', { name: /post comment/i }).click();
       const comment = page.locator('.comment-item').filter({ hasText: 'Looks good to me' });
       await expect(comment).toBeVisible({ timeout: 5000 });
@@ -34,7 +34,7 @@ test.describe('Comments — Voting', () => {
     try {
       await page.goto(`/decisions/${id}`);
       await page.locator('textarea[placeholder*="thoughts"]').fill('I disagree with this');
-      await page.locator('p-selectbutton button').filter({ hasText: /reject/i }).click();
+      await page.locator('p-selectbutton').getByRole('button', { name: /reject/i }).click();
       await page.getByRole('button', { name: /post comment/i }).click();
       const comment = page.locator('.comment-item').filter({ hasText: 'I disagree with this' });
       await expect(comment).toBeVisible({ timeout: 5000 });
@@ -52,7 +52,7 @@ test.describe('Comments — Voting', () => {
     try {
       await page.goto(`/decisions/${id}`);
       await page.locator('textarea[placeholder*="thoughts"]').fill('No strong opinion');
-      await page.locator('p-selectbutton button').filter({ hasText: /abstain/i }).click();
+      await page.locator('p-selectbutton').getByRole('button', { name: /abstain/i }).click();
       await page.getByRole('button', { name: /post comment/i }).click();
       const comment = page.locator('.comment-item').filter({ hasText: 'No strong opinion' });
       await expect(comment).toBeVisible({ timeout: 5000 });
