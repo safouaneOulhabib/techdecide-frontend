@@ -19,7 +19,8 @@ export class Sidebar {
     { label: 'Organizations', icon: 'pi-building', route: '/organizations' },
     { label: 'Teams', icon: 'pi-users', route: '/teams' },
     { label: 'Tags', icon: 'pi-tag', route: '/tags' },
-    { label: 'Reports', icon: 'pi-book', route: '/reports' }
+    { label: 'Reports', icon: 'pi-book', route: '/reports' },
+    { label: 'Projects', icon: 'pi-folder', route: '/projects' }
   ];
 
   readonly isCollapsed = signal(false);

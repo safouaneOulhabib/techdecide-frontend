@@ -1,0 +1,147 @@
+.project-list {
+  max-width: 100%;
+  margin: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--p-text-color);
+    margin: 0;
+  }
+}
+
+.table-wrapper {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.text-secondary {
+  color: var(--p-text-secondary-color);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--p-text-secondary-color);
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--p-primary-200);
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    input,
+    p-select,
+    textarea {
+      width: 100%;
+    }
+  }
+}
+
+.mb {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.skeleton-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--p-text-secondary-color);
+    border-bottom: 1px solid var(--p-surface-200);
+  }
+
+  td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--p-surface-100);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.skeleton-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep {
+  .p-datatable-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .p-datatable-thead > tr > th,
+  .p-datatable-column-title {
+    background: var(--p-surface-0) !important;
+    border-bottom: 1px solid var(--p-surface-200);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: var(--p-text-secondary-color) !important;
+  }
+
+  .p-datatable-tbody > tr {
+    border-bottom: 1px solid var(--p-surface-100);
+    transition: background 0.15s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--p-surface-50) !important;
+    }
+
+    > td {
+      padding: 1rem 1.25rem;
+      border: none;
+      font-size: 0.875rem;
+      color: var(--p-text-secondary-color);
+    }
+  }
+}

@@ -1,0 +1,64 @@
+.project-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--p-surface-100);
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.org-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--p-text-muted-color);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.btn-view,
+.btn-delete {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.btn-view {
+  background: var(--p-surface-100);
+  color: var(--p-primary-color);
+
+  &:hover {
+    background: var(--p-primary-50);
+  }
+}
+
+.btn-delete {
+  background: var(--p-surface-100);
+  color: var(--p-red-500);
+
+  &:hover {
+    background: #fef2f2;
+  }
+}

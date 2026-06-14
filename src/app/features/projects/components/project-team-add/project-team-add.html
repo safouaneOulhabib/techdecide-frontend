@@ -1,0 +1,23 @@
+<div class="add-team-panel">
+  <h4>Add Team</h4>
+  @if (availableTeams().length === 0) {
+    <p class="no-teams">All teams in this organization are already assigned.</p>
+  } @else {
+    <div class="add-team-row">
+      <p-select
+        [(ngModel)]="selectedTeamId"
+        [options]="availableTeams()"
+        optionLabel="teamName"
+        optionValue="teamId"
+        placeholder="Select a team"
+        [style]="{ flex: 1 }"
+      />
+      <p-button
+        label="Add"
+        icon="pi pi-plus"
+        (onClick)="submit()"
+        [disabled]="selectedTeamId() === null"
+      />
+    </div>
+  }
+</div>

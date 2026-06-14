@@ -1,0 +1,136 @@
+<div class="project-list">
+  <div class="page-header">
+    <h2>Projects</h2>
+    @if (isAppAdmin()) {
+      <p-button label="New Project" icon="pi pi-plus" (onClick)="openDialog()" />
+    }
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" class="mb" />
+  }
+
+  @if (!hasTeam() && !isAppAdmin()) {
+    <div class="table-wrapper">
+      <div class="empty-state">
+        <i class="pi pi-lock"></i>
+        <p>You are not assigned to a team yet.</p>
+      </div>
+    </div>
+  }
+
+  @if (hasTeam() || isAppAdmin()) {
+    @if (loading()) {
+      <div class="table-wrapper">
+        <table class="skeleton-table">
+          <thead>
+            <tr>
+              <th style="width: 35%">Name</th>
+              <th style="width: 35%">Organization</th>
+              <th style="width: 20%">Teams</th>
+              <th style="width: 10%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of [1,2,3,4,5]; track item) {
+              <tr>
+                <td>
+                  <div class="skeleton-name">
+                    <p-skeleton width="34px" height="34px" borderRadius="8px" />
+                    <p-skeleton width="140px" height="16px" />
+                  </div>
+                </td>
+                <td><p-skeleton width="160px" height="16px" /></td>
+                <td><p-skeleton width="40px" height="16px" /></td>
+                <td><p-skeleton width="28px" height="28px" borderRadius="6px" /></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (!loading()) {
+      <div class="table-wrapper">
+        <p-table [value]="projects()" [tableStyle]="{ 'min-width': '50rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 35%">Name</th>
+              <th style="width: 35%">Organization</th>
+              <th style="width: 20%">Teams</th>
+              <th style="width: 10%"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-project>
+            <tr
+              app-project-card
+              [project]="project"
+              [isAppAdmin]="isAppAdmin()"
+              (onView)="onView($event)"
+              (onDelete)="onDelete($event)"
+            ></tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4">
+                @if (isAppAdmin()) {
+                  <div class="empty-state">
+                    <i class="pi pi-folder"></i>
+                    <p>No projects found</p>
+                    <p-button label="Create your first project" (onClick)="openDialog()" />
+                  </div>
+                } @else {
+                  <div class="empty-state">
+                    <i class="pi pi-folder"></i>
+                    <p>Your team has no projects yet.</p>
+                  </div>
+                }
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+  }
+
+  <p-dialog header="New Project" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '480px' }">
+    <div class="dialog-form">
+      <div class="field">
+        <label for="projectName">Name *</label>
+        <input id="projectName" pInputText [(ngModel)]="newProjectName" placeholder="Project name" />
+      </div>
+      <div class="field">
+        <label for="projectOrg">Organization *</label>
+        <p-select
+          id="projectOrg"
+          [(ngModel)]="selectedOrgId"
+          [options]="organizations()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select organization"
+        />
+      </div>
+      <div class="field">
+        <label for="projectDesc">Description</label>
+        <textarea
+          id="projectDesc"
+          pTextarea
+          [(ngModel)]="newProjectDescription"
+          placeholder="Optional description"
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible = false" />
+      <p-button
+        label="Create"
+        icon="pi pi-check"
+        (onClick)="onSubmit()"
+        [disabled]="!newProjectName.trim() || selectedOrgId === null"
+      />
+    </ng-template>
+  </p-dialog>
+</div>

@@ -1,0 +1,27 @@
+<td>
+  <div class="project-name">
+    <div class="project-avatar">
+      <i class="pi pi-folder"></i>
+    </div>
+    <span>{{ project().name }}</span>
+  </div>
+</td>
+<td>
+  <span class="org-badge">
+    <i class="pi pi-building"></i>
+    {{ project().organizationName }}
+  </span>
+</td>
+<td class="text-secondary">{{ project().teamCount }}</td>
+<td>
+  <div class="row-actions">
+    <button class="btn-view" (click)="onView.emit(project().id)" pTooltip="View Project" tooltipPosition="top">
+      <i class="pi pi-eye"></i>
+    </button>
+    @if (isAppAdmin()) {
+      <button class="btn-delete" (click)="onDelete.emit(project().id)" pTooltip="Delete" tooltipPosition="top">
+        <i class="pi pi-trash"></i>
+      </button>
+    }
+  </div>
+</td>

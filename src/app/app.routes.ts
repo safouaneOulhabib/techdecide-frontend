@@ -54,6 +54,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('@features/reports/reports.routes')
             .then(m => m.REPORT_ROUTES)
+      },
+      {
+        path: 'projects',
+        loadChildren: () =>
+          import('@features/projects/projects.routes')
+            .then(m => m.PROJECT_ROUTES)
       }
     ]
   },
