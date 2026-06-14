@@ -1,0 +1,178 @@
+.project-detail {
+  max-width: 860px;
+  margin: 0;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--p-text-secondary-color);
+  padding: 6px 0;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--p-primary-color);
+  }
+}
+
+.detail-card {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--p-text-color);
+  }
+}
+
+.project-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--p-primary-50);
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.org-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--p-text-secondary-color);
+}
+
+.project-description {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--p-text-secondary-color);
+  line-height: 1.5;
+}
+
+.section {
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--p-text-color);
+    margin: 0 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--p-primary-100);
+  color: var(--p-primary-700);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.table-wrapper {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  color: var(--p-text-secondary-color);
+
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    color: var(--p-primary-200);
+  }
+
+  p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.mb {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.mb-sm {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+:host ::ng-deep {
+  .p-datatable-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .p-datatable-thead > tr > th,
+  .p-datatable-column-title {
+    background: var(--p-surface-0) !important;
+    border-bottom: 1px solid var(--p-surface-200);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: var(--p-text-secondary-color) !important;
+  }
+
+  .p-datatable-tbody > tr {
+    border-bottom: 1px solid var(--p-surface-100);
+    transition: background 0.15s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    > td {
+      padding: 1rem 1.25rem;
+      border: none;
+      font-size: 0.875rem;
+      color: var(--p-text-secondary-color);
+    }
+  }
+}

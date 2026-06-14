@@ -1,0 +1,17 @@
+<td>
+  <div class="team-name">
+    <div class="team-avatar">
+      <i class="pi pi-users"></i>
+    </div>
+    <span>{{ team().teamName }}</span>
+  </div>
+</td>
+<td>
+  <div class="row-actions">
+    @if (isAppAdmin()) {
+      <button class="btn-remove" (click)="onRemove.emit(team().teamId)" pTooltip="Remove" tooltipPosition="top">
+        <i class="pi pi-times"></i>
+      </button>
+    }
+  </div>
+</td>

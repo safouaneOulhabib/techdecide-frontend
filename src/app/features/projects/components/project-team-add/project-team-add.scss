@@ -1,0 +1,26 @@
+.add-team-panel {
+  padding: 16px;
+  background: var(--p-surface-50);
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 8px;
+  margin-top: 16px;
+
+  h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--p-text-color);
+  }
+}
+
+.add-team-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.no-teams {
+  margin: 0;
+  font-size: 13px;
+  color: var(--p-text-muted-color);
+}

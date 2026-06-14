@@ -1,0 +1,42 @@
+.team-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--p-surface-100);
+  color: var(--p-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-remove {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: var(--p-surface-100);
+  color: var(--p-red-500);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #fef2f2;
+  }
+}

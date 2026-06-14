@@ -1,0 +1,84 @@
+<div class="project-detail">
+  <div class="page-header">
+    <button class="btn-back" (click)="goBack()">
+      <i class="pi pi-arrow-left"></i>
+      Back
+    </button>
+  </div>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()!" class="mb" />
+  }
+
+  @if (loading() && !project()) {
+    <div class="detail-card skeleton-card">
+      <p-skeleton width="240px" height="28px" class="mb-sm" />
+      <p-skeleton width="160px" height="16px" class="mb-sm" />
+      <p-skeleton width="320px" height="16px" />
+    </div>
+  }
+
+  @if (!loading() || project()) {
+    @if (project()) {
+      <div class="detail-card">
+        <div class="detail-header">
+          <div class="project-icon">
+            <i class="pi pi-folder"></i>
+          </div>
+          <div>
+            <h2>{{ project()!.name }}</h2>
+            <span class="org-badge">
+              <i class="pi pi-building"></i>
+              {{ project()!.organizationName }}
+            </span>
+          </div>
+        </div>
+        @if (project()!.description) {
+          <p class="project-description">{{ project()!.description }}</p>
+        }
+      </div>
+
+      <div class="section">
+        <h3>Assigned Teams <span class="count-badge">{{ projectTeams().length }}</span></h3>
+
+        <div class="table-wrapper">
+          <p-table [value]="projectTeams()" [tableStyle]="{ 'min-width': '30rem' }">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 90%">Team</th>
+                <th style="width: 10%"></th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-team>
+              <tr
+                app-project-team-row
+                [team]="team"
+                [isAppAdmin]="isAppAdmin()"
+                (onRemove)="onRemove($event)"
+              ></tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="2">
+                  <div class="empty-state">
+                    <i class="pi pi-users"></i>
+                    <p>No teams assigned to this project yet.</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        @if (isAppAdmin()) {
+          <app-project-team-add
+            [availableTeams]="availableTeams()"
+            (onAssign)="onAssign($event)"
+          />
+        }
+      </div>
+    }
+  }
+</div>
