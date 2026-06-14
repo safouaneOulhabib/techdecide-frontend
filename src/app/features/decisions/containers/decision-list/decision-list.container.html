@@ -1,8 +1,8 @@
 <div class="decision-list">
   <div class="page-header">
     <h2>Technical Decisions</h2>
-    @if (hasTeam()) {
-      <p-button label="New Decision" icon="pi pi-plus" (onClick)="onCreateNew()" />
+    @if (hasTeam() && filteredDecisions().length > 0) {
+    <p-button label="New Decision" icon="pi pi-plus" (onClick)="onCreateNew()" />
     }
   </div>
 
@@ -35,19 +35,19 @@
   }
 
   @if (!loading() && filteredDecisions().length === 0) {
-    @if (!hasTeam()) {
-      <div class="empty-state">
-        <i class="pi pi-lock"></i>
-        <p>You are not assigned to a team yet.</p>
-        <p class="empty-state-sub">Contact your administrator to get access.</p>
-      </div>
-    } @else {
-      <div class="empty-state">
-        <i class="pi pi-inbox"></i>
-        <p>No decisions found</p>
-        <p-button label="Create your first decision" (onClick)="onCreateNew()" />
-      </div>
-    }
+  @if (!hasTeam()) {
+  <div class="empty-state">
+    <i class="pi pi-lock"></i>
+    <p>You are not assigned to a team yet.</p>
+    <p class="empty-state-sub">Contact your administrator to get access.</p>
+  </div>
+  } @else {
+  <div class="empty-state">
+    <i class="pi pi-inbox"></i>
+    <p>No decisions found</p>
+    <p-button label="Create your first decision" (onClick)="onCreateNew()" />
+  </div>
+  }
   }
 
   @if (!loading() || filteredDecisions().length > 0) {

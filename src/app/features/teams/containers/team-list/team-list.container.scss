@@ -70,54 +70,41 @@
   align-items: center;
   gap: 0.25rem;
   justify-content: flex-end;
-  opacity: 0;
   transition: opacity 0.15s;
 }
 
-.btn-members {
-  width: 32px;
-  height: 32px;
-  display: flex;
+.btn-members,
+.btn-delete {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   border: none;
   background: transparent;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   color: var(--p-text-secondary-color);
   transition: all 0.15s;
 
   i {
-    font-size: 0.85rem;
-  }
-
-  &:hover {
-    background: var(--p-primary-50);
-    color: var(--p-primary-color);
+    font-size: 0.95rem;
+    line-height: 1;
   }
 }
 
-.btn-delete {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  color: var(--p-text-secondary-color);
-  transition: all 0.15s;
+.btn-members:hover {
+  background: var(--p-primary-50);
+  color: var(--p-primary-color);
+}
 
-  i {
-    font-size: 0.85rem;
-  }
-
-  &:hover {
-    background: #FEF2F2;
-    color: #DC2626;
-  }
+.btn-delete:hover {
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
 .empty-state {
@@ -235,9 +222,5 @@
       font-size: 0.875rem;
       color: var(--p-text-secondary-color);
     }
-  }
-
-  .p-datatable-tbody>tr:hover .row-actions {
-    opacity: 1;
   }
 }
