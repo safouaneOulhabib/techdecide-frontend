@@ -11,12 +11,16 @@
   </div>
 
   <div class="form-footer">
-    <p-selectbutton
-      [(ngModel)]="selectedVote"
-      [options]="voteOptions"
-      optionLabel="label"
-      optionValue="value"
-    />
+    @if (canVote()) {
+      <p-selectbutton
+        [(ngModel)]="selectedVote"
+        [options]="voteOptions"
+        optionLabel="label"
+        optionValue="value"
+      />
+    } @else {
+      <span class="vote-disabled-note">Only involved teams can vote</span>
+    }
     <p-button
       label="Post Comment"
       icon="pi pi-send"

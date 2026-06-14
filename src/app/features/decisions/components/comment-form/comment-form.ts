@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
@@ -13,6 +13,7 @@ import { CreateCommentRequest, Vote } from '@features/decisions/models/comment.m
   styleUrl: './comment-form.scss'
 })
 export class CommentForm {
+  canVote = input<boolean>(true);
   onSubmit = output<CreateCommentRequest>();
 
   content = signal('');
@@ -29,7 +30,7 @@ export class CommentForm {
 
     this.onSubmit.emit({
       content: this.content(),
-      vote: this.selectedVote() ?? undefined
+      vote: this.canVote() ? (this.selectedVote() ?? undefined) : undefined
     });
 
     this.content.set('');

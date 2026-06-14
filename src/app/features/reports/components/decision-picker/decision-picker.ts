@@ -4,7 +4,7 @@ import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { Decision } from '@features/decisions/models/decision.model';
-import { Team } from '@features/teams/models/team.model';
+import { ProjectSummary } from '@features/projects/models/project.model';
 import { DecisionStatusBadge } from '@features/decisions/components/decision-status-badge/decision-status-badge';
 
 @Component({
@@ -16,32 +16,29 @@ import { DecisionStatusBadge } from '@features/decisions/components/decision-sta
 })
 export class DecisionPicker {
   decisions = input.required<Decision[]>();
-  teams = input.required<Team[]>();
+  projects = input<ProjectSummary[]>([]);
   selectedIds = output<number[]>();
 
   searchQuery = signal('');
-  selectedTeamId = signal<number | null>(null);
+  selectedProjectId = signal<number | null>(null);
   checkedIds = signal<Set<number>>(new Set());
 
   filteredDecisions = computed(() => {
     const q = this.searchQuery().toLowerCase();
-    const teamId = this.selectedTeamId();
-    const teamName = teamId
-      ? this.teams().find(t => t.id === teamId)?.name
-      : null;
+    const projectId = this.selectedProjectId();
 
     return this.decisions().filter(d => {
       const matchesSearch = !q || d.title.toLowerCase().includes(q);
-      const matchesTeam = !teamName || d.teamName === teamName;
-      return matchesSearch && matchesTeam;
+      const matchesProject = !projectId || d.projectId === projectId;
+      return matchesSearch && matchesProject;
     });
   });
 
   selectedCount = computed(() => this.checkedIds().size);
 
-  teamOptions = computed(() => [
-    { label: 'All teams', value: null },
-    ...this.teams().map(t => ({ label: t.name, value: t.id }))
+  projectOptions = computed(() => [
+    { label: 'All projects', value: null },
+    ...this.projects().map(p => ({ label: p.name, value: p.id }))
   ]);
 
   isChecked(id: number): boolean {
@@ -59,8 +56,8 @@ export class DecisionPicker {
     this.selectedIds.emit(Array.from(next));
   }
 
-  onTeamChange(value: number | null) {
-    this.selectedTeamId.set(value);
+  onProjectChange(value: number | null) {
+    this.selectedProjectId.set(value);
   }
 
   onSearchChange(value: string) {

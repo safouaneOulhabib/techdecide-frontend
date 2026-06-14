@@ -5,141 +5,159 @@
       <i class="pi pi-arrow-left"></i>
       Back
     </button>
-    @if (decision() && canEditCurrent()) {
-    <button class="btn-edit" (click)="onEdit()">
-      <i class="pi pi-pencil"></i>
-      Edit
-    </button>
-    }
+    <div class="header-actions">
+      @if (decision() && canEditCurrent()) {
+        <button class="btn-edit" (click)="onEdit()">
+          <i class="pi pi-pencil"></i>
+          Edit
+        </button>
+      }
+      @if (decision() && canDeleteCurrent()) {
+        <button class="btn-delete" (click)="onDelete()">
+          <i class="pi pi-trash"></i>
+          Delete
+        </button>
+      }
+    </div>
   </div>
 
   @if (loading() && !decision()) {
-  <div class="detail-card">
-    <div class="detail-top">
-      <div class="detail-title-row">
-        <p-skeleton width="240px" height="28px" />
-        <p-skeleton width="160px" height="38px" borderRadius="8px" />
+    <div class="detail-card">
+      <div class="detail-top">
+        <div class="detail-title-row">
+          <p-skeleton width="240px" height="28px" />
+          <p-skeleton width="160px" height="38px" borderRadius="8px" />
+        </div>
+        <div class="header-meta">
+          <p-skeleton width="80px" height="22px" borderRadius="20px" />
+          <p-skeleton width="100px" height="16px" />
+          <p-skeleton width="100px" height="16px" />
+          <p-skeleton width="100px" height="16px" />
+        </div>
       </div>
-      <div class="header-meta">
-        <p-skeleton width="80px" height="22px" borderRadius="20px" />
-        <p-skeleton width="100px" height="16px" />
-        <p-skeleton width="100px" height="16px" />
-        <p-skeleton width="100px" height="16px" />
+      <div class="detail-sections">
+        @for (s of [1,2,3]; track s) {
+          <div class="detail-section">
+            <p-skeleton width="80px" height="14px" />
+            <div style="height: 0.75rem"></div>
+            <p-skeleton width="100%" height="16px" />
+            <div style="height: 0.5rem"></div>
+            <p-skeleton width="70%" height="16px" />
+          </div>
+        }
       </div>
     </div>
-    <div class="detail-sections">
-      @for (s of [1,2,3]; track s) {
-      <div class="detail-section">
-        <p-skeleton width="80px" height="14px" />
-        <div style="height: 0.75rem"></div>
-        <p-skeleton width="100%" height="16px" />
-        <div style="height: 0.5rem"></div>
-        <p-skeleton width="70%" height="16px" />
-      </div>
-      }
-    </div>
-  </div>
   }
 
   @if (error()) {
-  <p-message severity="error" [text]="error()!" />
+    <p-message severity="error" [text]="error()!" />
   }
 
   @if (decision()) {
-  <div class="detail-card">
+    <div class="detail-card">
 
-    @if (decision()!.supersededById) {
-    <div class="superseded-banner" (click)="goToSuperseder()">
-      <i class="pi pi-info-circle"></i>
-      <span class="banner-text">
-        This decision has been superseded by
-        <strong>{{ decision()!.supersededByTitle || ('decision #' + decision()!.supersededById) }}</strong>
-      </span>
-      <i class="pi pi-arrow-right banner-arrow"></i>
-    </div>
-    }
-
-    <div class="detail-top">
-      <div class="detail-title-row">
-        <h1>{{ decision()!.title }}</h1>
-        <div class="title-actions">
-          <app-decision-status-selector
-            [currentStatus]="decision()!.status"
-            [teamRole]="teamRole()"
-            [appRole]="appRole()"
-            (statusChange)="onStatusChange($event)" />
-          @if (canSupersedeCurrent()) {
-            <p-button label="Supersede" icon="pi pi-refresh" severity="secondary" [outlined]="true"
-              (onClick)="openSupersedeDialog()" />
-          }
+      @if (decision()!.supersededById) {
+        <div class="superseded-banner" (click)="goToSuperseder()">
+          <i class="pi pi-info-circle"></i>
+          <span class="banner-text">
+            This decision has been superseded by
+            <strong>{{ decision()!.supersededByTitle || ('decision #' + decision()!.supersededById) }}</strong>
+          </span>
+          <i class="pi pi-arrow-right banner-arrow"></i>
         </div>
-      </div>
-      <div class="header-meta">
-        <app-decision-status-badge [status]="decision()!.status" />
-        <span class="meta-item"><i class="pi pi-users"></i>{{ decision()!.teamName }}</span>
-        <span class="meta-item"><i class="pi pi-user"></i>{{ decision()!.authorName }}</span>
-        <span class="meta-item"><i class="pi pi-calendar"></i>{{ decision()!.createdAt | date:'mediumDate' }}</span>
-      </div>
-    </div>
-
-    @if (decision()!.tags.length > 0) {
-    <div class="detail-tags">
-      @for (tag of decision()!.tags; track tag.id) {
-      <span class="tag">{{ tag.name }}</span>
-      }
-    </div>
-    }
-
-    <div class="detail-sections">
-
-      <div class="detail-section">
-        <h3>Context</h3>
-        <p>{{ decision()!.context }}</p>
-      </div>
-
-      <div class="detail-section">
-        <h3>Decision</h3>
-        <p>{{ decision()!.decision }}</p>
-      </div>
-
-      @if (decision()!.consequences) {
-      <div class="detail-section">
-        <h3>Consequences</h3>
-        <p>{{ decision()!.consequences }}</p>
-      </div>
       }
 
-      @if (decision()!.alternatives.length > 0) {
-      <div class="detail-section">
-        <h3>Alternatives Considered</h3>
-        <div class="alternatives-list">
-          @for (alt of decision()!.alternatives; track alt.id) {
-          <div class="alternative-item">
-            <span class="alt-name">{{ alt.name }}</span>
-            <span class="alt-reason">{{ alt.rejectionReason }}</span>
+      <div class="detail-top">
+        <div class="detail-title-row">
+          <h1>{{ decision()!.title }}</h1>
+          <div class="title-actions">
+            @if (canGoverncurrent()) {
+              <app-decision-status-selector
+                [currentStatus]="decision()!.status"
+                [teamRole]="teamRole()"
+                [appRole]="appRole()"
+                (statusChange)="onStatusChange($event)" />
+              @if (canSupersedeCurrent()) {
+                <p-button label="Supersede" icon="pi pi-refresh" severity="secondary" [outlined]="true"
+                  (onClick)="openSupersedeDialog()" />
+              }
+            }
           </div>
+        </div>
+        <div class="header-meta">
+          <app-decision-status-badge [status]="decision()!.status" />
+          <span class="meta-item">
+            <i class="pi pi-folder-open"></i>
+            {{ decision()!.projectName }}
+          </span>
+          <span class="meta-item"><i class="pi pi-user"></i>{{ decision()!.authorName }}</span>
+          <span class="meta-item"><i class="pi pi-calendar"></i>{{ decision()!.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <div class="involved-teams">
+          @for (team of decision()!.teams; track team.teamId) {
+            <span class="team-chip">{{ team.teamName }}</span>
           }
         </div>
       </div>
+
+      @if (decision()!.tags.length > 0) {
+        <div class="detail-tags">
+          @for (tag of decision()!.tags; track tag.id) {
+            <span class="tag">{{ tag.name }}</span>
+          }
+        </div>
       }
 
-      <div class="detail-section">
-        <app-vote-summary [comments]="comments()" />
-      </div>
+      <div class="detail-sections">
 
-      <div class="detail-section">
-        <h3>Discussion</h3>
-        <app-comment-form (onSubmit)="onCommentSubmit($event)" />
-        <div style="height: 1.5rem"></div>
-        @if (commentsLoading()) {
-        <div class="loading"><p-progressSpinner /></div>
+        <div class="detail-section">
+          <h3>Context</h3>
+          <p>{{ decision()!.context }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h3>Decision</h3>
+          <p>{{ decision()!.decision }}</p>
+        </div>
+
+        @if (decision()!.consequences) {
+          <div class="detail-section">
+            <h3>Consequences</h3>
+            <p>{{ decision()!.consequences }}</p>
+          </div>
         }
-        <app-comment-list [comments]="comments()" [currentUserId]="currentUser()?.id || 0"
-          (onDelete)="onCommentDelete($event)" />
-      </div>
 
+        @if (decision()!.alternatives.length > 0) {
+          <div class="detail-section">
+            <h3>Alternatives Considered</h3>
+            <div class="alternatives-list">
+              @for (alt of decision()!.alternatives; track alt.id) {
+                <div class="alternative-item">
+                  <span class="alt-name">{{ alt.name }}</span>
+                  <span class="alt-reason">{{ alt.rejectionReason }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="detail-section">
+          <app-vote-summary [comments]="comments()" />
+        </div>
+
+        <div class="detail-section">
+          <h3>Discussion</h3>
+          <app-comment-form [canVote]="canVoteCurrent()" (onSubmit)="onCommentSubmit($event)" />
+          <div style="height: 1.5rem"></div>
+          @if (commentsLoading()) {
+            <div class="loading"><p-progressSpinner /></div>
+          }
+          <app-comment-list [comments]="comments()" [currentUserId]="currentUser()?.id || 0"
+            (onDelete)="onCommentDelete($event)" />
+        </div>
+
+      </div>
     </div>
-  </div>
   }
 
   <app-decision-supersede-dialog [visible]="supersedeDialogVisible()" [candidates]="supersedeCandidates()"

@@ -10,7 +10,14 @@
   margin-bottom: 1.5rem;
 }
 
-.btn-back, .btn-edit {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.btn-back, .btn-edit, .btn-delete {
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -29,6 +36,14 @@
   &:hover {
     background: var(--p-surface-100);
     color: var(--p-text-color);
+  }
+}
+
+.btn-delete {
+  &:hover {
+    background: #FEF2F2;
+    border-color: #FECACA;
+    color: #DC2626;
   }
 }
 
@@ -81,6 +96,23 @@
   color: var(--p-text-secondary-color);
 
   i { font-size: 0.8rem; }
+}
+
+.involved-teams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.75rem;
+}
+
+.team-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.625rem;
+  border-radius: 1rem;
+  background: var(--p-primary-50);
+  color: var(--p-primary-700);
+  border: 1px solid var(--p-primary-100);
 }
 
 .detail-tags {

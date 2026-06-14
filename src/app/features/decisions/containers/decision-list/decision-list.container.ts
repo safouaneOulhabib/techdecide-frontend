@@ -3,18 +3,17 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { SkeletonModule } from 'primeng/skeleton';
+import { signal, computed } from '@angular/core';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { AuthStore } from '@features/auth/store/auth.store';
+import { ProjectStore } from '@features/projects/store/project.store';
+import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionCard } from '@features/decisions/components/decision-card/decision-card';
 import { Decision } from '@features/decisions/models/decision.model';
-import { signal, computed } from '@angular/core';
-import { TeamStore } from '@features/teams/store/team.store';
-import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionFilters, DecisionFiltersValue } from '@features/decisions/components/decision-filters/decision-filters';
-import { Team } from '@features/teams/models/team.model';
+import { ProjectSummary } from '@features/projects/models/project.model';
 import { Tag } from '@features/tags/models/tag.model';
-import { SkeletonModule } from 'primeng/skeleton';
-
 
 @Component({
   selector: 'app-decision-list',
@@ -34,23 +33,20 @@ export class DecisionListContainer implements OnInit {
   private readonly store = inject(DecisionStore);
   private readonly router = inject(Router);
   private readonly authStore = inject(AuthStore);
+  private readonly projectStore = inject(ProjectStore);
+  private readonly tagStore = inject(TagStore);
 
   readonly allDecisions: Signal<Decision[]> = this.store.decisions;
   readonly loading: Signal<boolean> = this.store.loading;
   readonly error: Signal<string | null> = this.store.error;
-
-  private readonly teamStore = inject(TeamStore);
-  private readonly tagStore = inject(TagStore);
-
-  readonly teams: Signal<Team[]> = this.teamStore.teams;
+  readonly projects: Signal<ProjectSummary[]> = this.projectStore.projects;
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
-
   readonly hasTeam = this.authStore.hasTeam;
 
   activeFilters = signal<DecisionFiltersValue>({
     keyword: '',
     status: null,
-    teamId: null,
+    projectId: null,
     tagId: null
   });
 
@@ -63,21 +59,17 @@ export class DecisionListContainer implements OnInit {
 
       const matchesStatus = !filters.status || d.status === filters.status;
 
-      const matchesTeam = !filters.teamId || d.teamName ===
-        this.teams().find(t => t.id === filters.teamId)?.name;
+      const matchesProject = !filters.projectId || d.projectId === filters.projectId;
 
-      const matchesTag = !filters.tagId ||
-        d.tags.some(t => t.id === filters.tagId);
+      const matchesTag = !filters.tagId || d.tags.some(t => t.id === filters.tagId);
 
-      return matchesKeyword && matchesStatus && matchesTeam && matchesTag;
+      return matchesKeyword && matchesStatus && matchesProject && matchesTag;
     });
   });
 
-
-
   ngOnInit() {
     this.store.loadAll();
-    this.teamStore.loadAll();
+    this.projectStore.loadAll();
     this.tagStore.loadAll();
   }
 

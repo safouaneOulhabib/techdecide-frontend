@@ -24,14 +24,41 @@
   justify-content: space-between;
 }
 
-.card-team {
+.card-project {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   font-size: 0.75rem;
   color: var(--p-text-secondary-color);
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 140px;
+  max-width: 160px;
+
+  i { font-size: 0.7rem; }
+}
+
+.card-teams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.team-chip {
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  background: var(--p-primary-50);
+  color: var(--p-primary-700);
+  border: 1px solid var(--p-primary-100);
+
+  &.team-chip-more {
+    background: var(--p-surface-100);
+    color: var(--p-text-secondary-color);
+    border-color: var(--p-surface-200);
+  }
 }
 
 .card-body {

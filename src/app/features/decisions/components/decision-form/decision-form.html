@@ -11,13 +11,34 @@
 
     @if (!isEditMode) {
       <div class="field">
-        <label for="team">Team *</label>
-        <p-select id="team"
-          [ngModel]="form().teamId"
-          (ngModelChange)="form.update(f => ({...f, teamId: $event}))"
-          [options]="teams()" optionLabel="name" optionValue="id"
-          placeholder="Select a team" styleClass="w-full" />
+        <label for="project">Project *</label>
+        <p-select id="project"
+          [ngModel]="form().projectId"
+          (ngModelChange)="onProjectChange($event)"
+          [options]="projects()" optionLabel="name" optionValue="id"
+          placeholder="Select a project" styleClass="w-full" />
       </div>
+
+      @if (form().projectId && projectTeams().length > 0) {
+        <div class="field">
+          <label>Involved Teams</label>
+          <div class="team-chips">
+            @for (teamId of form().teamIds; track teamId) {
+              <span class="team-chip" [class.own-team]="teamId === ownTeamId()">
+                {{ teamName(teamId) }}
+                @if (teamId !== ownTeamId()) {
+                  <button type="button" class="chip-remove" (click)="removeTeam(teamId)">
+                    <i class="pi pi-times"></i>
+                  </button>
+                }
+              </span>
+            }
+          </div>
+          @if (form().teamIds.length === 0) {
+            <p class="field-hint">No teams selected. All project teams were auto-selected above.</p>
+          }
+        </div>
+      }
     }
 
     <div class="field">

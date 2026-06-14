@@ -58,10 +58,8 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
 
   private decisionId = 0;
 
-  // Supersede dialog state
   supersedeDialogVisible = signal(false);
 
-  // Candidates for superseding: approved decisions, excluding the current one
   supersedeCandidates = computed(() =>
     this.decisionStore.approvedDecisions().filter(d => d.id !== this.decisionId)
   );
@@ -69,18 +67,28 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
   readonly teamRole = computed(() => this.authStore.user()?.teamRole ?? null);
   readonly appRole = computed(() => this.authStore.user()?.appRole ?? 'USER');
 
+  // Use canGovern flag from the decision DTO — backend computed per actor
+  canGoverncurrent = computed(() => this.decision()?.canGovern ?? false);
+  canVoteCurrent = computed(() => this.decision()?.canVote ?? false);
+
   canSupersedeCurrent = computed(() => {
     const d = this.decision();
-    if (!d || !canSupersede(d.status)) return false;
-    return this.appRole() === 'APP_ADMIN' || this.teamRole() === 'TEAM_ADMIN';
+    return !!d && canSupersede(d.status) && (this.decision()?.canGovern ?? false);
   });
 
   canEditCurrent = computed(() => {
     const d = this.decision();
-    return d ? canEdit(d.status) : false;
+    if (!d) return false;
+    const isAuthor = this.authStore.user()?.id === d.authorId;
+    return canEdit(d.status) && (d.canGovern || isAuthor);
   });
 
-  isTeamAdminOrAppAdmin = this.authStore.isTeamAdminOrAppAdmin;
+  canDeleteCurrent = computed(() => {
+    const d = this.decision();
+    if (!d) return false;
+    const isAuthor = this.authStore.user()?.id === d.authorId;
+    return canDelete(d.status) && (d.canGovern || isAuthor);
+  });
 
   openSupersedeDialog() {
     if (this.decisionStore.decisions().length === 0) {
@@ -113,6 +121,11 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.router.navigate(['/decisions', this.decisionId, 'edit']);
   }
 
+  onDelete() {
+    this.decisionStore.remove(this.decisionId);
+    this.router.navigate(['/decisions']);
+  }
+
   onStatusChange(status: DecisionStatus) {
     this.decisionStore.updateStatus(this.decisionId, status);
   }
@@ -132,7 +145,6 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
       this.router.navigate(['/decisions', id]);
     }
   }
-
 
   ngOnDestroy() {
     this.commentStore.clearComments();

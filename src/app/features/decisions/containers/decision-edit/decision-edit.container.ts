@@ -1,13 +1,10 @@
 import { Component, effect, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageModule } from 'primeng/message';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DecisionStore } from '@features/decisions/store/decision.store';
-import { TeamStore } from '@features/teams/store/team.store';
 import { TagStore } from '@features/tags/store/tag.store';
 import { DecisionForm, DecisionFormData } from '@features/decisions/components/decision-form/decision-form';
 import { Decision } from '@features/decisions/models/decision.model';
-import { Team } from '@features/teams/models/team.model';
 import { Tag } from '@features/tags/models/tag.model';
 import { DecisionFormSkeleton } from '@features/decisions/components/decision-form-skeleton/decision-form-skeleton';
 import { canEdit } from '@features/decisions/utils/decision-governance';
@@ -21,7 +18,6 @@ import { canEdit } from '@features/decisions/utils/decision-governance';
 })
 export class DecisionEditContainer implements OnInit {
   private readonly decisionStore = inject(DecisionStore);
-  private readonly teamStore = inject(TeamStore);
   private readonly tagStore = inject(TagStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -29,7 +25,6 @@ export class DecisionEditContainer implements OnInit {
   readonly decision: Signal<Decision | null> = this.decisionStore.selectedDecision;
   readonly loading: Signal<boolean> = this.decisionStore.loading;
   readonly error: Signal<string | null> = this.decisionStore.error;
-  readonly teams: Signal<Team[]> = this.teamStore.teams;
   readonly tags: Signal<Tag[]> = this.tagStore.tags;
 
   private decisionId = 0;
@@ -46,7 +41,6 @@ export class DecisionEditContainer implements OnInit {
   ngOnInit() {
     this.decisionId = Number(this.route.snapshot.paramMap.get('id'));
     this.decisionStore.loadById(this.decisionId);
-    this.teamStore.loadAll();
     this.tagStore.loadAll();
   }
 

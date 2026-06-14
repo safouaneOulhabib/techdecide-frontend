@@ -6,7 +6,7 @@
     }
   </div>
 
-  <app-decision-filters [teams]="teams()" [tags]="tags()" (filtersChange)="onFiltersChange($event)" />
+  <app-decision-filters [projects]="projects()" [tags]="tags()" (filtersChange)="onFiltersChange($event)" />
 
   @if (loading() && filteredDecisions().length === 0) {
   <div class="decisions-grid">

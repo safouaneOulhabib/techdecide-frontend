@@ -1,7 +1,10 @@
 <div class="decision-card" (click)="onView.emit(decision().id)">
   <div class="card-header">
     <app-decision-status-badge [status]="decision().status" />
-    <span class="card-team">{{ decision().teamName }}</span>
+    <span class="card-project">
+      <i class="pi pi-folder-open"></i>
+      {{ decision().projectName }}
+    </span>
   </div>
 
   <div class="card-body">
@@ -11,12 +14,21 @@
     </p>
   </div>
 
-  @if (decision().tags.length > 0) {
-  <div class="card-tags">
-    @for (tag of decision().tags; track tag.id) {
-    <span class="tag">{{ tag.name }}</span>
+  <div class="card-teams">
+    @for (team of visibleTeams(); track team.teamId) {
+      <span class="team-chip">{{ team.teamName }}</span>
+    }
+    @if (hiddenTeamCount() > 0) {
+      <span class="team-chip team-chip-more">+{{ hiddenTeamCount() }} more</span>
     }
   </div>
+
+  @if (decision().tags.length > 0) {
+    <div class="card-tags">
+      @for (tag of decision().tags; track tag.id) {
+        <span class="tag">{{ tag.name }}</span>
+      }
+    </div>
   }
 
   <div class="card-footer">
@@ -32,9 +44,9 @@
     </div>
 
     @if (canDeleteCurrent()) {
-    <button class="btn-delete" (click)="onDeleteClick($event)">
-      <i class="pi pi-trash"></i>
-    </button>
+      <button class="btn-delete" (click)="onDeleteClick($event)">
+        <i class="pi pi-trash"></i>
+      </button>
     }
   </div>
 </div>

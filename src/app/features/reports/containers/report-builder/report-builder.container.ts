@@ -7,10 +7,10 @@ import { TextareaModule } from 'primeng/textarea';
 import { MessageModule } from 'primeng/message';
 import { ReportStore } from '@features/reports/store/report.store';
 import { DecisionStore } from '@features/decisions/store/decision.store';
-import { TeamStore } from '@features/teams/store/team.store';
+import { ProjectStore } from '@features/projects/store/project.store';
 import { DecisionPicker } from '@features/reports/components/decision-picker/decision-picker';
 import { Decision } from '@features/decisions/models/decision.model';
-import { Team } from '@features/teams/models/team.model';
+import { ProjectSummary } from '@features/projects/models/project.model';
 
 @Component({
   selector: 'app-report-builder',
@@ -22,11 +22,11 @@ import { Team } from '@features/teams/models/team.model';
 export class ReportBuilderContainer implements OnInit {
   private readonly reportStore = inject(ReportStore);
   private readonly decisionStore = inject(DecisionStore);
-  private readonly teamStore = inject(TeamStore);
+  private readonly projectStore = inject(ProjectStore);
   private readonly router = inject(Router);
 
   readonly decisions: Signal<Decision[]> = this.decisionStore.decisions;
-  readonly teams: Signal<Team[]> = this.teamStore.teams;
+  readonly projects: Signal<ProjectSummary[]> = this.projectStore.projects;
   readonly loading: Signal<boolean> = this.reportStore.loading;
   readonly error: Signal<string | null> = this.reportStore.error;
 
@@ -40,7 +40,7 @@ export class ReportBuilderContainer implements OnInit {
 
   ngOnInit() {
     this.decisionStore.loadAll();
-    this.teamStore.loadAll();
+    this.projectStore.loadAll();
   }
 
   onDecisionIdsChange(ids: number[]) {

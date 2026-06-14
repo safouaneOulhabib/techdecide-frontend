@@ -3,13 +3,18 @@ import { Tag } from "@features/tags/models/tag.model";
 export type DecisionStatus =
   'DRAFT' | 'PROPOSED' | 'APPROVED' | 'REJECTED' | 'SUPERSEDED';
 
-export interface Alternative {
+export type Alternative = {
   id: number;
   name: string;
   rejectionReason: string;
-}
+};
 
-export interface Decision {
+export type TeamRef = {
+  teamId: number;
+  teamName: string;
+};
+
+export type Decision = {
   id: number;
   title: string;
   context: string;
@@ -18,27 +23,33 @@ export interface Decision {
   status: DecisionStatus;
   supersededById: number | null;
   supersededByTitle: string | null;
+  authorId: number;
   authorName: string;
-  teamName: string;
+  projectId: number;
+  projectName: string;
+  teams: TeamRef[];
+  canVote: boolean;
+  canGovern: boolean;
   tags: Tag[];
   alternatives: Alternative[];
   reviewDate: string;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-export interface CreateDecisionRequest {
+export type CreateDecisionRequest = {
   title: string;
   context: string;
   decision: string;
   consequences?: string;
-  teamId: number;
+  projectId: number;
+  teamIds: number[];
   tagIds?: number[];
   alternatives?: { name: string; rejectionReason?: string }[];
   reviewDate?: string;
-}
+};
 
-export interface UpdateDecisionRequest {
+export type UpdateDecisionRequest = {
   title?: string;
   context?: string;
   decision?: string;
@@ -46,4 +57,4 @@ export interface UpdateDecisionRequest {
   tagIds?: number[];
   alternatives?: { name: string; rejectionReason?: string }[];
   reviewDate?: string;
-}
+};
