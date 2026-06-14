@@ -1,10 +1,10 @@
-export interface Tag {
+export type Tag = {
   id: number;
   name: string;
   color: string;
-}
+};
 
-export interface CreateTagRequest {
+export type CreateTagRequest = {
   name: string;
   color?: string;
-}
+};
