@@ -7,7 +7,6 @@ import { DecisionForm, DecisionFormData } from '@features/decisions/components/d
 import { Decision } from '@features/decisions/models/decision.model';
 import { Tag } from '@features/tags/models/tag.model';
 import { DecisionFormSkeleton } from '@features/decisions/components/decision-form-skeleton/decision-form-skeleton';
-import { canEdit } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-edit',
@@ -32,7 +31,7 @@ export class DecisionEditContainer implements OnInit {
   constructor() {
     effect(() => {
       const d = this.decision();
-      if (d && !canEdit(d.status)) {
+      if (d && !d.canEdit) {
         this.router.navigate(['/decisions', d.id]);
       }
     });

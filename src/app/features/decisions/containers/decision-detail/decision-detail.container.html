@@ -71,10 +71,11 @@
         <div class="detail-title-row">
           <h1>{{ decision()!.title }}</h1>
           <div class="title-actions">
-            @if (canGoverncurrent()) {
+            @if (canGoverncurrent() || canProposeCurrent()) {
               <app-decision-status-selector
                 [currentStatus]="decision()!.status"
-                [teamRole]="teamRole()"
+                [canPropose]="canProposeCurrent()"
+                [canGovern]="canGoverncurrent()"
                 [appRole]="appRole()"
                 (statusChange)="onStatusChange($event)" />
               @if (canSupersedeCurrent()) {

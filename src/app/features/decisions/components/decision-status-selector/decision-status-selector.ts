@@ -13,7 +13,8 @@ import { allowedTransitions } from '@features/decisions/utils/decision-governanc
 })
 export class DecisionStatusSelector {
   currentStatus = input.required<DecisionStatus>();
-  teamRole = input<string | null>(null);
+  canPropose = input<boolean>(false);
+  canGovern = input<boolean>(false);
   appRole = input<string>('USER');
   statusChange = output<DecisionStatus>();
 
@@ -26,14 +27,14 @@ export class DecisionStatusSelector {
 
   visibleOptions = computed(() => {
     const current = this.currentStatus();
-    const allowed = allowedTransitions(current, this.teamRole(), this.appRole());
+    const allowed = allowedTransitions(current, this.canPropose(), this.canGovern(), this.appRole());
     return this.statusOptions.filter(
       opt => opt.value === current || allowed.includes(opt.value)
     );
   });
 
   hasTransitions = computed(() =>
-    allowedTransitions(this.currentStatus(), this.teamRole(), this.appRole()).length > 0
+    allowedTransitions(this.currentStatus(), this.canPropose(), this.canGovern(), this.appRole()).length > 0
   );
 
   onStatusChange(newStatus: DecisionStatus) {

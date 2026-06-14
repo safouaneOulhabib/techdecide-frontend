@@ -43,7 +43,7 @@
       </span>
     </div>
 
-    @if (canDeleteCurrent()) {
+    @if (decision().canDelete) {
       <button class="btn-delete" (click)="onDeleteClick($event)">
         <i class="pi pi-trash"></i>
       </button>

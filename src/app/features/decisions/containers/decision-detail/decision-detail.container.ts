@@ -18,7 +18,7 @@ import { DecisionStatusBadge } from '@features/decisions/components/decision-sta
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DecisionSupersedeDialog } from '@features/decisions/components/decision-supersede-dialog/decision-supersede-dialog';
-import { canDelete, canEdit, canSupersede } from '@features/decisions/utils/decision-governance';
+import { canSupersede } from '@features/decisions/utils/decision-governance';
 
 @Component({
   selector: 'app-decision-detail',
@@ -64,30 +64,18 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
     this.decisionStore.approvedDecisions().filter(d => d.id !== this.decisionId)
   );
 
-  readonly teamRole = computed(() => this.authStore.user()?.teamRole ?? null);
   readonly appRole = computed(() => this.authStore.user()?.appRole ?? 'USER');
 
-  // Use canGovern flag from the decision DTO — backend computed per actor
+  // Permission flags sourced directly from the backend DTO
   canGoverncurrent = computed(() => this.decision()?.canGovern ?? false);
+  canProposeCurrent = computed(() => this.decision()?.canPropose ?? false);
   canVoteCurrent = computed(() => this.decision()?.canVote ?? false);
+  canEditCurrent = computed(() => this.decision()?.canEdit ?? false);
+  canDeleteCurrent = computed(() => this.decision()?.canDelete ?? false);
 
   canSupersedeCurrent = computed(() => {
     const d = this.decision();
     return !!d && canSupersede(d.status) && (this.decision()?.canGovern ?? false);
-  });
-
-  canEditCurrent = computed(() => {
-    const d = this.decision();
-    if (!d) return false;
-    const isAuthor = this.authStore.user()?.id === d.authorId;
-    return canEdit(d.status) && (d.canGovern || isAuthor);
-  });
-
-  canDeleteCurrent = computed(() => {
-    const d = this.decision();
-    if (!d) return false;
-    const isAuthor = this.authStore.user()?.id === d.authorId;
-    return canDelete(d.status) && (d.canGovern || isAuthor);
   });
 
   openSupersedeDialog() {

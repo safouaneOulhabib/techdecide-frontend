@@ -30,6 +30,9 @@ export type Decision = {
   teams: TeamRef[];
   canVote: boolean;
   canGovern: boolean;
+  canPropose: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   tags: Tag[];
   alternatives: Alternative[];
   reviewDate: string;
