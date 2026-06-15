@@ -163,4 +163,32 @@ describe('AuthStore', () => {
       expect(mockAuthService.logout).toHaveBeenCalled();
     });
   });
+
+  describe('register', () => {
+    it('sets user and navigates to /decisions on success', () => {
+      const user = mockUser({ email: 'new@test.com', name: 'New User' });
+      mockAuthService.register.mockReturnValue(of(user));
+      store.register({ name: 'New User', email: 'new@test.com', password: 'Pass1234!' });
+      expect(store.user()).toEqual(user);
+      expect(store.loading()).toBe(false);
+      expect(store.error()).toBeNull();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/decisions']);
+    });
+
+    it('sets error message on failure', () => {
+      mockAuthService.register.mockReturnValue(
+        throwError(() => ({ error: { message: 'Email already taken' } }))
+      );
+      store.register({ name: 'X', email: 'x@test.com', password: 'Pass1234!' });
+      expect(store.user()).toBeNull();
+      expect(store.loading()).toBe(false);
+      expect(store.error()).toBe('Email already taken');
+    });
+
+    it('uses fallback error message when server sends no message', () => {
+      mockAuthService.register.mockReturnValue(throwError(() => ({})));
+      store.register({ name: 'X', email: 'x@test.com', password: 'Pass1234!' });
+      expect(store.error()).toBe('Registration failed');
+    });
+  });
 });

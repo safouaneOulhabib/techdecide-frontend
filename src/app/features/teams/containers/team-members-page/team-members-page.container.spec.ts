@@ -174,3 +174,105 @@ describe('TeamMembersPageContainer — computed signals', () => {
     });
   });
 });
+
+// Cross-team guard tests need a route that fires its callback so teamId gets set.
+describe('TeamMembersPageContainer — cross-team access guard (effect)', () => {
+  let members$: ReturnType<typeof signal<TeamMember[]>>;
+  let loading$: ReturnType<typeof signal<boolean>>;
+  let isAppAdmin$: ReturnType<typeof signal<boolean>>;
+  let user$: ReturnType<typeof signal<{ id: number } | null>>;
+
+  const mockRouter = { navigate: vi.fn() };
+
+  // Route that calls the paramMap subscriber immediately with teamId=1
+  const mockRoute = {
+    paramMap: {
+      subscribe: vi.fn((cb: (p: { get: (k: string) => string | null }) => void) => {
+        cb({ get: (key: string) => (key === 'id' ? '1' : null) });
+      }),
+    },
+  };
+
+  beforeEach(() => {
+    members$ = signal<TeamMember[]>([]);
+    loading$ = signal(false);
+    isAppAdmin$ = signal(false);
+    user$ = signal<{ id: number } | null>(null);
+    vi.clearAllMocks();
+
+    const mockTeamMemberStore = {
+      members: members$,
+      availableUsers: signal([]),
+      loading: loading$,
+      error: signal<string | null>(null),
+      loadMembers: vi.fn(),
+      loadAvailableUsers: vi.fn(),
+      assignMember: vi.fn(),
+      removeMember: vi.fn(),
+      changeRole: vi.fn(),
+      clearMembers: vi.fn(),
+    };
+
+    const mockAuthStore = {
+      user: user$,
+      isAppAdmin: isAppAdmin$,
+      isTeamAdmin: signal(false),
+      isTeamAdminOrAppAdmin: signal(false),
+      hasTeam: signal(true),
+    };
+
+    TestBed.configureTestingModule({
+      imports: [TeamMembersPageContainer],
+      providers: [
+        { provide: TeamMemberStore, useValue: mockTeamMemberStore },
+        { provide: AuthStore, useValue: mockAuthStore },
+        { provide: ActivatedRoute, useValue: mockRoute },
+        { provide: Router, useValue: mockRouter },
+        { provide: Location, useValue: { back: vi.fn() } },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    });
+  });
+
+  it('redirects to /decisions when user is NOT a member of the team', () => {
+    user$.set({ id: 42 });
+    members$.set([makeMember({ userId: 99 })]); // userId 42 is not in the list
+
+    const fixture = TestBed.createComponent(TeamMembersPageContainer);
+    fixture.detectChanges(); // ngOnInit sets teamId=1; effect fires
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/decisions']);
+  });
+
+  it('does NOT redirect when the current user IS a member of the team', () => {
+    user$.set({ id: 42 });
+    members$.set([makeMember({ userId: 42 })]); // current user is present
+
+    const fixture = TestBed.createComponent(TeamMembersPageContainer);
+    fixture.detectChanges();
+
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+
+  it('does NOT redirect when isAppAdmin is true (APP_ADMIN bypasses team check)', () => {
+    user$.set({ id: 1 });
+    isAppAdmin$.set(true);
+    members$.set([makeMember({ userId: 99 })]); // user not in list, but is APP_ADMIN
+
+    const fixture = TestBed.createComponent(TeamMembersPageContainer);
+    fixture.detectChanges();
+
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+
+  it('does NOT redirect while the store is still loading', () => {
+    user$.set({ id: 1 });
+    loading$.set(true);
+    members$.set([]); // no members loaded yet
+
+    const fixture = TestBed.createComponent(TeamMembersPageContainer);
+    fixture.detectChanges();
+
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+});
