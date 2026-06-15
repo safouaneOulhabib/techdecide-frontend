@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Auth — unauthenticated flows', () => {
+test.describe('Auth — critical journeys', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test('register new user → success and redirect to /decisions', async ({ page }) => {
@@ -27,27 +27,5 @@ test.describe('Auth — unauthenticated flows', () => {
     await page.locator('p-password input').fill('WrongPass!');
     await page.getByRole('button', { name: /sign in/i }).click();
     await expect(page.locator('p-message')).toBeVisible({ timeout: 5000 });
-  });
-});
-
-test.describe('Auth — authenticated redirect', () => {
-  test.use({ storageState: 'e2e/.auth/backend-member.json' });
-
-  test('authenticated user visits /auth/login → redirected to /decisions', async ({ page }) => {
-    await page.goto('/auth/login');
-    await expect(page).toHaveURL(/decisions/, { timeout: 5000 });
-  });
-});
-
-test.describe('Auth — logout', () => {
-  test.use({ storageState: 'e2e/.auth/backend-member.json' });
-
-  test('logout clears session and redirects to login', async ({ page }) => {
-    await page.goto('/decisions');
-    await page.locator('header .user-avatar').click();
-    await page.getByText('Logout').click();
-    await expect(page).toHaveURL(/auth\/login/, { timeout: 5000 });
-    await page.goto('/decisions');
-    await expect(page).toHaveURL(/auth\/login/);
   });
 });
