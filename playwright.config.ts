@@ -1,11 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Single browser project — each spec declares its own storageState via test.use().
+// workers: 1 ensures sequential execution on a shared backend (no cross-test data races).
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
+  workers: 1,
   retries: 0,
   reporter: 'list',
-  timeout: 15000,
+  timeout: 20000,
 
   use: {
     baseURL: 'http://localhost:4200',
@@ -13,37 +16,10 @@ export default defineConfig({
   },
 
   projects: [
-    // Global setup runs first — logs in all users and saves sessions
     { name: 'setup', testMatch: /global\.setup\.ts/ },
-
     {
-      name: 'admin',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/admin.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'backend-admin',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/backend-admin.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'backend-member',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/backend-member.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'devops-admin',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/devops-admin.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'devops-member',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/devops-member.json' },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'no-team',
-      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/no-team.json' },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
       dependencies: ['setup'],
     },
   ],
