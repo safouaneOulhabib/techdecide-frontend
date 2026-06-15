@@ -129,6 +129,40 @@ describe('ReportStore', () => {
     });
   });
 
+  describe('update', () => {
+    it('replaces title and updatedAt in the summary list without dropping other fields', () => {
+      const existing = mockSummary({ id: 3, title: 'Old Title', statusCounts: { APPROVED: 2 } });
+      mockService.getAll.mockReturnValue(of([existing]));
+      store.loadAll();
+
+      const updatedReport = mockReport({ id: 3, title: 'New Title', updatedAt: '2025-01-01T00:00:00' });
+      mockService.update.mockReturnValue(of(updatedReport));
+      store.update(3, { title: 'New Title', introduction: null }).subscribe();
+
+      const summary = store.reports().find(r => r.id === 3)!;
+      expect(summary.title).toBe('New Title');
+      expect(summary.updatedAt).toBe('2025-01-01T00:00:00');
+      // Fields not part of the update payload must be preserved
+      expect(summary.statusCounts).toEqual({ APPROVED: 2 });
+      expect(summary.id).toBe(3);
+    });
+
+    it('sets selectedReport to the updated report', () => {
+      const updated = mockReport({ id: 7, title: 'Updated' });
+      mockService.update.mockReturnValue(of(updated));
+      store.update(7, { title: 'Updated', introduction: null }).subscribe();
+      expect(store.selectedReport()).toEqual(updated);
+    });
+
+    it('sets error on failure', () => {
+      mockService.update.mockReturnValue(
+        throwError(() => ({ error: { message: 'Update failed' } }))
+      );
+      store.update(1, { title: 'X', introduction: null }).subscribe({ error: () => {} });
+      expect(store.error()).toBe('Update failed');
+    });
+  });
+
   describe('remove', () => {
     it('removes report from list', () => {
       mockService.getAll.mockReturnValue(of([mockSummary({ id: 1 }), mockSummary({ id: 2 })]));
@@ -137,6 +171,14 @@ describe('ReportStore', () => {
       store.remove(1);
       expect(store.reports().length).toBe(1);
       expect(store.reports()[0].id).toBe(2);
+    });
+
+    it('sets error on failure', () => {
+      mockService.remove.mockReturnValue(
+        throwError(() => ({ error: { message: 'Cannot delete' } }))
+      );
+      store.remove(99);
+      expect(store.error()).toBe('Cannot delete');
     });
   });
 
