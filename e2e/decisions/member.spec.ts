@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, updateStatusApi, deleteDecisionApi } from 
 
 test.use({ storageState: 'e2e/.auth/backend-member.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Decisions — MEMBER1', () => {
@@ -11,12 +12,6 @@ test.describe('Decisions — MEMBER1', () => {
     await page.goto('/decisions');
     await expect(page).not.toHaveURL(/login/);
     await expect(page.locator('h2')).toBeVisible({ timeout: 5000 });
-  });
-
-  test('decision list shows no Devops Team cards (team-scoped)', async ({ page }) => {
-    await page.goto('/decisions');
-    await page.waitForTimeout(1500);
-    await expect(page.locator('.decision-card').filter({ hasText: 'Devops Team' })).toHaveCount(0);
   });
 
   test('New Decision button visible (has team)', async ({ page }) => {
@@ -44,7 +39,8 @@ test.describe('Decisions — MEMBER1', () => {
   test('status selector visible on DRAFT shows only Proposed option', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E M1 Status Options', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Status Options', context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -63,7 +59,8 @@ test.describe('Decisions — MEMBER1', () => {
     const token = getToken('backend-member');
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E M1 Advance', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Advance', context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -78,21 +75,22 @@ test.describe('Decisions — MEMBER1', () => {
   test('Supersede button NOT visible on APPROVED decision for MEMBER', async ({ page }) => {
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, adminToken, {
-      title: 'E2E M1 Sup Guard', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Sup Guard', context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     await updateStatusApi(page, adminToken, id, 'APPROVED');
     await page.goto(`/decisions/${id}`);
     await page.waitForSelector('app-decision-status-badge', { timeout: 5000 });
     await expect(page.getByRole('button', { name: /supersede/i })).not.toBeVisible();
-    // Best-effort cleanup
     await deleteDecisionApi(page, adminToken, id).catch(() => null);
   });
 
   test('can edit own DRAFT decision', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E M1 Edit', context: 'original ctx', decision: 'original dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Edit', context: 'original ctx', decision: 'original dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -111,7 +109,8 @@ test.describe('Decisions — MEMBER1', () => {
     const memberToken = getToken('backend-member');
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, memberToken, {
-      title: 'E2E M1 Edit Guard', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Edit Guard', context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     try {
@@ -127,7 +126,8 @@ test.describe('Decisions — MEMBER1', () => {
     const title = `E2E M1 Delete ${uid}`;
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title, context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await page.goto('/decisions');
     await page.waitForLoadState('networkidle');
@@ -136,6 +136,24 @@ test.describe('Decisions — MEMBER1', () => {
     await card.locator('.btn-delete').click();
     await page.getByRole('button', { name: /delete|confirm|yes|ok/i }).click({ timeout: 3000 }).catch(() => null);
     await expect(page.locator('.decision-card').filter({ hasText: title })).not.toBeVisible({ timeout: 5000 });
+  });
+
+  test('MEMBER of non-involved team sees decision (project member) but cannot vote', async ({ page }) => {
+    const devopsToken = getToken('devops-admin');
+    const adminToken = getToken('admin');
+    // Decision only involves Backend team, but Devops is also in GTN → Devops can see it but not vote
+    const id = await createDecisionApi(page, devopsToken, {
+      title: 'E2E Devops-Only Decision', context: 'ctx', decision: 'dec',
+      projectId: GTN_PROJECT_ID, teamIds: [2],
+    });
+    try {
+      await page.goto(`/decisions/${id}`);
+      await expect(page.locator('h1')).toContainText('E2E Devops-Only Decision', { timeout: 8000 });
+      // MEMBER1 (backend) can see it (project member) but canVote=false → vote UI not shown
+      await expect(page.locator('p-selectbutton')).not.toBeVisible();
+    } finally {
+      await deleteDecisionApi(page, adminToken, id);
+    }
   });
 
 });

@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, deleteDecisionApi, createCommentApi } from
 
 test.use({ storageState: 'e2e/.auth/backend-member.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Comments — MEMBER1', () => {
@@ -10,7 +11,7 @@ test.describe('Comments — MEMBER1', () => {
   test('can post a comment on a Backend Team decision', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E M1 Comment Post', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Comment Post', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -26,7 +27,7 @@ test.describe('Comments — MEMBER1', () => {
   test('can delete own comment', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E M1 Comment Del', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Comment Del', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -49,7 +50,7 @@ test.describe('Comments — MEMBER1', () => {
     const memberToken = getToken('backend-member');
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, memberToken, {
-      title: 'E2E M1 Comment Others', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E M1 Comment Others', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await createCommentApi(page, adminToken, id, 'Admin comment here');
     try {

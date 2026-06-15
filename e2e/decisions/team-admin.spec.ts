@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, updateStatusApi, deleteDecisionApi } from 
 
 test.use({ storageState: 'e2e/.auth/backend-admin.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Decisions — TEAM_ADMIN1', () => {
@@ -31,7 +32,7 @@ test.describe('Decisions — TEAM_ADMIN1', () => {
   test('status selector shows APPROVED and REJECTED options on PROPOSED decision', async ({ page }) => {
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, adminToken, {
-      title: 'E2E TA Status Opts', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E TA Status Opts', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     try {
@@ -49,7 +50,7 @@ test.describe('Decisions — TEAM_ADMIN1', () => {
   test('can advance PROPOSED → APPROVED', async ({ page }) => {
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, adminToken, {
-      title: 'E2E TA Approve', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E TA Approve', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     await page.goto(`/decisions/${id}`);
@@ -63,7 +64,7 @@ test.describe('Decisions — TEAM_ADMIN1', () => {
   test('can advance PROPOSED → REJECTED', async ({ page }) => {
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, adminToken, {
-      title: 'E2E TA Reject', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E TA Reject', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     try {
@@ -79,7 +80,7 @@ test.describe('Decisions — TEAM_ADMIN1', () => {
   test('Supersede button visible on APPROVED decision for TEAM_ADMIN', async ({ page }) => {
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, adminToken, {
-      title: 'E2E TA Sup Visible', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E TA Sup Visible', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, adminToken, id, 'PROPOSED');
     await updateStatusApi(page, adminToken, id, 'APPROVED');

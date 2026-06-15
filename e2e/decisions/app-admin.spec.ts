@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, deleteDecisionApi } from '../helpers';
 
 test.use({ storageState: 'e2e/.auth/admin.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 const DEVOPS_TEAM_ID = 2;
 
@@ -15,10 +16,10 @@ test.describe('Decisions — APP_ADMIN', () => {
     const uid = Date.now();
 
     const backendId = await createDecisionApi(page, backendMemberToken, {
-      title: `E2E AppAdmin Backend ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: `E2E AppAdmin Backend ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     const devopsId = await createDecisionApi(page, devopsAdminToken, {
-      title: `E2E AppAdmin Devops ${uid}`, context: 'ctx', decision: 'dec', teamId: DEVOPS_TEAM_ID,
+      title: `E2E AppAdmin Devops ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [DEVOPS_TEAM_ID],
     });
 
     try {
@@ -44,7 +45,7 @@ test.describe('Decisions — APP_ADMIN', () => {
     const devopsAdminToken = getToken('devops-admin');
     const uid = Date.now();
     const id = await createDecisionApi(page, devopsAdminToken, {
-      title: `E2E AppAdmin View Devops ${uid}`, context: 'ctx', decision: 'dec', teamId: DEVOPS_TEAM_ID,
+      title: `E2E AppAdmin View Devops ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [DEVOPS_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -61,10 +62,10 @@ test.describe('Decisions — APP_ADMIN', () => {
     const uid = Date.now();
 
     const backendId = await createDecisionApi(page, backendMemberToken, {
-      title: `E2E AppAdmin TeamFilter Backend ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: `E2E AppAdmin TeamFilter Backend ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     const devopsId = await createDecisionApi(page, devopsAdminToken, {
-      title: `E2E AppAdmin TeamFilter Devops ${uid}`, context: 'ctx', decision: 'dec', teamId: DEVOPS_TEAM_ID,
+      title: `E2E AppAdmin TeamFilter Devops ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [DEVOPS_TEAM_ID],
     });
 
     try {
