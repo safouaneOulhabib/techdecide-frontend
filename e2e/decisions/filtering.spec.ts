@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, updateStatusApi, deleteDecisionApi, create
 
 test.use({ storageState: 'e2e/.auth/backend-admin.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Decisions — Filtering', () => {
@@ -13,7 +14,7 @@ test.describe('Decisions — Filtering', () => {
     const uid = Date.now();
     const title = `E2E Keyword Filter ${uid}`;
     const id = await createDecisionApi(page, token, {
-      title, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto('/decisions');
@@ -33,10 +34,10 @@ test.describe('Decisions — Filtering', () => {
     const proposedTitle = `E2E Status Filter Proposed ${uid}`;
 
     const draftId = await createDecisionApi(page, token, {
-      title: draftTitle, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: draftTitle, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     const proposedId = await createDecisionApi(page, token, {
-      title: proposedTitle, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: proposedTitle, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, token, proposedId, 'PROPOSED');
 
@@ -62,7 +63,7 @@ test.describe('Decisions — Filtering', () => {
     const uid = Date.now();
     const title = `E2E Clear Filter ${uid}`;
     const id = await createDecisionApi(page, token, {
-      title, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto('/decisions');
@@ -92,10 +93,10 @@ test.describe('Decisions — Filtering', () => {
     const tagId = await createTagApi(page, adminToken, `E2E Tag Filter ${uid}`, '#6366f1');
     const taggedId = await createDecisionApi(page, token, {
       title: `E2E Tagged Decision ${uid}`, context: 'ctx', decision: 'dec',
-      teamId: BACKEND_TEAM_ID, tagIds: [tagId],
+      projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID], tagIds: [tagId],
     });
     const untaggedId = await createDecisionApi(page, token, {
-      title: `E2E Untagged Decision ${uid}`, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: `E2E Untagged Decision ${uid}`, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
 
     try {

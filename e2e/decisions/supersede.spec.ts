@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, updateStatusApi, deleteDecisionApi } from 
 
 test.use({ storageState: 'e2e/.auth/backend-admin.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Decisions — Supersede Flow', () => {
@@ -17,13 +18,13 @@ test.describe('Decisions — Supersede Flow', () => {
 
     // Create and approve both decisions
     const idA = await createDecisionApi(page, backendAdminToken, {
-      title: titleA, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: titleA, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, backendAdminToken, idA, 'PROPOSED');
     await updateStatusApi(page, backendAdminToken, idA, 'APPROVED');
 
     const idB = await createDecisionApi(page, backendAdminToken, {
-      title: titleB, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: titleB, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, backendAdminToken, idB, 'PROPOSED');
     await updateStatusApi(page, backendAdminToken, idB, 'APPROVED');
@@ -55,7 +56,7 @@ test.describe('Decisions — Supersede Flow', () => {
     const token = getToken('backend-admin');
     const adminToken = getToken('admin');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E Supersede Guard', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Supersede Guard', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -74,7 +75,7 @@ test.describe('Decisions — Supersede Flow', () => {
     const titleA = `E2E Supersede Self ${uid}`;
 
     const idA = await createDecisionApi(page, backendAdminToken, {
-      title: titleA, context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: titleA, context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await updateStatusApi(page, backendAdminToken, idA, 'PROPOSED');
     await updateStatusApi(page, backendAdminToken, idA, 'APPROVED');

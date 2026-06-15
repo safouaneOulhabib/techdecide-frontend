@@ -4,6 +4,8 @@ export type ReportSummary = {
   introduction: string | null;
   authorId: number;
   authorName: string;
+  projectId: number;
+  projectName: string;
   createdAt: string;
   updatedAt: string | null;
   itemCount: number;
@@ -31,12 +33,15 @@ export type Report = {
   introduction: string | null;
   authorId: number;
   authorName: string;
+  projectId: number;
+  projectName: string;
   createdAt: string;
   updatedAt: string | null;
   items: ReportItem[];
 };
 
 export type CreateReportRequest = {
+  projectId: number;
   title: string;
   introduction: string | null;
   decisionIds: number[];

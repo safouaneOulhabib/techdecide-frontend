@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { Page } from '@playwright/test';
 
-const API = 'http://localhost:8080/api';
+export const API = 'http://localhost:8080/api';
 
 /** Read JWT token from a saved Playwright storageState JSON file. */
 export function getToken(authFile: string): string {
@@ -16,7 +16,8 @@ export interface DecisionPayload {
   title: string;
   context: string;
   decision: string;
-  teamId: number;
+  projectId: number;
+  teamIds: number[];
   tagIds?: number[];
 }
 
@@ -104,11 +105,12 @@ export async function createReportApi(
   page: Page,
   token: string,
   title: string,
-  decisionIds: number[]
+  decisionIds: number[],
+  projectId: number
 ): Promise<number> {
   const res = await page.request.post(`${API}/reports`, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    data: { title, introduction: null, decisionIds },
+    data: { projectId, title, introduction: null, decisionIds },
   });
   const body = await res.json();
   return body.id as number;
@@ -121,6 +123,45 @@ export async function deleteReportApi(
   id: number
 ): Promise<void> {
   await page.request.delete(`${API}/reports/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+/** Create a project via the REST API. Returns the new project id. */
+export async function createProjectApi(
+  page: Page,
+  token: string,
+  name: string,
+  organizationId: number
+): Promise<number> {
+  const res = await page.request.post(`${API}/projects`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { name, description: null, organizationId },
+  });
+  const body = await res.json();
+  return body.id as number;
+}
+
+/** Assign a team to a project via the REST API. */
+export async function assignTeamToProjectApi(
+  page: Page,
+  token: string,
+  projectId: number,
+  teamId: number
+): Promise<void> {
+  await page.request.post(`${API}/projects/${projectId}/teams`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { teamId },
+  });
+}
+
+/** Delete a project via the REST API. */
+export async function deleteProjectApi(
+  page: Page,
+  token: string,
+  id: number
+): Promise<void> {
+  await page.request.delete(`${API}/projects/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 }

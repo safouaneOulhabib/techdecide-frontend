@@ -20,6 +20,12 @@
 
   <div class="card-footer">
     <div class="footer-meta">
+      @if (report().projectName) {
+      <span class="meta-chip meta-chip--project">
+        <i class="pi pi-folder"></i>
+        {{ report().projectName }}
+      </span>
+      }
       <span class="meta-chip">
         <i class="pi pi-user"></i>
         {{ report().authorName }}

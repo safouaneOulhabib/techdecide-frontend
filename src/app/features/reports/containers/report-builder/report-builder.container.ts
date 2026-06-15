@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { MessageModule } from 'primeng/message';
+import { SelectModule } from 'primeng/select';
 import { ReportStore } from '@features/reports/store/report.store';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { ProjectStore } from '@features/projects/store/project.store';
@@ -15,7 +16,7 @@ import { ProjectSummary } from '@features/projects/models/project.model';
 @Component({
   selector: 'app-report-builder',
   standalone: true,
-  imports: [FormsModule, ButtonModule, InputTextModule, TextareaModule, MessageModule, DecisionPicker],
+  imports: [FormsModule, ButtonModule, InputTextModule, TextareaModule, MessageModule, SelectModule, DecisionPicker],
   templateUrl: './report-builder.container.html',
   styleUrl: './report-builder.container.scss'
 })
@@ -32,15 +33,34 @@ export class ReportBuilderContainer implements OnInit {
 
   title = signal('');
   introduction = signal('');
+  selectedProjectId = signal<number | null>(null);
   selectedDecisionIds = signal<number[]>([]);
 
+  projectOptions = computed(() => [
+    { label: 'Select a project...', value: null },
+    ...this.projects().map(p => ({ label: p.name, value: p.id }))
+  ]);
+
+  decisionsForProject = computed(() => {
+    const projectId = this.selectedProjectId();
+    if (!projectId) return [];
+    return this.decisions().filter(d => d.projectId === projectId);
+  });
+
   canCreate = computed(() =>
-    this.title().trim().length > 0 && this.selectedDecisionIds().length > 0
+    this.title().trim().length > 0 &&
+    this.selectedProjectId() !== null &&
+    this.selectedDecisionIds().length > 0
   );
 
   ngOnInit() {
     this.decisionStore.loadAll();
     this.projectStore.loadAll();
+  }
+
+  onProjectChange(value: number | null) {
+    this.selectedProjectId.set(value);
+    this.selectedDecisionIds.set([]);
   }
 
   onDecisionIdsChange(ids: number[]) {
@@ -55,6 +75,7 @@ export class ReportBuilderContainer implements OnInit {
     if (!this.canCreate()) return;
 
     this.reportStore.create({
+      projectId: this.selectedProjectId()!,
       title: this.title().trim(),
       introduction: this.introduction().trim() || null,
       decisionIds: this.selectedDecisionIds()

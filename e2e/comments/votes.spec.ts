@@ -3,6 +3,7 @@ import { getToken, createDecisionApi, deleteDecisionApi, createCommentApi } from
 
 test.use({ storageState: 'e2e/.auth/backend-member.json' });
 
+const GTN_PROJECT_ID = 1;
 const BACKEND_TEAM_ID = 1;
 
 test.describe('Comments — Voting', () => {
@@ -11,7 +12,7 @@ test.describe('Comments — Voting', () => {
   test('can post a comment with Approve vote', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E Vote Approve', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Vote Approve', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -29,7 +30,7 @@ test.describe('Comments — Voting', () => {
   test('can post a comment with Reject vote', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E Vote Reject', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Vote Reject', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -47,7 +48,7 @@ test.describe('Comments — Voting', () => {
   test('can post a comment with Abstain vote', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E Vote Abstain', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Vote Abstain', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -65,7 +66,7 @@ test.describe('Comments — Voting', () => {
   test('comment without vote shows no vote badge', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
-      title: 'E2E Vote None', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Vote None', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     try {
       await page.goto(`/decisions/${id}`);
@@ -84,7 +85,7 @@ test.describe('Comments — Voting', () => {
     const adminToken = getToken('admin');
     const backendAdminToken = getToken('backend-admin');
     const id = await createDecisionApi(page, memberToken, {
-      title: 'E2E Vote Summary', context: 'ctx', decision: 'dec', teamId: BACKEND_TEAM_ID,
+      title: 'E2E Vote Summary', context: 'ctx', decision: 'dec', projectId: GTN_PROJECT_ID, teamIds: [BACKEND_TEAM_ID],
     });
     await createCommentApi(page, memberToken, id, 'Member approves', 'APPROVE');
     await createCommentApi(page, backendAdminToken, id, 'Admin rejects', 'REJECT');

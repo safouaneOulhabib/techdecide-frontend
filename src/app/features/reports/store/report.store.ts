@@ -58,6 +58,8 @@ export const ReportStore = signalStore(
               introduction: report.introduction,
               authorId: report.authorId,
               authorName: report.authorName,
+              projectId: report.projectId,
+              projectName: report.projectName,
               createdAt: report.createdAt,
               updatedAt: report.updatedAt,
               itemCount: report.items.length,
