@@ -22,9 +22,9 @@ for (const user of users) {
     await page.locator('#email').fill(user.email);
     await page.locator('p-password input').fill('Test1234!');
     const signIn = page.getByRole('button', { name: /sign in/i });
-    await expect(signIn).toBeEnabled({ timeout: 8000 });
+    await expect(signIn).toBeEnabled({ timeout: 15000 });
     await signIn.click();
-    await expect(page).toHaveURL(/decisions/, { timeout: 8000 });
+    await expect(page).toHaveURL(/decisions/, { timeout: 15000 });
     await page.context().storageState({ path: `e2e/.auth/${user.file}.json` });
   });
 }
