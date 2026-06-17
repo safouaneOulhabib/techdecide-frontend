@@ -7,12 +7,8 @@ import { ProjectSummary } from '@features/projects/models/project.model';
 const makeProject = (overrides: Partial<ProjectSummary> = {}): ProjectSummary => ({
   id: 1,
   name: 'GTN',
-  description: 'Main project',
-  organizationId: 1,
   organizationName: 'TechDecide',
   teamCount: 2,
-  createdAt: '2024-01-01T00:00:00',
-  updatedAt: '2024-01-01T00:00:00',
   ...overrides,
 });
 
