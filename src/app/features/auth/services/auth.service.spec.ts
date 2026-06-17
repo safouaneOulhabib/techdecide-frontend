@@ -96,4 +96,29 @@ describe('AuthService — isTokenExpired (via loadFromSession)', () => {
     expect(service.isAuthenticated()).toBe(false);
     expect(localStorage.getItem('auth_user')).toBeNull();
   });
+
+  it('AUTH-12 persists session to localStorage so multiple browser tabs share it', () => {
+    // This test documents the localStorage storage mechanism that makes tab sharing
+    // natural: any tab reading localStorage.auth_user sees the same JWT.
+    const futureExp = Math.floor(Date.now() / 1000) + 3600;
+    const token = makeToken({ sub: 'alice@test.com', exp: futureExp });
+    localStorage.setItem('auth_user', JSON.stringify({
+      id: 1, token, email: 'alice@test.com', name: 'Alice',
+      appRole: 'USER', teamRole: 'MEMBER', teamId: 1,
+    }));
+
+    // A second service instance (simulating a new tab) reading the same localStorage
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        AuthService,
+        { provide: Router, useValue: mockRouter },
+        { provide: HttpClient, useValue: mockHttpClient },
+      ],
+    });
+    const tab2Service = TestBed.inject(AuthService);
+
+    expect(tab2Service.isAuthenticated()).toBe(true);
+    expect(tab2Service.getToken()).toBe(token);
+  });
 });
