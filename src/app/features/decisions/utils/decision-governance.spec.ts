@@ -6,10 +6,10 @@ const ALL_STATUSES: DecisionStatus[] = ['DRAFT', 'PROPOSED', 'APPROVED', 'REJECT
 
 describe('allowedTransitions', () => {
   describe('canGovern=true, appRole=APP_ADMIN', () => {
-    it('DRAFT → [PROPOSED]', () => {
+    it('DEC-12 DRAFT → [PROPOSED]', () => {
       expect(allowedTransitions('DRAFT', true, true, 'APP_ADMIN')).toEqual(['PROPOSED']);
     });
-    it('PROPOSED → [APPROVED, REJECTED, DRAFT]', () => {
+    it('DEC-22 DEC-23 DEC-24 PROPOSED → [APPROVED, REJECTED, DRAFT]', () => {
       expect(allowedTransitions('PROPOSED', true, true, 'APP_ADMIN')).toEqual(['APPROVED', 'REJECTED', 'DRAFT']);
     });
     it('APPROVED → [] (terminal)', () => {
@@ -30,22 +30,22 @@ describe('allowedTransitions', () => {
     it('PROPOSED → [APPROVED, REJECTED, DRAFT]', () => {
       expect(allowedTransitions('PROPOSED', true, true, 'USER')).toEqual(['APPROVED', 'REJECTED', 'DRAFT']);
     });
-    it('APPROVED → []', () => {
+    it('DEC-33 APPROVED → []', () => {
       expect(allowedTransitions('APPROVED', true, true, 'USER')).toEqual([]);
     });
     it('REJECTED → [] (TEAM_ADMIN cannot reopen rejected)', () => {
       expect(allowedTransitions('REJECTED', true, true, 'USER')).toEqual([]);
     });
-    it('SUPERSEDED → []', () => {
+    it('DEC-34 SUPERSEDED → []', () => {
       expect(allowedTransitions('SUPERSEDED', true, true, 'USER')).toEqual([]);
     });
   });
 
   describe('canGovern=false, canPropose=true (MEMBER)', () => {
-    it('DRAFT → [PROPOSED] (only transition allowed)', () => {
+    it('DEC-12 DRAFT → [PROPOSED] (only transition allowed)', () => {
       expect(allowedTransitions('DRAFT', true, false)).toEqual(['PROPOSED']);
     });
-    it('PROPOSED → [] (cannot approve/reject)', () => {
+    it('DEC-13 DEC-14 PROPOSED → [] (cannot approve/reject)', () => {
       expect(allowedTransitions('PROPOSED', true, false)).toEqual([]);
     });
     it('APPROVED → []', () => {
@@ -54,7 +54,7 @@ describe('allowedTransitions', () => {
     it('REJECTED → []', () => {
       expect(allowedTransitions('REJECTED', true, false)).toEqual([]);
     });
-    it('SUPERSEDED → []', () => {
+    it('DEC-34 SUPERSEDED → []', () => {
       expect(allowedTransitions('SUPERSEDED', true, false)).toEqual([]);
     });
   });

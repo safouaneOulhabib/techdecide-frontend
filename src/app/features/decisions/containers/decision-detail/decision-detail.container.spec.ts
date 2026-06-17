@@ -84,13 +84,13 @@ describe('DecisionDetailContainer — computed signals', () => {
       expect(fixture.componentInstance.canEditCurrent()).toBe(false);
     });
 
-    it('returns decision.canEdit when decision is set', () => {
+    it('DEC-16 DEC-17 returns decision.canEdit when decision is set', () => {
       selectedDecision$.set(makeDecision({ canEdit: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canEditCurrent()).toBe(true);
     });
 
-    it('returns false when decision.canEdit is false', () => {
+    it('DEC-18 VIS-04 returns false when decision.canEdit is false', () => {
       selectedDecision$.set(makeDecision({ canEdit: false }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canEditCurrent()).toBe(false);
@@ -103,7 +103,7 @@ describe('DecisionDetailContainer — computed signals', () => {
       expect(fixture.componentInstance.canDeleteCurrent()).toBe(false);
     });
 
-    it('returns true when decision.canDelete is true', () => {
+    it('DEC-19 DEC-20 returns true when decision.canDelete is true', () => {
       selectedDecision$.set(makeDecision({ canDelete: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canDeleteCurrent()).toBe(true);
@@ -116,7 +116,7 @@ describe('DecisionDetailContainer — computed signals', () => {
       expect(fixture.componentInstance.canVoteCurrent()).toBe(false);
     });
 
-    it('returns decision.canVote', () => {
+    it('VIS-02 returns decision.canVote', () => {
       selectedDecision$.set(makeDecision({ canVote: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canVoteCurrent()).toBe(true);
@@ -142,7 +142,7 @@ describe('DecisionDetailContainer — computed signals', () => {
       expect(fixture.componentInstance.canGoverncurrent()).toBe(false);
     });
 
-    it('returns decision.canGovern', () => {
+    it('VIS-03 returns decision.canGovern', () => {
       selectedDecision$.set(makeDecision({ canGovern: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canGoverncurrent()).toBe(true);
@@ -161,13 +161,13 @@ describe('DecisionDetailContainer — computed signals', () => {
       expect(fixture.componentInstance.canSupersedeCurrent()).toBe(false);
     });
 
-    it('returns false for APPROVED but canGovern=false', () => {
+    it('DEC-15 returns false for APPROVED but canGovern=false', () => {
       selectedDecision$.set(makeDecision({ status: 'APPROVED', canGovern: false }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canSupersedeCurrent()).toBe(false);
     });
 
-    it('returns true for APPROVED with canGovern=true', () => {
+    it('DEC-27 returns true for APPROVED with canGovern=true', () => {
       selectedDecision$.set(makeDecision({ status: 'APPROVED', canGovern: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canSupersedeCurrent()).toBe(true);

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Auth — critical journeys', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('register new user → success and redirect to /decisions', async ({ page }) => {
+  test('AUTH-01 register new user → success and redirect to /decisions', async ({ page }) => {
     const uid = Date.now();
     await page.goto('/auth/register');
     await page.locator('#name').fill(`E2E User ${uid}`);
@@ -13,7 +13,7 @@ test.describe('Auth — critical journeys', () => {
     await expect(page).toHaveURL(/decisions/, { timeout: 10000 });
   });
 
-  test('login valid credentials → redirected to /decisions', async ({ page }) => {
+  test('AUTH-05 login valid credentials → redirected to /decisions', async ({ page }) => {
     await page.goto('/auth/login');
     await page.locator('#email').fill('member.backend@techdecide.com');
     await page.locator('p-password input').fill('Test1234!');
@@ -21,7 +21,7 @@ test.describe('Auth — critical journeys', () => {
     await expect(page).toHaveURL(/decisions/, { timeout: 8000 });
   });
 
-  test('login wrong password → error message shown', async ({ page }) => {
+  test('AUTH-06 login wrong password → error message shown', async ({ page }) => {
     await page.goto('/auth/login');
     await page.locator('#email').fill('member.backend@techdecide.com');
     await page.locator('p-password input').fill('WrongPass!');

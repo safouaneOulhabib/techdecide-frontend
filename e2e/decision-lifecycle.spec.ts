@@ -11,7 +11,7 @@ test.describe('Decision lifecycle — create → propose → approve', () => {
   const GTN_PROJECT_ID = 1;
   const BACKEND_TEAM_ID = 1;
 
-  test('MEMBER proposes a DRAFT via UI; TEAM_ADMIN approves; UI shows APPROVED', async ({ page }) => {
+  test('DEC-05 DEC-12 DEC-22 MEMBER creates/proposes DRAFT; TEAM_ADMIN approves; UI shows APPROVED', async ({ page }) => {
     const adminToken = getToken('admin');
     const backendMemberToken = getToken('backend-member');
     const backendAdminToken = getToken('backend-admin');
