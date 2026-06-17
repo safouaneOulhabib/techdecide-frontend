@@ -140,7 +140,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('tag filter', () => {
-    it('LIST-05 filters decisions that include the tag', () => {
+    it('LIST-05 TAG-09 filters decisions that include the tag', () => {
       decisions$.set([
         makeDecision({ id: 1, tags: [{ id: 10, name: 'security', color: '#fff' }] }),
         makeDecision({ id: 2, tags: [{ id: 20, name: 'perf', color: '#000' }] }),
