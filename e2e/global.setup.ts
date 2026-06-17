@@ -21,7 +21,9 @@ for (const user of users) {
     await page.goto('/auth/login');
     await page.locator('#email').fill(user.email);
     await page.locator('p-password input').fill('Test1234!');
-    await page.getByRole('button', { name: /sign in/i }).click();
+    const signIn = page.getByRole('button', { name: /sign in/i });
+    await expect(signIn).toBeEnabled({ timeout: 8000 });
+    await signIn.click();
     await expect(page).toHaveURL(/decisions/, { timeout: 8000 });
     await page.context().storageState({ path: `e2e/.auth/${user.file}.json` });
   });
