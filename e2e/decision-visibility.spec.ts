@@ -9,7 +9,7 @@ test.describe('Decision visibility — non-involved project member', () => {
   const GTN_PROJECT_ID = 1;
   const DEVOPS_TEAM_ID = 2;
 
-  test('sees decision read-only: title visible, vote UI absent', async ({ page }) => {
+  test('VIS-01 VIS-02 VIS-05 COM-02 sees decision read-only, vote UI absent, comment allowed', async ({ page }) => {
     const devopsToken = getToken('devops-admin');
     const adminToken = getToken('admin');
     // Decision involves only Devops team; backend-member is in GTN project → can see, cannot vote
@@ -21,6 +21,9 @@ test.describe('Decision visibility — non-involved project member', () => {
       await page.goto(`/decisions/${id}`);
       await expect(page.locator('h1')).toContainText('E2E Visibility Read-Only', { timeout: 8000 });
       await expect(page.locator('p-selectbutton')).not.toBeVisible();
+      await page.locator('textarea[placeholder*="thoughts"]').fill('Project-level comment');
+      await page.getByRole('button', { name: /post comment/i }).click();
+      await expect(page.locator('.comment-item').filter({ hasText: 'Project-level comment' })).toBeVisible({ timeout: 8000 });
     } finally {
       await deleteDecisionApi(page, adminToken, id);
     }

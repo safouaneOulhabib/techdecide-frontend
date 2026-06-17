@@ -86,7 +86,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('keyword filter', () => {
-    it('filters by title (case-insensitive)', () => {
+    it('LIST-06 filters by title (case-insensitive)', () => {
       decisions$.set([
         makeDecision({ id: 1, title: 'Use GraphQL', context: '' }),
         makeDecision({ id: 2, title: 'Use REST', context: '' }),
@@ -112,7 +112,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('status filter', () => {
-    it('filters to matching status only', () => {
+    it('LIST-03 filters to matching status only', () => {
       decisions$.set([
         makeDecision({ id: 1, status: 'APPROVED' }),
         makeDecision({ id: 2, status: 'DRAFT' }),
@@ -126,7 +126,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('project filter', () => {
-    it('filters to matching projectId', () => {
+    it('LIST-04 filters to matching projectId', () => {
       decisions$.set([
         makeDecision({ id: 1, projectId: 1 }),
         makeDecision({ id: 2, projectId: 2 }),
@@ -140,7 +140,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('tag filter', () => {
-    it('filters decisions that include the tag', () => {
+    it('LIST-05 filters decisions that include the tag', () => {
       decisions$.set([
         makeDecision({ id: 1, tags: [{ id: 10, name: 'security', color: '#fff' }] }),
         makeDecision({ id: 2, tags: [{ id: 20, name: 'perf', color: '#000' }] }),
@@ -154,7 +154,7 @@ describe('DecisionListContainer — filteredDecisions', () => {
   });
 
   describe('combined filters', () => {
-    it('applies keyword + status together', () => {
+    it('LIST-07 applies keyword + status together', () => {
       decisions$.set([
         makeDecision({ id: 1, title: 'Use Redis', context: '', status: 'APPROVED' }),
         makeDecision({ id: 2, title: 'Use Redis', context: '', status: 'DRAFT' }),
@@ -165,6 +165,34 @@ describe('DecisionListContainer — filteredDecisions', () => {
       comp.onFiltersChange({ keyword: 'redis', status: 'APPROVED', projectId: null, tagId: null });
       expect(comp.filteredDecisions().length).toBe(1);
       expect(comp.filteredDecisions()[0].id).toBe(1);
+    });
+  });
+
+  describe('filter reset and empty results', () => {
+    it('LIST-08 restores the full list when filters are cleared', () => {
+      decisions$.set([
+        makeDecision({ id: 1, title: 'Use Redis', status: 'APPROVED' }),
+        makeDecision({ id: 2, title: 'Use Postgres', status: 'DRAFT' }),
+      ]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+      comp.onFiltersChange({ keyword: 'redis', status: null, projectId: null, tagId: null });
+      expect(comp.filteredDecisions().length).toBe(1);
+
+      comp.onFiltersChange({ keyword: '', status: null, projectId: null, tagId: null });
+
+      expect(comp.filteredDecisions().length).toBe(2);
+    });
+
+    it('LIST-09 returns an empty subset when no decision matches filters', () => {
+      decisions$.set([
+        makeDecision({ id: 1, title: 'Use Redis', status: 'APPROVED' }),
+      ]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+      comp.onFiltersChange({ keyword: 'not-present', status: null, projectId: null, tagId: null });
+
+      expect(comp.filteredDecisions()).toEqual([]);
     });
   });
 });

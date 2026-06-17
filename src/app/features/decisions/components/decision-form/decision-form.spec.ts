@@ -26,7 +26,7 @@ describe('DecisionForm', () => {
   });
 
   describe('removeTeam — own-team lock', () => {
-    it('removes a team that is NOT the own team', () => {
+    it('DEC-04 removes a team that is NOT the own team', () => {
       const fixture = TestBed.createComponent(DecisionForm);
       fixture.componentRef.setInput('tags', []);
       fixture.componentRef.setInput('loading', false);
@@ -41,7 +41,7 @@ describe('DecisionForm', () => {
       expect(comp.form().teamIds).toEqual([10, 30]);
     });
 
-    it('does NOT remove the own team', () => {
+    it('DEC-03 does NOT remove the own team', () => {
       const fixture = TestBed.createComponent(DecisionForm);
       fixture.componentRef.setInput('tags', []);
       fixture.componentRef.setInput('loading', false);
@@ -73,7 +73,7 @@ describe('DecisionForm', () => {
   });
 
   describe('ngOnChanges — projectTeams auto-populate in create mode', () => {
-    it('sets teamIds to all project teams when projectTeams changes in create mode', () => {
+    it('DEC-02 sets teamIds to all project teams when projectTeams changes in create mode', () => {
       const fixture = TestBed.createComponent(DecisionForm);
       fixture.componentRef.setInput('tags', []);
       fixture.componentRef.setInput('loading', false);
@@ -123,7 +123,7 @@ describe('DecisionForm', () => {
   });
 
   describe('onProjectChange — resets teamIds on project switch', () => {
-    it('clears teamIds when a new project is selected', () => {
+    it('DEC-11 clears teamIds when a new project is selected', () => {
       const fixture = TestBed.createComponent(DecisionForm);
       fixture.componentRef.setInput('tags', []);
       fixture.componentRef.setInput('loading', false);

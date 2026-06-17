@@ -27,12 +27,12 @@ describe('authGuard', () => {
     });
   });
 
-  it('returns true when the user is authenticated', () => {
+  it('AUTH-09 returns true when the user is authenticated', () => {
     mockAuthService.isAuthenticated.mockReturnValue(true);
     expect(run()).toBe(true);
   });
 
-  it('returns a UrlTree redirect to /auth/login when not authenticated', () => {
+  it('AUTH-10 returns a UrlTree redirect to /auth/login when not authenticated', () => {
     mockAuthService.isAuthenticated.mockReturnValue(false);
     const result = run();
     expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/auth/login']);

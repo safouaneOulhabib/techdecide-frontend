@@ -32,7 +32,7 @@ describe('VoteSummary — computed vote counts', () => {
     expect(comp.totalVotes()).toBe(0);
   });
 
-  it('counts approved votes correctly', () => {
+  it('COM-06 counts approved votes correctly', () => {
     const fixture = TestBed.createComponent(VoteSummary);
     fixture.componentRef.setInput('comments', [
       makeComment(1, 'APPROVE'),
@@ -42,7 +42,7 @@ describe('VoteSummary — computed vote counts', () => {
     expect(fixture.componentInstance.approved()).toBe(2);
   });
 
-  it('counts rejected votes correctly', () => {
+  it('COM-07 counts rejected votes correctly', () => {
     const fixture = TestBed.createComponent(VoteSummary);
     fixture.componentRef.setInput('comments', [
       makeComment(1, 'APPROVE'),
@@ -52,7 +52,7 @@ describe('VoteSummary — computed vote counts', () => {
     expect(fixture.componentInstance.rejected()).toBe(2);
   });
 
-  it('counts abstained votes correctly', () => {
+  it('COM-08 counts abstained votes correctly', () => {
     const fixture = TestBed.createComponent(VoteSummary);
     fixture.componentRef.setInput('comments', [
       makeComment(1, 'ABSTAIN'),
@@ -75,7 +75,7 @@ describe('VoteSummary — computed vote counts', () => {
     expect(comp.totalVotes()).toBe(0);
   });
 
-  it('totalVotes equals the sum of all vote types', () => {
+  it('COM-10 totalVotes equals the sum of all vote types', () => {
     const fixture = TestBed.createComponent(VoteSummary);
     fixture.componentRef.setInput('comments', [
       makeComment(1, 'APPROVE'),

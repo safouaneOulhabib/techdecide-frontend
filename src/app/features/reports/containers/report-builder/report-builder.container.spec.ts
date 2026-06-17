@@ -68,7 +68,7 @@ describe('ReportBuilderContainer', () => {
       expect(fixture.componentInstance.decisionsForProject()).toEqual([]);
     });
 
-    it('filters to decisions belonging to the selected project', () => {
+    it('REP-01 filters to decisions belonging to the selected project', () => {
       decisions$.set([
         makeDecision({ id: 1, projectId: 1 }),
         makeDecision({ id: 2, projectId: 2 }),
@@ -122,7 +122,7 @@ describe('ReportBuilderContainer', () => {
       expect(comp.canCreate()).toBe(false);
     });
 
-    it('returns false when no decisions are selected', () => {
+    it('REP-04 returns false when no decisions are selected', () => {
       const fixture = TestBed.createComponent(ReportBuilderContainer);
       const comp = fixture.componentInstance;
       comp.title.set('Q1 Review');
@@ -142,7 +142,7 @@ describe('ReportBuilderContainer', () => {
   });
 
   describe('onProjectChange — clears selected decisions on project switch', () => {
-    it('resets selectedDecisionIds when the project changes', () => {
+    it('REP-03 resets selectedDecisionIds when the project changes', () => {
       const fixture = TestBed.createComponent(ReportBuilderContainer);
       const comp = fixture.componentInstance;
 

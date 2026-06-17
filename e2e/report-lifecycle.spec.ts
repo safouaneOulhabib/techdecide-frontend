@@ -9,7 +9,7 @@ test.describe('Report lifecycle — build → detail → PDF', () => {
   const GTN_PROJECT_ID = 1;
   const BACKEND_TEAM_ID = 1;
 
-  test('MEMBER builds a report, views detail, and PDF preview is reachable', async ({ page }) => {
+  test('REP-01 REP-02 REP-15 MEMBER builds a report, views detail, and PDF preview is reachable', async ({ page }) => {
     const uid = Date.now();
     const token = getToken('backend-member');
     const decisionId = await createDecisionApi(page, token, {
