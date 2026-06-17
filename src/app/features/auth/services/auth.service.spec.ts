@@ -30,7 +30,7 @@ describe('AuthService — isTokenExpired (via loadFromSession)', () => {
     localStorage.clear();
   });
 
-  it('loads a valid non-expired token from localStorage on init', () => {
+  it('AUTH-09 loads a valid non-expired token from localStorage on init', () => {
     const futureExp = Math.floor(Date.now() / 1000) + 3600;
     const token = makeToken({ sub: 'alice@test.com', exp: futureExp });
     localStorage.setItem('auth_user', JSON.stringify({
@@ -44,7 +44,7 @@ describe('AuthService — isTokenExpired (via loadFromSession)', () => {
     expect(service.getToken()).toBe(token);
   });
 
-  it('clears an expired token from localStorage on init', () => {
+  it('SEC-09 clears an expired token from localStorage on init', () => {
     const pastExp = Math.floor(Date.now() / 1000) - 1;
     const token = makeToken({ sub: 'alice@test.com', exp: pastExp });
     localStorage.setItem('auth_user', JSON.stringify({
@@ -84,7 +84,7 @@ describe('AuthService — isTokenExpired (via loadFromSession)', () => {
     expect(service.isAuthenticated()).toBe(true);
   });
 
-  it('clears storage when the JWT is malformed (cannot decode payload)', () => {
+  it('SEC-09 clears storage when the JWT is malformed (cannot decode payload)', () => {
     localStorage.setItem('auth_user', JSON.stringify({
       id: 1, token: 'not.a.jwt',
       email: 'alice@test.com', name: 'Alice',

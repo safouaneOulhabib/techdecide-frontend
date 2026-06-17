@@ -43,7 +43,7 @@ describe('ReportCard — statusBadges computed', () => {
     expect(comp.statusBadges()).toEqual([]);
   });
 
-  it('returns badges for non-zero counts', () => {
+  it('REP-18 returns badges for non-zero counts', () => {
     const comp = create(makeSummary({ statusCounts: { APPROVED: 3, REJECTED: 1, DRAFT: 0 } }));
     const badges = comp.statusBadges();
     expect(badges.length).toBe(2);
@@ -52,7 +52,7 @@ describe('ReportCard — statusBadges computed', () => {
     expect(badges.some(b => b.status === 'DRAFT')).toBe(false);
   });
 
-  it('badge label shows count and title-cased status', () => {
+  it('REP-18 badge label shows count and title-cased status', () => {
     const comp = create(makeSummary({ statusCounts: { APPROVED: 2 } }));
     const badge = comp.statusBadges()[0];
     expect(badge.label).toBe('2 Approved');

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Team admin — APP_ADMIN creates and deletes a team', () => {
   test.use({ storageState: 'e2e/.auth/admin.json' });
 
-  test('can create and delete a team', async ({ page }) => {
+  test('TEAM-01 TEAM-02 TEAM-03 TEAM-07 can create and delete a team', async ({ page }) => {
     const uid = Date.now();
     const name = `E2E Team ${uid}`;
 

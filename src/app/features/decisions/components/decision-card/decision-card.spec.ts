@@ -39,7 +39,7 @@ describe('DecisionCard — team chip computeds', () => {
       expect(comp.visibleTeams()).toEqual([]);
     });
 
-    it('returns all teams when 2 or fewer', () => {
+    it('LIST-01 returns all teams when 2 or fewer', () => {
       const teams = [
         { teamId: 1, teamName: 'Backend' },
         { teamId: 2, teamName: 'Frontend' },
@@ -48,7 +48,7 @@ describe('DecisionCard — team chip computeds', () => {
       expect(comp.visibleTeams().length).toBe(2);
     });
 
-    it('caps at 2 even when more teams present', () => {
+    it('LIST-02 caps at 2 even when more teams present', () => {
       const teams = [
         { teamId: 1, teamName: 'Backend' },
         { teamId: 2, teamName: 'Frontend' },
@@ -66,7 +66,7 @@ describe('DecisionCard — team chip computeds', () => {
       expect(comp.hiddenTeamCount()).toBe(0);
     });
 
-    it('returns correct overflow count', () => {
+    it('LIST-02 returns correct overflow count', () => {
       const teams = Array.from({ length: 5 }, (_, i) => ({ teamId: i + 1, teamName: `Team ${i + 1}` }));
       const comp = create(makeDecision({ teams }));
       expect(comp.hiddenTeamCount()).toBe(3);
@@ -75,6 +75,17 @@ describe('DecisionCard — team chip computeds', () => {
     it('returns 0 when no teams', () => {
       const comp = create(makeDecision({ teams: [] }));
       expect(comp.hiddenTeamCount()).toBe(0);
+    });
+  });
+  describe('rendering safety', () => {
+    it('SEC-06 escapes HTML in the decision title on render', () => {
+      const fixture = TestBed.createComponent(DecisionCard);
+      fixture.componentRef.setInput('decision', makeDecision({ title: '<img src=x onerror=alert(1)>' }));
+      fixture.detectChanges();
+
+      const title = fixture.nativeElement.querySelector('.card-title') as HTMLElement;
+      expect(title.textContent).toBe('<img src=x onerror=alert(1)>');
+      expect(title.innerHTML).not.toContain('<img');
     });
   });
 });

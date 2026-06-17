@@ -15,7 +15,7 @@ describe('allowedTransitions', () => {
     it('APPROVED → [] (terminal)', () => {
       expect(allowedTransitions('APPROVED', true, true, 'APP_ADMIN')).toEqual([]);
     });
-    it('REJECTED → [DRAFT] (APP_ADMIN can reopen)', () => {
+    it('DEC-25 REJECTED → [DRAFT] (APP_ADMIN can reopen)', () => {
       expect(allowedTransitions('REJECTED', true, true, 'APP_ADMIN')).toEqual(['DRAFT']);
     });
     it('SUPERSEDED → [] (terminal)', () => {
@@ -33,7 +33,7 @@ describe('allowedTransitions', () => {
     it('DEC-33 APPROVED → []', () => {
       expect(allowedTransitions('APPROVED', true, true, 'USER')).toEqual([]);
     });
-    it('REJECTED → [] (TEAM_ADMIN cannot reopen rejected)', () => {
+    it('DEC-25 REJECTED → [] (TEAM_ADMIN cannot reopen rejected)', () => {
       expect(allowedTransitions('REJECTED', true, true, 'USER')).toEqual([]);
     });
     it('DEC-34 SUPERSEDED → []', () => {

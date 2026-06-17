@@ -48,7 +48,7 @@ describe('AuthStore', () => {
     expect(store.error()).toBeNull();
   });
 
-  it('rehydrates user from session on init', () => {
+  it('AUTH-09 rehydrates user from session on init', () => {
     const user = mockUser();
     mockAuthService.currentUser.mockReturnValue(user);
     TestBed.resetTestingModule();
@@ -130,7 +130,7 @@ describe('AuthStore', () => {
   });
 
   describe('login', () => {
-    it('sets user and navigates to /decisions on success', () => {
+    it('AUTH-05 sets user and navigates to /decisions on success', () => {
       const user = mockUser();
       mockAuthService.login.mockReturnValue(of(user));
       store.login({ email: 'a@b.com', password: 'p' });
@@ -139,7 +139,7 @@ describe('AuthStore', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/decisions']);
     });
 
-    it('sets error on failure', () => {
+    it('AUTH-06 AUTH-07 sets error on failure', () => {
       mockAuthService.login.mockReturnValue(throwError(() => ({ error: { message: 'Invalid credentials' } })));
       store.login({ email: 'a@b.com', password: 'wrong' });
       expect(store.error()).toBe('Invalid credentials');
@@ -154,7 +154,7 @@ describe('AuthStore', () => {
   });
 
   describe('logout', () => {
-    it('clears user state and calls authService.logout', () => {
+    it('AUTH-08 clears user state and calls authService.logout', () => {
       mockAuthService.login.mockReturnValue(of(mockUser()));
       store.login({ email: 'a@b.com', password: 'p' });
       expect(store.user()).not.toBeNull();
@@ -165,7 +165,7 @@ describe('AuthStore', () => {
   });
 
   describe('register', () => {
-    it('sets user and navigates to /decisions on success', () => {
+    it('AUTH-01 sets user and navigates to /decisions on success', () => {
       const user = mockUser({ email: 'new@test.com', name: 'New User' });
       mockAuthService.register.mockReturnValue(of(user));
       store.register({ name: 'New User', email: 'new@test.com', password: 'Pass1234!' });
@@ -175,7 +175,7 @@ describe('AuthStore', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/decisions']);
     });
 
-    it('sets error message on failure', () => {
+    it('AUTH-02 sets error message on failure', () => {
       mockAuthService.register.mockReturnValue(
         throwError(() => ({ error: { message: 'Email already taken' } }))
       );

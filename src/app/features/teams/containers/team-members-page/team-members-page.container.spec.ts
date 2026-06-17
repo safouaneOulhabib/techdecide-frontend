@@ -70,7 +70,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
       expect(fixture.componentInstance.statsTotal()).toBe(0);
     });
 
-    it('returns correct count', () => {
+    it('TM-15 returns correct count', () => {
       members$.set([makeMember({ userId: 1 }), makeMember({ userId: 2 })]);
       const fixture = TestBed.createComponent(TeamMembersPageContainer);
       expect(fixture.componentInstance.statsTotal()).toBe(2);
@@ -78,7 +78,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
   });
 
   describe('statsTeamAdmins', () => {
-    it('counts only TEAM_ADMIN roles', () => {
+    it('TM-15 counts only TEAM_ADMIN roles', () => {
       members$.set([
         makeMember({ userId: 1, teamRole: 'TEAM_ADMIN' }),
         makeMember({ userId: 2, teamRole: 'MEMBER' }),
@@ -102,7 +102,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
       expect(fixture.componentInstance.filteredMembers().length).toBe(2);
     });
 
-    it('filters by name (case-insensitive)', () => {
+    it('TM-17 filters by name (case-insensitive)', () => {
       members$.set([
         makeMember({ userId: 1, name: 'Alice Smith', email: 'alice@corp.com' }),
         makeMember({ userId: 2, name: 'Bob Jones', email: 'bob@corp.com' }),
@@ -114,7 +114,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
       expect(comp.filteredMembers()[0].name).toBe('Alice Smith');
     });
 
-    it('filters by email', () => {
+    it('TM-17 filters by email', () => {
       members$.set([
         makeMember({ userId: 1, email: 'alice@corp.com', name: 'Alice' }),
         makeMember({ userId: 2, email: 'bob@corp.com', name: 'Bob' }),
@@ -125,7 +125,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
       expect(comp.filteredMembers().length).toBe(1);
     });
 
-    it('filters by role', () => {
+    it('TM-18 filters by role', () => {
       members$.set([
         makeMember({ userId: 1, teamRole: 'TEAM_ADMIN' }),
         makeMember({ userId: 2, teamRole: 'MEMBER' }),
@@ -137,7 +137,7 @@ describe('TeamMembersPageContainer — computed signals', () => {
       expect(comp.filteredMembers()[0].teamRole).toBe('TEAM_ADMIN');
     });
 
-    it('combines name filter and role filter', () => {
+    it('TM-17 TM-18 combines name filter and role filter', () => {
       members$.set([
         makeMember({ userId: 1, name: 'Alice', email: 'alice1@corp.com', teamRole: 'TEAM_ADMIN' }),
         makeMember({ userId: 2, name: 'Alice', email: 'alice2@corp.com', teamRole: 'MEMBER' }),
@@ -234,7 +234,7 @@ describe('TeamMembersPageContainer — cross-team access guard (effect)', () => 
     });
   });
 
-  it('redirects to /decisions when user is NOT a member of the team', () => {
+  it('TM-07 TM-12 TM-14 redirects to /decisions when user is NOT a member of the team', () => {
     user$.set({ id: 42 });
     members$.set([makeMember({ userId: 99 })]); // userId 42 is not in the list
 
@@ -244,7 +244,7 @@ describe('TeamMembersPageContainer — cross-team access guard (effect)', () => 
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/decisions']);
   });
 
-  it('does NOT redirect when the current user IS a member of the team', () => {
+  it('TM-08 does NOT redirect when the current user IS a member of the team', () => {
     user$.set({ id: 42 });
     members$.set([makeMember({ userId: 42 })]); // current user is present
 

@@ -82,7 +82,7 @@ describe('jwtInterceptor', () => {
   });
 
   describe('401 error handling', () => {
-    it('calls authService.logout() when a protected request returns 401', () => {
+    it('SEC-09 calls authService.logout() when a protected request returns 401', () => {
       mockAuthService.getToken.mockReturnValue('expired-token');
       const next: HttpHandlerFn = () =>
         throwError(() => new HttpErrorResponse({ status: 401 }));

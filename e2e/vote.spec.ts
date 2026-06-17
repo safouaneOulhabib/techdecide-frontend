@@ -7,7 +7,7 @@ test.describe('Vote — involved member casts a vote', () => {
   const GTN_PROJECT_ID = 1;
   const BACKEND_TEAM_ID = 1;
 
-  test('can post a comment with Approve vote and see vote badge', async ({ page }) => {
+  test('COM-01 COM-06 COM-10 can post a comment with Approve vote and see vote badge', async ({ page }) => {
     const token = getToken('backend-member');
     const id = await createDecisionApi(page, token, {
       title: 'E2E Vote Journey', context: 'ctx', decision: 'dec',

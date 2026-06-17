@@ -36,7 +36,7 @@ describe('TeamMemberRow — computed logic', () => {
   }
 
   describe('isSelf', () => {
-    it('returns true when currentUserId matches member.userId', () => {
+    it('TM-16 returns true when currentUserId matches member.userId', () => {
       const comp = create({ member: makeMember({ userId: 5 }), currentUserId: 5 });
       expect(comp.isSelf).toBe(true);
     });
@@ -54,7 +54,7 @@ describe('TeamMemberRow — computed logic', () => {
       expect(adminOpt.disabled).toBe(false);
     });
 
-    it('TEAM_ADMIN option is disabled when another member is already TEAM_ADMIN', () => {
+    it('TM-11 TEAM_ADMIN option is disabled when another member is already TEAM_ADMIN', () => {
       // hasTeamAdmin=true and current member is MEMBER (not TEAM_ADMIN)
       const comp = create({ hasTeamAdmin: true, member: makeMember({ teamRole: 'MEMBER' }) });
       const adminOpt = comp.computedRoleOptions.find(o => o.value === 'TEAM_ADMIN')!;
