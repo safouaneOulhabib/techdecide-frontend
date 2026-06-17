@@ -167,4 +167,32 @@ describe('DecisionListContainer — filteredDecisions', () => {
       expect(comp.filteredDecisions()[0].id).toBe(1);
     });
   });
+
+  describe('filter reset and empty results', () => {
+    it('LIST-08 restores the full list when filters are cleared', () => {
+      decisions$.set([
+        makeDecision({ id: 1, title: 'Use Redis', status: 'APPROVED' }),
+        makeDecision({ id: 2, title: 'Use Postgres', status: 'DRAFT' }),
+      ]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+      comp.onFiltersChange({ keyword: 'redis', status: null, projectId: null, tagId: null });
+      expect(comp.filteredDecisions().length).toBe(1);
+
+      comp.onFiltersChange({ keyword: '', status: null, projectId: null, tagId: null });
+
+      expect(comp.filteredDecisions().length).toBe(2);
+    });
+
+    it('LIST-09 returns an empty subset when no decision matches filters', () => {
+      decisions$.set([
+        makeDecision({ id: 1, title: 'Use Redis', status: 'APPROVED' }),
+      ]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+      comp.onFiltersChange({ keyword: 'not-present', status: null, projectId: null, tagId: null });
+
+      expect(comp.filteredDecisions()).toEqual([]);
+    });
+  });
 });

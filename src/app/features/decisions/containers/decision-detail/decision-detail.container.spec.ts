@@ -95,6 +95,12 @@ describe('DecisionDetailContainer — computed signals', () => {
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canEditCurrent()).toBe(false);
     });
+
+    it('DEC-26 returns true for TEAM_ADMIN-editable PROPOSED decision', () => {
+      selectedDecision$.set(makeDecision({ status: 'PROPOSED', canEdit: true, canGovern: true }));
+      const fixture = TestBed.createComponent(DecisionDetailContainer);
+      expect(fixture.componentInstance.canEditCurrent()).toBe(true);
+    });
   });
 
   describe('canDeleteCurrent', () => {
@@ -107,6 +113,12 @@ describe('DecisionDetailContainer — computed signals', () => {
       selectedDecision$.set(makeDecision({ canDelete: true }));
       const fixture = TestBed.createComponent(DecisionDetailContainer);
       expect(fixture.componentInstance.canDeleteCurrent()).toBe(true);
+    });
+
+    it('DEC-21 returns false for APPROVED decision when canDelete is false', () => {
+      selectedDecision$.set(makeDecision({ status: 'APPROVED', canDelete: false }));
+      const fixture = TestBed.createComponent(DecisionDetailContainer);
+      expect(fixture.componentInstance.canDeleteCurrent()).toBe(false);
     });
   });
 
