@@ -22,16 +22,18 @@ const makeDecision = (overrides: Partial<Decision> = {}): Decision => ({
 
 describe('DecisionListContainer — filteredDecisions', () => {
   let decisions$: ReturnType<typeof signal<Decision[]>>;
+  let loading$: ReturnType<typeof signal<boolean>>;
   let hasTeam$: ReturnType<typeof signal<boolean>>;
 
   beforeEach(() => {
     decisions$ = signal<Decision[]>([]);
+    loading$ = signal(false);
     hasTeam$ = signal(true);
     vi.clearAllMocks();
 
     const mockDecisionStore = {
       decisions: decisions$,
-      loading: signal(false),
+      loading: loading$,
       error: signal<string | null>(null),
       loadAll: vi.fn(),
       remove: vi.fn(),
@@ -82,6 +84,41 @@ describe('DecisionListContainer — filteredDecisions', () => {
       hasTeam$.set(false);
       const fixture = TestBed.createComponent(DecisionListContainer);
       expect(fixture.componentInstance.hasTeam()).toBe(false);
+    });
+  });
+
+  describe('loading skeleton state', () => {
+    it('UI-01 loading=true with empty list triggers skeleton condition (loading && empty)', () => {
+      loading$.set(true);
+      decisions$.set([]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+      expect(comp.loading()).toBe(true);
+      expect(comp.filteredDecisions().length).toBe(0);
+      // The skeleton block condition: loading() && filteredDecisions().length === 0
+      expect(comp.loading() && comp.filteredDecisions().length === 0).toBe(true);
+    });
+
+    it('UI-02 during skeleton state allDecisions is empty — no stale data surfaced', () => {
+      loading$.set(true);
+      decisions$.set([]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      expect(fixture.componentInstance.allDecisions()).toEqual([]);
+    });
+
+    it('UI-02 after load completes, decisions arrive and loading flag drops to false', () => {
+      loading$.set(true);
+      decisions$.set([]);
+      const fixture = TestBed.createComponent(DecisionListContainer);
+      const comp = fixture.componentInstance;
+
+      loading$.set(false);
+      decisions$.set([makeDecision({ id: 1 })]);
+
+      expect(comp.loading()).toBe(false);
+      expect(comp.allDecisions().length).toBe(1);
+      // Skeleton condition is now false
+      expect(comp.loading() && comp.filteredDecisions().length === 0).toBe(false);
     });
   });
 

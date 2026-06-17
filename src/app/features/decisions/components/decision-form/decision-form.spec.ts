@@ -139,6 +139,61 @@ describe('DecisionForm', () => {
     });
   });
 
+  describe('UI-09 — form validation guard', () => {
+    it('UI-09 isValid is false when title is empty', () => {
+      const fixture = TestBed.createComponent(DecisionForm);
+      fixture.componentRef.setInput('tags', []);
+      fixture.componentRef.setInput('loading', false);
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance;
+      // title starts empty
+      expect(comp.isValid()).toBe(false);
+    });
+
+    it('UI-09 isValid is true when all required fields are filled', () => {
+      const fixture = TestBed.createComponent(DecisionForm);
+      fixture.componentRef.setInput('tags', []);
+      fixture.componentRef.setInput('loading', false);
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance;
+      comp.form.update(f => ({ ...f, title: 'My Decision', context: 'Some context', decision: 'The choice' }));
+      expect(comp.isValid()).toBe(true);
+    });
+
+    it('UI-09 onSubmit does not emit when title is blank', () => {
+      const fixture = TestBed.createComponent(DecisionForm);
+      fixture.componentRef.setInput('tags', []);
+      fixture.componentRef.setInput('loading', false);
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance;
+      const emitted: unknown[] = [];
+      comp.formSubmit.subscribe((v: unknown) => emitted.push(v));
+
+      comp.onSubmit(); // title is empty → guard fires
+      expect(emitted).toHaveLength(0);
+    });
+
+    it('UI-09 onSubmit emits when all required fields are filled', () => {
+      const fixture = TestBed.createComponent(DecisionForm);
+      fixture.componentRef.setInput('tags', []);
+      fixture.componentRef.setInput('loading', false);
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance;
+      const emitted: unknown[] = [];
+      comp.formSubmit.subscribe((v: unknown) => emitted.push(v));
+
+      comp.form.update(f => ({
+        ...f, title: 'My Decision', context: 'Some context', decision: 'The choice',
+      }));
+      comp.onSubmit();
+      expect(emitted).toHaveLength(1);
+    });
+  });
+
   describe('onProjectChange — resets teamIds on project switch', () => {
     it('DEC-11 clears teamIds when a new project is selected', () => {
       const fixture = TestBed.createComponent(DecisionForm);

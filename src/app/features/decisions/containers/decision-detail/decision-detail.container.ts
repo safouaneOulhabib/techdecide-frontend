@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { DatePipe, Location } from '@angular/common';
+import { ConfirmService } from '@core/services/confirm.service';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { Decision, DecisionStatus } from '@features/decisions/models/decision.model';
 import { OnDestroy } from '@angular/core';
@@ -51,6 +52,7 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
   private readonly commentStore = inject(CommentStore);
   private readonly authStore = inject(AuthStore);
   private readonly location = inject(Location);
+  private readonly confirmService = inject(ConfirmService);
 
   readonly comments: Signal<Comment[]> = this.commentStore.comments;
   readonly commentsLoading: Signal<boolean> = this.commentStore.loading;
@@ -110,8 +112,13 @@ export class DecisionDetailContainer implements OnInit, OnDestroy {
   }
 
   onDelete() {
-    this.decisionStore.remove(this.decisionId);
-    this.router.navigate(['/decisions']);
+    this.confirmService.confirm(
+      'Are you sure you want to delete this decision?',
+      () => {
+        this.decisionStore.remove(this.decisionId);
+        this.router.navigate(['/decisions']);
+      }
+    );
   }
 
   onStatusChange(status: DecisionStatus) {

@@ -1,4 +1,4 @@
-import { Component, input, output, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
+import { Component, computed, input, output, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -60,6 +60,11 @@ export class DecisionForm implements OnInit, OnChanges {
   });
 
   newAlternative = signal({ name: '', rejectionReason: '' });
+
+  readonly isValid = computed(() => {
+    const f = this.form();
+    return f.title.trim().length > 0 && f.context.trim().length > 0 && f.decision.trim().length > 0;
+  });
 
   get isEditMode(): boolean {
     return !!this.existingDecision();
@@ -129,6 +134,7 @@ export class DecisionForm implements OnInit, OnChanges {
   }
 
   onSubmit() {
+    if (!this.isValid()) return;
     this.formSubmit.emit(this.form());
   }
 

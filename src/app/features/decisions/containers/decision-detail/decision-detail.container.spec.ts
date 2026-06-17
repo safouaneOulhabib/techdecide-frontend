@@ -8,6 +8,7 @@ import { DecisionDetailContainer } from './decision-detail.container';
 import { DecisionStore } from '@features/decisions/store/decision.store';
 import { AuthStore } from '@features/auth/store/auth.store';
 import { CommentStore } from '@features/decisions/store/comment.store';
+import { ConfirmService } from '@core/services/confirm.service';
 import { Decision } from '@features/decisions/models/decision.model';
 
 const makeDecision = (overrides: Partial<Decision> = {}): Decision => ({
@@ -73,6 +74,7 @@ describe('DecisionDetailContainer — computed signals', () => {
         { provide: ActivatedRoute, useValue: mockRoute },
         { provide: Router, useValue: mockRouter },
         { provide: Location, useValue: mockLocation },
+        { provide: ConfirmService, useValue: { confirm: vi.fn() } },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     });
