@@ -56,6 +56,23 @@ describe('DecisionForm', () => {
       expect(comp.form().teamIds).toEqual([10, 20]); // unchanged
     });
 
+    it('DATA-08 keeps the own team when all removable teams are removed', () => {
+      const fixture = TestBed.createComponent(DecisionForm);
+      fixture.componentRef.setInput('tags', []);
+      fixture.componentRef.setInput('loading', false);
+      fixture.componentRef.setInput('ownTeamId', 10);
+      fixture.detectChanges();
+
+      const comp = fixture.componentInstance;
+      comp.form.update(f => ({ ...f, teamIds: [10, 20, 30] }));
+
+      comp.removeTeam(20);
+      comp.removeTeam(30);
+      comp.removeTeam(10);
+
+      expect(comp.form().teamIds).toEqual([10]);
+    });
+
     it('removes a team when ownTeamId is null (no lock in effect)', () => {
       const fixture = TestBed.createComponent(DecisionForm);
       fixture.componentRef.setInput('tags', []);

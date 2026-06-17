@@ -275,4 +275,14 @@ describe('TeamMembersPageContainer — cross-team access guard (effect)', () => 
 
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
+
+  it('TM-09 hides the add member panel for MEMBER users', () => {
+    user$.set({ id: 42 });
+    members$.set([makeMember({ userId: 42 })]);
+
+    const fixture = TestBed.createComponent(TeamMembersPageContainer);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('app-team-member-add')).toBeNull();
+  });
 });
