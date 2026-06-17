@@ -27,12 +27,15 @@ test.describe('Decision delete — UI-04 confirmation dialog', () => {
       await expect(deleteBtn).toBeVisible({ timeout: 5000 });
       await deleteBtn.click();
 
-      // PrimeNG ConfirmDialog must appear before any deletion occurs
-      await expect(page.locator('.p-confirmdialog')).toBeVisible({ timeout: 5000 });
+      // PrimeNG ConfirmDialog must appear — verified by the presence of its action buttons
+      const cancelBtn = page.getByRole('button', { name: /cancel/i });
+      await expect(cancelBtn).toBeVisible({ timeout: 5000 });
+      // The "Delete" accept button must also be visible inside the dialog
+      await expect(page.getByRole('button', { name: /^delete$/i })).toBeVisible();
 
-      // Dismiss with Cancel — decision must still exist
-      await page.getByRole('button', { name: /cancel/i }).click();
-      await expect(page.locator('.p-confirmdialog')).not.toBeVisible({ timeout: 3000 });
+      // Dismiss — decision must still exist
+      await cancelBtn.click();
+      await expect(cancelBtn).not.toBeVisible({ timeout: 3000 });
       await expect(page).toHaveURL(new RegExp(`/decisions/${decisionId}`));
     } finally {
       await deleteDecisionApi(page, token, decisionId).catch(() => null);

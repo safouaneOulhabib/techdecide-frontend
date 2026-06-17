@@ -46,18 +46,23 @@ test.describe('LIST-10 — skeleton appears before data loads', () => {
     let resolveDelay!: () => void;
     const delayed = new Promise<void>(r => resolveDelay = r);
 
+    // Intercept every /api/decisions request and hold it until we release the latch.
+    // Multiple parallel requests may all await the same promise — use catch to
+    // ignore the "already handled" error that Playwright throws for concurrent routes.
     await page.route('**/api/decisions', async route => {
       await delayed;
-      await route.continue();
+      route.continue().catch(() => {});
     });
 
-    await page.goto('/decisions');
+    // Start navigation without waiting for network idle — we need to catch the skeleton
+    const gotoPromise = page.goto('/decisions');
 
     // While the API is still blocked, skeleton-card elements must be present
     await expect(page.locator('.skeleton-card').first()).toBeVisible({ timeout: 5000 });
 
+    // Release the latch so all held requests can continue
     resolveDelay();
-    await page.unrouteAll();
+    await gotoPromise.catch(() => {});
 
     // After data arrives the skeletons disappear
     await expect(page.locator('.skeleton-card').first()).not.toBeVisible({ timeout: 8000 });
